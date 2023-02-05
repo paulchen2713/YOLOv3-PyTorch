@@ -1,6 +1,7 @@
 # YOLOv3-PyTorch
 - The original code was copied from [YOLOv3-PyTorch](https://github.com/SannaPersson/YOLOv3-PyTorch)
-- patch notes
-  - try to run ```model_with_weights2.py``` 
+- 2023.02.05
+  - first download the YOLOv3 weights from https://pjreddie.com/media/files/yolov3.weights as ```yolov3.weights``` and put it at the same directory
+  - then run ```model_with_weights2.py```, it will save the weights to PyTorch format. we name the output weights as ```checkpoint-2023-02-05.pth.tar``` also in the same directory
   
   
