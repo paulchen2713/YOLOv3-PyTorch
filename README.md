@@ -6,9 +6,9 @@
     - to leave the env ```conda deactivate```
     - actual env and pkgs locates at ```C:\Users\Paul\.conda\envs\pt3.7```, don't know why it is not been stored in ```D Drive```
   - Upgrade default conda env ```base``` through command ```conda update -n base -c defaults conda```
-    <img src='https://i.imgur.com/6JozbHB.png' width=90% height=90%>
+<!--     <img src='https://i.imgur.com/6JozbHB.png' width=90% height=90%> -->
     - It has to be done under ```(base) C:\Windows\system32>```
-    <img src='https://i.imgur.com/cYJM1XN.png' width=80% height=80%>
+<!--     <img src='https://i.imgur.com/cYJM1XN.png' width=80% height=80%> -->
   - Install all the packages through ```pip install -r requirements.txt```
     - content in the requirements file
         ```python
