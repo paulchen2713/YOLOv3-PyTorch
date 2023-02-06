@@ -2,9 +2,9 @@
 - The original code was copied from [YOLOv3-PyTorch](https://github.com/SannaPersson/YOLOv3-PyTorch)
 - 2023.02.06
   - On lab PC, create a new env ```pt3.7``` through command ```conda create --name pt3.7 python=3.7```
-    - To use the env ```conda activate pt3.7```
-    - To leave the env ```conda deactivate```
-    - Actual env and pkgs locates at ```C:\Users\Paul\.conda\envs\pt3.7```, don't know why it is not been stored in ```D Drive```
+    - to use the env ```conda activate pt3.7```
+    - to leave the env ```conda deactivate```
+    - actual env and pkgs locates at ```C:\Users\Paul\.conda\envs\pt3.7```, don't know why it is not been stored in ```D Drive```
   - Upgrade default conda env ```base``` through command ```conda update -n base -c defaults conda```
     <img src='https://i.imgur.com/6JozbHB.png' width=90% height=90%>
     - It has to be done under ```(base) C:\Windows\system32>```
@@ -22,7 +22,7 @@
         Pillow>=8.1.0
         ```
     - cmd output stored as ```D:/Datasets/YOLOv3-PyTorch/logs/installation_logs_0206.txt```
-    - Actual dependency, new requirements is:
+    - actual dependency, the new requirement is:
         ```python
         numpy==1.21.6
         matplotlib==3.5.3
