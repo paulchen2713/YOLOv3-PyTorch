@@ -169,7 +169,6 @@ class YOLOv3(nn.Module):
         return layers
 
     def load_CNN_weights(self, ptr, block):
-
         conv_layer = block.conv
         if block.use_bn_act:
             # Load BN bias, weights, running mean and running variance
@@ -249,12 +248,13 @@ class YOLOv3(nn.Module):
                 # ptr = self.load_CNN_weights(ptr, cnn_block)
             # print("Scale prediction ")
 
-        print(ptr)
+        print(ptr) # number of parameters: 62001757
 
 
 if __name__ == "__main__":
 
     model = YOLOv3()
+    # the "yolov3.weights" should be put in the same directory
     model.load_darknet_weights(weights_path="yolov3.weights")
     model.layers[15].pred[1] = CNNBlock(1024, 25 * 3, bn_act=False, kernel_size=1)
     model.layers[22].pred[1] = CNNBlock(512, 25 * 3, bn_act=False, kernel_size=1)
@@ -262,12 +262,13 @@ if __name__ == "__main__":
     optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
     # from utils import save_checkpoint
+    from datetime import date
 
-    file_name = f"checkpoint.pth.tar"
+    file_name = f"checkpoint-{date.today()}.pth.tar"
     checkpoint = {"state_dict": model.state_dict(), "optimizer": optimizer.state_dict()}
     torch.save(checkpoint, file_name)
 
-    # save_checkpoint(checkpoint)
+    # save_checkpoint(checkpoint) # malfunctioning
 
     import sys
 
