@@ -40,6 +40,10 @@
   - Wanted to test the training ability using ```PASCAL_VOC``` dataset
     - download the preprocessed ```PASCAL_VOC``` dataset from [kaggle](https://www.kaggle.com/datasets/aladdinpersson/pascal-voc-dataset-used-in-yolov3-video)
     - download the preprocessed ```MS-COCO``` dataset from [kaggle](https://www.kaggle.com/datasets/79abcc2659dc745fddfba1864438afb2fac3fabaa5f37daa8a51e36466db101e)
+  - But first, we have to test the converted weights to check if they actually work
+    - to do so, maybe we could write a program ```detect.py``` and test the weights with some inference samples
+    - if it can predict perfectly, then we may assume it is converted correctly
+    - Okay, it does not work..., the inference outputs are bunch of random tags
 - 2023.02.05
   - first download the YOLOv3 weights from https://pjreddie.com/media/files/yolov3.weights as ```yolov3.weights``` and put it at the same directory
   - then run ```model_with_weights2.py```, it will save the weights to PyTorch format. we name the output weights as ```checkpoint-2023-02-05.pth.tar``` also in the same directory
