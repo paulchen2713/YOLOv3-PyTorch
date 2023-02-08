@@ -1,4 +1,7 @@
 # YOLOv3-PyTorch
+- 2023.02.07
+  - The code ```detect.py``` and ```model_with_weights2.py``` works fine, but the result may not be the way as we expected
+  - Need to figure out the usability of the converted weights, since there is a huge difference between random weights and the converted weights, maybe it's not complete garbage
 - The original code was copied from [YOLOv3-PyTorch](https://github.com/SannaPersson/YOLOv3-PyTorch)
 - 2023.02.06
   - On lab PC, create a new env ```pt3.7``` through command ```conda create --name pt3.7 python=3.7```
