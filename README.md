@@ -1,9 +1,8 @@
 # YOLOv3-PyTorch
-## reference
+## Reference
 - The original code was copied from [YOLOv3-PyTorch](https://github.com/SannaPersson/YOLOv3-PyTorch)
 
-
-## notes
+## Notes
 - 2023.02.08
   - The ```YOLOv3``` model is trainable with ```Pascal_VOC``` dataset
     - But it's bind with ```Albumentations``` / data augmentations, which means we need to decoupling it
@@ -31,6 +30,7 @@
   - Make sure we can properly run ```train.py``` with radar dataset
   - Find a proper way to measure the "communication overhead"
   - Test the functionality of  ```seed_everything()```, check if it works like the way we think
+  - Find a newer stable PyTorch and CUDA version for the project
 - 2023.02.07
   - The code ```detect.py``` and ```model_with_weights2.py``` works fine, but the result may not be the way as we expected
   - Need to figure out the usability of the converted weights, since there is a huge difference between random weights and the converted weights, maybe it's not complete garbage
