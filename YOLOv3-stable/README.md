@@ -1,7 +1,5 @@
 # YOLOv3-stable
-
-## Note 
-- The dependency for env ```pt3.7```
+- Dependencies for env ```pt3.7```
   ```python
   python==3.7.13
   numpy==1.19.2
@@ -13,5 +11,5 @@
   tqdm==4.56.0
   matplotlib==3.3.4
   ```
-- Dataset: ```RD_maps``` radar dataset
+- Dataset: ```RD_maps``` synthetic radar dataset
 
