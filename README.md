@@ -3,6 +3,29 @@
 - The original code was copied from [YOLOv3-PyTorch](https://github.com/SannaPersson/YOLOv3-PyTorch)
 
 ## Notes
+- 2023.02.10
+  - Trying newer stable PyTorch and CUDA version for the project
+  - Python 3.8 + CUDA 11.7 
+    - ```conda create --name pt3.8 python=3.8```
+    - ```conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia``` ([Install PyTorch](https://pytorch.org/))
+  - **Interesting to know!** 
+    - 如果透過系統管理員開啟 ```Anaconda Prompt``` 並安裝的環境會存在 D 槽的 ```D:/ProgramData/Anaconda3/envs/```
+    ![](https://i.imgur.com/G979f4e.png)
+    - 反之，直接開 ```Anaconda Prompt``` 安裝的環境會存在 C 槽的 ```C:/Users/Paul/.conda/envs/```
+    - 以後記得都用系統管理員執行!
+  - The new dependency is:
+    ```python
+    numpy==1.23.5
+    matplotlib==3.6.2
+    pytorch==1.13.1
+    pytorch-cuda==11.7
+    torchaudio==0.13.1             
+    torchvision==0.14.1
+    tqdm==4.64.1
+    albumentations==1.3.0
+    pandas==1.5.2
+    pillow==9.3.0
+    ```
 - 2023.02.08
   - The ```YOLOv3``` model is trainable with ```Pascal_VOC``` dataset
     - But it's bind with ```Albumentations``` / data augmentations, which means we need to decoupling it
