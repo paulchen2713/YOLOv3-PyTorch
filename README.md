@@ -4,6 +4,56 @@
 
 ## Notes
 - 2023.02.21
+  - modified from YOLO-CFAR
+    ```clike
+    (pt3.8) D:\Datasets\YOLOv3-PyTorch\YOLOv3-debug1>D:/ProgramData/Anaconda3/envs/pt3.8/python.exe d:/Datasets/YOLOv3-PyTorch/YOLOv3-debug1/train.py
+      0%|                                                                                                                                            | 0/375 [00:03<?, ?it/s]
+    Traceback (most recent call last):
+      File "d:/Datasets/YOLOv3-PyTorch/YOLOv3-debug1/train.py", line 166, in <module>
+        main()
+      File "d:/Datasets/YOLOv3-PyTorch/YOLOv3-debug1/train.py", line 107, in main    
+        train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors)    
+      File "d:/Datasets/YOLOv3-PyTorch/YOLOv3-debug1/train.py", line 57, in train_fn
+        out = model(x)
+      File "D:\ProgramData\Anaconda3\envs\pt3.8\lib\site-packages\torch\nn\modules\module.py", line 1194, in _call_impl
+        return forward_call(*input, **kwargs)
+      File "d:\Datasets\YOLOv3-PyTorch\YOLOv3-debug1\model.py", line 191, in forward
+        x = layer(x) #
+      File "D:\ProgramData\Anaconda3\envs\pt3.8\lib\site-packages\torch\nn\modules\module.py", line 1194, in _call_impl
+        return forward_call(*input, **kwargs)
+      File "d:\Datasets\YOLOv3-PyTorch\YOLOv3-debug1\model.py", line 110, in forward
+        return self.leaky(self.bn(self.conv(x))) # bn_act()
+      File "D:\ProgramData\Anaconda3\envs\pt3.8\lib\site-packages\torch\nn\modules\module.py", line 1194, in _call_impl
+        return forward_call(*input, **kwargs)
+      File "D:\ProgramData\Anaconda3\envs\pt3.8\lib\site-packages\torch\nn\modules\conv.py", line 463, in forward
+        return self._conv_forward(input, self.weight, self.bias)
+      File "D:\ProgramData\Anaconda3\envs\pt3.8\lib\site-packages\torch\nn\modules\conv.py", line 459, in _conv_forward
+        return F.conv2d(input, weight, bias, self.stride,
+    RuntimeError: Given groups=1, weight of size [32, 3, 3, 3], expected input[16, 256, 64, 3] to have 3 channels, but got 256 channels instead
+    ```
+  - modified from YOLO-Pascal_VOC
+    ```clike
+    (pt3.8) D:\Datasets\YOLOv3-PyTorch\YOLOv3-debug2>D:/ProgramData/Anaconda3/envs/pt3.8/python.exe d:/Datasets/YOLOv3-PyTorch/YOLOv3-debug2/train.py
+      0%|                                                                                                                           | 0/5999 [00:00<?, ?it/s]
+    x:  torch.Size([1, 3, 256, 64])
+    y0: torch.Size([1, 3, 2, 2, 6])
+    y1: torch.Size([1, 3, 2, 2, 6])
+    y2: torch.Size([1, 3, 2, 2, 6])
+      0%|                                                                                                                           | 0/5999 [00:04<?, ?it/s]
+    Traceback (most recent call last):
+      File "d:/Datasets/YOLOv3-PyTorch/YOLOv3-debug2/train.py", line 144, in <module>
+        main()
+      File "d:/Datasets/YOLOv3-PyTorch/YOLOv3-debug2/train.py", line 91, in main
+        train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors)
+      File "d:/Datasets/YOLOv3-PyTorch/YOLOv3-debug2/train.py", line 47, in train_fn
+        loss_fn(out[0], y0, scaled_anchors[0])
+      File "D:\ProgramData\Anaconda3\envs\pt3.8\lib\site-packages\torch\nn\modules\module.py", line 1194, in _call_impl
+        return forward_call(*input, **kwargs)
+      File "d:\Datasets\YOLOv3-PyTorch\YOLOv3-debug2\loss.py", line 83, in forward
+        no_object_loss = self.bce((predictions[..., 0:1][noobj]), (target[..., 0:1][noobj]),)
+    IndexError: The shape of the mask [1, 3, 2, 2] at index 2 does not match the shape of the indexed tensor [1, 3, 8, 2, 1] at index 2
+    ```
+- 2023.02.20
   - We now have the model trained on ```Pascal_VOC``` dataset with the following result
     ![](https://i.imgur.com/mZN3b25.png)
   - The model was evaluated with confidence ```0.6``` and IOU threshold ```0.5``` using NMS
