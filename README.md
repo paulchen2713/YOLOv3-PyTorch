@@ -1,6 +1,4 @@
 # YOLOv3-PyTorch
-## Reference
-- The original code was copied from [YOLOv3-PyTorch](https://github.com/SannaPersson/YOLOv3-PyTorch)
 
 ## Notes
 - 2023.02.21
@@ -233,4 +231,7 @@
     ![image](https://user-images.githubusercontent.com/95068443/216808211-7a95bcdf-4444-4116-965b-6462cb20646a.png)
   - I override most of the files with my previous ones, except for ```model_with_weights2.py```
 
+
+## Reference
+- The original code was copied from [YOLOv3-PyTorch](https://github.com/SannaPersson/YOLOv3-PyTorch)
   
