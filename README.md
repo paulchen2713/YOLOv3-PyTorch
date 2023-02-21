@@ -3,7 +3,17 @@
 - The original code was copied from [YOLOv3-PyTorch](https://github.com/SannaPersson/YOLOv3-PyTorch)
 
 ## Notes
-- 2023.02.20
+- 2023.02.21
+  - We now have the model trained on ```Pascal_VOC``` dataset with the following result
+    ![](https://i.imgur.com/mZN3b25.png)
+  - The model was evaluated with confidence ```0.6``` and IOU threshold ```0.5``` using NMS
+    |          Model          |     mAP_50    |
+    | ----------------------- | ------------- |
+    | ```YOLOv3-Pascal_VOC``` | ```75.7776``` |
+    - The overlapped area means <img src = 'https://i.imgur.com/SHNltVr.png' height=10% width=10% >
+    - IoU threshold value to the actual overlapped area
+    <img src = 'https://i.imgur.com/quULxhX.png' height=70% width=70% >
+- 2023.02.18
   - The virtual envs are summarized below:
   - My PC ```(Intel i7-8700 + Nvidia Geforce RTX 2060)```: 
     - env ```pt3.7``` with CUDA 
