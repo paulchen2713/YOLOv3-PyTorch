@@ -74,31 +74,109 @@ def delete_useless_files():
         print("It's clear!")
 
 
-def resize_to_n_by_n(n=64, debug_mode=False):
-    print(f"Generating labels for {n}-by-{n} matrices")
+def resize_to_n_by_n(out_shape=64, debug_mode=False, data_type='RDM', out_type='YOLO', store=False):
+    print(f"Generating labels for {out_shape}-by-{out_shape} matrices")
     count = 0
-    for dir_name in dir_names: # [23:24]: # 
+    for dir_name in dir_names[23:24]: # : # 
         if debug_mode == True: print(f"current directory: {dir_name}")
 
         # set the file path
         file_index = ["range_doppler_light.json", "range_angle_light.json"]
         with open(f"D:/Datasets/CARRADA/{dir_name}/annotations/box/" + f"{file_index[0]}", "r") as json_file:
+            # read out all the bbox labels 
             data = json.loads(json_file.read())
         
         # extract all keys from the dict, and store them in a list()
         all_keys = list(data.keys())
 
-        for key in all_keys: # [62:63]: # 
+        for key in all_keys[62:63]: # : # 
             print(f"frame name: \"{key}\"")
+
+            dest_dirs = ['RD_64', 'RD_256', 'RD_416']
+            #  set the store path
+            DEST_PATH = f"D:/Datasets/RADA/{dest_dirs[0]}/labels/"
+            if debug_mode == True:
+                print(f"num of boxes: {len(data[key]['boxes'])}")
+                print(f"num of labels: {len(data[key]['labels'])}")
+
+            if (len(data[key]['boxes']) != len(data[key]['labels'])): print("boxes and labels are mismatched!")
+
+            count += 1
+            with open(DEST_PATH + f"{count}.txt", "w") as label_txt_file:
+                # in each rd_matrix / image it may contain 1~3 possible targets
+                for index in range(0, len(data[key]['boxes'])):
+                    class_index = data[key]['labels'][index] - 1
+                    if debug_mode == True:
+                        print(data[key]['boxes'][index])
+                        print(data[key]['labels'][index])
+                        print(f"class_index = {class_index}")
+                    
+                    # [x, y, width, height] is COCO format in absolute scale
+                    # [x_min, y_min, x_max, y_max] is Pascal_VOC format in absolute scale
+                    x_min, y_min, x_max, y_max = data[key]['boxes'][index][0:4]   # extract Pascal_VOC / COCO format in absolute scale
+
+                    if out_shape == 64: 
+                        x_min, x_max = x_min / 4, x_max / 4
+                        if debug_mode == True: print(f"out_shape is {out_shape}, (x_min, x_max) = {x_min}, {x_max}")
+
+                    if out_shape == 256: 
+                        y_min, y_max = y_min * 4, y_max * 4
+                        if debug_mode == True: print(f"out_shape is {out_shape}, (y_min, y_max) = {y_min}, {y_max}")
+
+                    if debug_mode == True:
+                        print(f"(class, x_min, y_min, x_max, y_max) = ({class_index} {x_min} {y_min} {x_max} {y_max})")
+
+                    if out_type == 'YOLO':
+                        """
+                        make sure it's [class_id, x, y, width, height] in relative scale
+                        """
+                        x, y = (x_max + x_min) / 2, (y_max + y_min) / 2
+                        w, h = (y_max - y_min), (x_max - x_min)
+                        if data_type == 'RDM':
+                            # convert resized RD map from COCO format to YOLO format in relative scale
+                            x, y, w, h = x / out_shape, y / out_shape, w / out_shape, h / out_shape 
+                        elif data_type == 'RAM':
+                            x, y, w, h = x / 256, y / 256, w / 256, h / 256 # RA map
+                        if debug_mode == True: print(f"(class, x, y, w, h) = ({class_index}, {x}, {y}, {w}, {h}) in relative scale")
+                        # redirect 'print()' output to a file
+                        if store == True: print(f"{class_index} {x} {y} {w} {h}", file=label_txt_file) 
+                    elif out_type == 'COCO':
+                        """
+                        make sure it's [class_id, x, y, width, height] in absolute value
+                        """
+                        x, y = (x_max + x_min) / 2, (y_max + y_min) / 2
+                        w, h = (y_max - y_min), (x_max - x_min)
+
+                        if debug_mode == True:
+                            print(f"(class, x, y, w, h) = ({class_index}, {x}, {y}, {w}, {h}) in absolute value")
+                        
+                        if store == True:
+                            print(f"{class_index} {x} {y} {w} {h}", file=label_txt_file) # redirect 'print()' output to a file
+                    elif out_type == 'Pascal_VOC':
+                        """
+                        make sure it's [class_id, x_min, y_min, x_max, y_max] in relative scale
+                        """
+                        if data_type == 'RDM':
+                            x_min, y_min, x_max, y_max = x_min / 256, y_min / 64, x_max / 256, y_max / 64
+                        elif data_type == 'RAM':
+                            x_min, y_min, x_max, y_max = x_min / 256, y_min / 256, x_max / 256, y_max / 256
+                        
+                        if debug_mode == True:
+                            print(f"(class, x_min, y_min, x_max, y_max) = ({class_index} {x_min} {y_min} {x_max} {y_max}) in relative scale")
+                        
+                        if store == True:
+                            print(f"{class_index} {x_min} {y_min} {x_max} {y_max}", file=label_txt_file) # redirect 'print()' output to a file
+                    # print("---------------------------")
+
 
 
 
 if __name__ == '__main__':
     tic = time.perf_counter()
 
-    n = 64
-    # resize_to_n_by_n(n)
-    print(f"Resizing every labels to {n}-by-{n}")
+    out_shape = 256
+    resize_to_n_by_n(out_shape=out_shape, debug_mode=True, data_type='RDM', out_type='YOLO', store=False)
+    # print(f"Resizing every labels to {n}-by-{n}")
 
     toc = time.perf_counter()
     duration = toc - tic
