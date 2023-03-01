@@ -18,11 +18,13 @@ from PIL import Image              # for loading and saving the images
 import os
 from os import listdir
 import shutil
+import time
 
 folder_name = ['RD_Pascal_VOC', 'RD_YOLO', 'RD_COCO', 'RD', 'RD2', 'RD3', 'RA']
 
 # set the dataset path
 DATASET = f'D:/Datasets/CARRADA2/{folder_name[6]}/'
+DATASET2 = f'D:/Datasets/RADA/'
 
 # directory names, number of directorie: 30
 dir_names = ['2019-09-16-12-52-12', '2019-09-16-12-55-51', '2019-09-16-12-58-42', '2019-09-16-13-03-38', '2019-09-16-13-06-41', 
@@ -44,7 +46,6 @@ def read_txt_file(file_name=""):
         dir_names = seqs_file.read().splitlines()
     return dir_names
 # temp = read_txt_file("validated_seqs.txt")
-
 
 
 def delete_useless_files():
@@ -78,7 +79,6 @@ def delete_useless_files():
         print("It's clear!")
 
 
-
 def copy_and_rename_labels():
     count = 0
     for dir_name in dir_names: # [23:24]: # 
@@ -99,11 +99,42 @@ def copy_and_rename_labels():
     if count != 7193: print("Error!")
 
 
+def copy_and_rename_images():
+    count = 0
+    # set the file path
+    folder_name2 = ['RD_64', 'RD_256', 'RD_416', 'RD_YOLO']
+    folder_index = 3
+    # src_path = DATASET2 + 'RD_PNG/' + f'{folder_name2[folder_index]}/images/'
+    src_path = f'D:/Datasets/RD_YOLO/images/'
+    print(f"current source path: {src_path}")
 
+    dest_path = DATASET2 + 'RD_JPG/' + f'{folder_name2[folder_index]}/images/'
+    print(f"destination path:    {dest_path}")
+
+    for images in os.listdir(src_path):
+        # check if the images ends with .png
+        if (images.endswith(".png")):
+            count += 1
+            print(count)
+            # shutil.copyfile(src_path + images, dest_path + f'{count}.jpg')
+            
+    if count != 7193: print("Error!")
+
+        
 
 if __name__ == '__main__':
-    delete_useless_files()
+    tic = time.perf_counter()
+
+    # delete_useless_files()
     # copy_and_rename_labels()
+    copy_and_rename_images()
     
+    toc = time.perf_counter()
+    duration = toc - tic
+    print(f"duration: {duration:0.4f} seconds")
+
+    # RD_256  duration: 18.6437 seconds
+    # RD_416  duration: 20.0160 seconds
+    # RD_YOLO duration: 19.3529 seconds
 
 
