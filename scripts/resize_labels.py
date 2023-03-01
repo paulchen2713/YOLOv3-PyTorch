@@ -1,28 +1,33 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Dec 20 17:09:11 2022
+Created on Sun Jul 29 10:05:35 2023
 
+@patch:
+    2023.02.26
 @author: Paul
-@file: iterate_all_files.py
+@file: resize_labels.py
 @dependencies:
     env pt3.7 (my PC)
     python 3.7.13
     pytorch==1.7.1     py3.7_cuda110_cudnn8_0 pytorch
     torchaudio==0.7.2  py37 pytorch
     torchvision==0.8.2 py37_cu110 pytorch
+    pillow==8.1.0
+
+Resize the labels to fit the resized images to a certain size
 """
 
-# import the required libraries
-import torchvision.transforms as T # for resizing the images
-from PIL import Image              # for loading and saving the images
+import json
 import os
 from os import listdir
-import shutil
+import time
+from datetime import date
 
-folder_name = ['RD_Pascal_VOC', 'RD_YOLO', 'RD_COCO', 'RD', 'RD2', 'RD3', 'RA']
+folder_name = ['RD_Pascal_VOC', 'RD_YOLO', 'RD_COCO', 'RD', 'RD2', 'RD3']
 
 # set the dataset path
-DATASET = f'D:/Datasets/CARRADA2/{folder_name[6]}/'
+DATASET = f'D:/Datasets/CARRADA2/{folder_name[1]}/'
+
 
 # directory names, number of directorie: 30
 dir_names = ['2019-09-16-12-52-12', '2019-09-16-12-55-51', '2019-09-16-12-58-42', '2019-09-16-13-03-38', '2019-09-16-13-06-41', 
@@ -36,15 +41,6 @@ dir_names = ['2019-09-16-12-52-12', '2019-09-16-12-55-51', '2019-09-16-12-58-42'
 num_of_images = [286, 273, 304, 327, 218, 219, 150, 208, 152, 174, 
                  174, 235, 442, 493, 656, 523, 350, 340, 304, 108, 
                  129, 137, 171, 143, 104, 81, 149, 124, 121, 98]
-
-# e.g. read "validated_seqs.txt"
-def read_txt_file(file_name=""):
-    dir_names = list()
-    with open(DATASET + file_name, "r") as seqs_file:
-        dir_names = seqs_file.read().splitlines()
-    return dir_names
-# temp = read_txt_file("validated_seqs.txt")
-
 
 
 def delete_useless_files():
@@ -78,32 +74,32 @@ def delete_useless_files():
         print("It's clear!")
 
 
-
-def copy_and_rename_labels():
+def resize_to_n_by_n(n=64, debug_mode=False):
+    print(f"Generating labels for {n}-by-{n} matrices")
     count = 0
     for dir_name in dir_names: # [23:24]: # 
-        # print(f"current directory: {dir_name}")
+        if debug_mode == True: print(f"current directory: {dir_name}")
 
         # set the file path
-        seq_path = DATASET + dir_name + '/labels/'
-        # print(f"current seq path: {seq_path}")
+        file_index = ["range_doppler_light.json", "range_angle_light.json"]
+        with open(f"D:/Datasets/CARRADA/{dir_name}/annotations/box/" + f"{file_index[0]}", "r") as json_file:
+            data = json.loads(json_file.read())
+        
+        # extract all keys from the dict, and store them in a list()
+        all_keys = list(data.keys())
 
-        for labels in os.listdir(seq_path):
-            # check if the labels ends with .txt
-            if (labels.endswith(".txt")):
-                if labels[0:5] == "0000_" or labels[0:2] == "RD": print("Error!")
-                # shutil.copyfile(seq_path + labels, DATASET + 'labels/' + f'{count}.txt')
-                count += 1
-                print(count)
-                
-    if count != 7193: print("Error!")
-
+        for key in all_keys: # [62:63]: # 
+            print(f"frame name: \"{key}\"")
 
 
 
 if __name__ == '__main__':
-    delete_useless_files()
-    # copy_and_rename_labels()
-    
+    tic = time.perf_counter()
 
+    n = 64
+    # resize_to_n_by_n(n)
+    print(f"Resizing every labels to {n}-by-{n}")
 
+    toc = time.perf_counter()
+    duration = toc - tic
+    print(f"duration: {duration:0.4f} seconds")

@@ -13,6 +13,7 @@ Created on Tue Oct 30 17:17:12 2022
 
 import json
 import time
+from datetime import date
 
 # set the dataset path
 DATASET = 'D:/Datasets/CARRADA/'
@@ -67,14 +68,15 @@ def main():
 
             # paths of RD_maps and RA_maps
             RDM_PATH = f"D:/Datasets/CARRADA2/RD_Pascal_VOC/{dir_name}/labels/" # path that we store our labels
-            RAM_PATH = f"D:/Datasets/CARRADA2/RA/{dir_name}/labels/" # path that we store our labels
+            # RAM_PATH = f"D:/Datasets/CARRADA2/RA/{dir_name}/labels/" # path that we store our labels
 
             # we have to set 2 different paths of 'RDM_PATH' or 'RAM_PATH',
             # 2 different data types of 'RDM' or 'RAM', and
             # 3 different output annotation types of 'Pascal_VOC', 'COCO' or 'YOLO'
             def store_labels(data_path=f'{RDM_PATH}', data_type='RDM', out_type='YOLO', mode='', store=True):
-                with open(data_path + f"0000_log_{dir_name}.txt", "a") as label_txt_file:
-                    print(f"{data[key]}", file=label_txt_file)
+                if mode == 'debug':
+                    with open(data_path + f"0000_{date.today()}_log_{dir_name}.txt", "a") as log_file:
+                        print(f"{data[key]}", file=log_file)
                 if mode == 'debug':
                     print(f"num of boxes: {len(data[key]['boxes'])}")
                     print(f"num of labels: {len(data[key]['labels'])}")
