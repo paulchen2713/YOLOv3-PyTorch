@@ -120,7 +120,7 @@ def copy_and_rename_images():
             
     if count != 7193: print("Error!")
 
-        
+
 
 if __name__ == '__main__':
     tic = time.perf_counter()

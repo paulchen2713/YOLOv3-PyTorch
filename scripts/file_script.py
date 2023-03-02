@@ -23,16 +23,18 @@ def read_txt_file(file_name=""):
         dir_names = seqs_file.read().splitlines()
     return dir_names
 
-for dir_name in dir_names: # [23:24]:
-    # e.g. "D:/Datasets/CARRADA/2020-02-28-13-09-58/annotations/box/"
-    print(f"current directory: {dir_name}")
 
-    directory = "images" # "labels", "RD_maps"
+def create_folders():
+    for dir_name in dir_names: # [23:24]:
+        # e.g. "D:/Datasets/CARRADA/2020-02-28-13-09-58/annotations/box/"
+        print(f"current directory: {dir_name}")
 
-    parent_dir = DATASET + f"{dir_name}/" + "RD_maps"
+        directory = "images" # "labels", "RD_maps"
 
-    path = os.path.join(parent_dir, directory)
+        parent_dir = DATASET + f"{dir_name}/" + "RD_maps"
 
-    # create foler named "path", e.g. '2020-02-28-13-09-58'
-    # os.makedirs(path)
+        path = os.path.join(parent_dir, directory)
+
+        # create foler named "path", e.g. '2020-02-28-13-09-58'
+        # os.makedirs(path)
 
