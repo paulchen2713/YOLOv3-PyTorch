@@ -3,9 +3,9 @@
 ## Notes
 - 2023.03.04
   - New breach, image file format may be the issue
-  - regenerate all data in .jpg
+  - Regenerate all data in .jpg
 - 2023.02.21
-  - modified from YOLO-CFAR
+  - Modified from YOLO-CFAR
     ```clike
     (pt3.8) D:\Datasets\YOLOv3-PyTorch\YOLOv3-debug1>D:/ProgramData/Anaconda3/envs/pt3.8/python.exe d:/Datasets/YOLOv3-PyTorch/YOLOv3-debug1/train.py
       0%|                                                                                                                                            | 0/375 [00:03<?, ?it/s]
@@ -32,7 +32,7 @@
         return F.conv2d(input, weight, bias, self.stride,
     RuntimeError: Given groups=1, weight of size [32, 3, 3, 3], expected input[16, 256, 64, 3] to have 3 channels, but got 256 channels instead
     ```
-  - modified from YOLO-Pascal_VOC
+  - Modified from YOLO-Pascal_VOC
     ```clike
     (pt3.8) D:\Datasets\YOLOv3-PyTorch\YOLOv3-debug2>D:/ProgramData/Anaconda3/envs/pt3.8/python.exe d:/Datasets/YOLOv3-PyTorch/YOLOv3-debug2/train.py
       0%|                                                                                                                           | 0/5999 [00:00<?, ?it/s]
