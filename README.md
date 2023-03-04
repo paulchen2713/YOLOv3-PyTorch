@@ -1,6 +1,9 @@
 # YOLOv3-PyTorch
 
 ## Notes
+- 2023.03.04
+  - New breach, image file format may be the issue
+  - regenerate all data in .jpg
 - 2023.02.21
   - modified from YOLO-CFAR
     ```clike
