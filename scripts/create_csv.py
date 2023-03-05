@@ -37,7 +37,7 @@ if __name__ == "__main__":
     tic = time.perf_counter()
 
     split, last = 6000, 7193
-    create_csv(split=split, last=last)
+    # create_csv(split=split, last=last)
     print(f"Creating tran.csv with {split} samples and test.csv with {last - split} samples")
 
     toc = time.perf_counter()

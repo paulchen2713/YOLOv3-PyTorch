@@ -131,7 +131,7 @@ def resize_to_64_256():
 
 
 def resize_to_n_by_n(n=64, debug_mode=False):
-    print(f"Resizing every images to {n}-by-{n}")
+    # print(f"Resizing every images to {n}-by-{n}")
     count = 0
     for dir_name in dir_names: # [23:24]: # 
         if debug_mode == True: print(f"current directory: {dir_name}")
@@ -178,25 +178,74 @@ def resize_to_n_by_n(n=64, debug_mode=False):
                 img = img.save(f'D:/Datasets/RADA/RD_{n}/images/{count}.png')
                 
 
+def main(n=64, debug_mode=False):
+    count = 0
+
+    # set the file path
+    seq_path = 'D:/Datasets/RADA/RD_JPG/images/'
+    if debug_mode == True: print(f"current seq path: {seq_path}")
+
+    for images in os.listdir(seq_path):
+        # check if the image ends with jpg
+        if (images.endswith(".jpg")):
+            if debug_mode == True: print(count, seq_path + images)
+
+            # read the input image
+            img = Image.open(seq_path + images)
+
+            # compute the size (width, height) of image
+            if debug_mode == True:
+                before = img.size
+                print(f"original image size: {before}")
+
+            """
+            The PyTorch method for resizing, named torchvision.transforms.Resize(), is a 
+            wrapper around the PIL library, so that the results will be the same compared to Pillow.
+            """
+            # define the transform function to resize the image with given size
+            transform = T.Resize(size=(n, n))
+
+            # apply the transform on the input image
+            img = transform(img)
+
+            # check the size (width, height) of image
+            if debug_mode == True:
+                after = img.size
+                print(f"resized image size: {after}")
+
+            count += 1
+            print(count)
+            if debug_mode == True: 
+                print(f"store_path: D:/Datasets/RADA/RD_JPG/RD_{n}/images/{count}.jpg")
+                break # under debug mode, we do not want to save the images
+
+            # overwrite the original image with the resized one
+            img = img.save(f'D:/Datasets/RADA/RD_JPG/RD_{n}/images/{count}.jpg')
+
 
 if __name__ == '__main__':
     tic = time.perf_counter()
 
     # testing(1, 'jpg')
     # main(1600, 'jpg')
+
     # resize_to_64_256()
-    
-    n = 416
-    resize_to_n_by_n(n)
+    # resize_to_n_by_n(n=416, debug_mode=False)
+
+    n = 416 # 64, 256, 416
+    # main(n=n, debug_mode=False)
     print(f"Resizing every images to {n}-by-{n}")
 
     toc = time.perf_counter()
     duration = toc - tic
     print(f"duration: {duration:0.4f} seconds") 
 
+    # Resizing every images to 64-by-64
+    # duration: 45.3211 seconds
+
     # Resizing every images to 256-by-256
-    # duration: 176.5745 seconds
+    # duration: 65.3794 seconds
 
     # Resizing every images to 416-by-416
-    # duration: 285.5628 seconds
+    # duration: 91.9069 seconds
 
