@@ -62,7 +62,7 @@ class YOLODataset(Dataset):
         C=20, # number of classes C=20,
         transform=None,
     ):
-        self.annotations = pd.read_csv(csv_file) # "D:/Datasets/RD_maps/train.csv"
+        self.annotations = pd.read_csv(csv_file) # "D:/Datasets/PASCAL_VOC/train.csv"
         self.img_dir = img_dir
         self.label_dir = label_dir
         self.image_size = image_size #
@@ -80,11 +80,13 @@ class YOLODataset(Dataset):
         return len(self.annotations)
 
     def __getitem__(self, index):
-        # get the index-th data, in the csv files, data are structured as indxe.jpg,index.txt, 
+        
+        # get the index-th data, in the csv files, data are structured as index.jpg,index.txt, 
         # so (indxe, 0) get us the image and (index, 1) get us the label
 
         # get the label directory path (self.label_dir), then get the csv file name (self.annotations), then get the .txt file 
         label_path = os.path.join(self.label_dir, self.annotations.iloc[index, 1]) # on the second column (which is 1)
+        # print(label_path) # e.g. D:/Datasets/PASCAL_VOC/labels\003077.txt
 
         # after getting the .txt file path, we then load the .txt file which is delimited by space, and we set the returned array 
         # will have at least ndmin=2 dimensions, the original label is [class, x, y, w, h]
@@ -217,7 +219,7 @@ class YOLODataset(Dataset):
 
 def test():
     anchors = config.ANCHORS
-    transform = config.test_transforms
+    transform = config.test_transforms # None # 
 
     # S = [13, 26, 52]
     S = config.S 

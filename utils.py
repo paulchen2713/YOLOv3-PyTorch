@@ -284,7 +284,7 @@ def get_evaluation_bboxes(
     anchors,
     threshold,
     box_format="midpoint",
-    device="cuda",
+    device=config.DEVICE,
 ):
     # make sure model is in eval before get bboxes
     model.eval()
@@ -373,6 +373,7 @@ def cells_to_bboxes(predictions, anchors, S, is_preds=True):
     converted_bboxes = torch.cat((best_class, scores, x, y, w_h), dim=-1).reshape(BATCH_SIZE, num_anchors * S * S, 6)
     return converted_bboxes.tolist()
 
+
 def check_class_accuracy(model, loader, threshold):
     model.eval()
     tot_class_preds, correct_class = 0, 0
@@ -380,8 +381,7 @@ def check_class_accuracy(model, loader, threshold):
     tot_obj, correct_obj = 0, 0
 
     for idx, (x, y) in enumerate(tqdm(loader)):
-        if idx == 100:
-            break
+        # if idx == 100: break
         x = x.to(config.DEVICE)
         with torch.no_grad():
             out = model(x)
@@ -481,29 +481,30 @@ def get_loaders(train_csv_path, test_csv_path):
         drop_last=False,
     )
 
-    train_eval_dataset = YOLODataset(
-        train_csv_path,
-        transform=config.test_transforms,
-        S=[IMAGE_SIZE // 32, IMAGE_SIZE // 16, IMAGE_SIZE // 8],
-        img_dir=config.IMG_DIR,
-        label_dir=config.LABEL_DIR,
-        anchors=config.ANCHORS,
-    )
-    train_eval_loader = DataLoader(
-        dataset=train_eval_dataset,
-        batch_size=config.BATCH_SIZE,
-        num_workers=config.NUM_WORKERS,
-        pin_memory=config.PIN_MEMORY,
-        shuffle=False,
-        drop_last=False,
-    )
+    # train_eval_dataset = YOLODataset(
+    #     train_csv_path,
+    #     transform=config.test_transforms,
+    #     S=[IMAGE_SIZE // 32, IMAGE_SIZE // 16, IMAGE_SIZE // 8],
+    #     img_dir=config.IMG_DIR,
+    #     label_dir=config.LABEL_DIR,
+    #     anchors=config.ANCHORS,
+    # )
+    # train_eval_loader = DataLoader(
+    #     dataset=train_eval_dataset,
+    #     batch_size=config.BATCH_SIZE,
+    #     num_workers=config.NUM_WORKERS,
+    #     pin_memory=config.PIN_MEMORY,
+    #     shuffle=False,
+    #     drop_last=False,
+    # )
 
-    return train_loader, test_loader, train_eval_loader
+    return train_loader, test_loader #, train_eval_loader
+
 
 def plot_couple_examples(model, loader, thresh, iou_thresh, anchors):
     model.eval()
     x, y = next(iter(loader))
-    x = x.to("cuda")
+    x = x.to(config.DEVICE)
     with torch.no_grad():
         out = model(x)
         bboxes = [[] for _ in range(x.shape[0])]
@@ -525,7 +526,6 @@ def plot_couple_examples(model, loader, thresh, iou_thresh, anchors):
         plot_image(x[i].permute(1,2,0).detach().cpu(), nms_boxes)
 
 
-
 def seed_everything(seed=42):
     os.environ['PYTHONHASHSEED'] = str(seed)
     random.seed(seed)
@@ -535,3 +535,5 @@ def seed_everything(seed=42):
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
+
+

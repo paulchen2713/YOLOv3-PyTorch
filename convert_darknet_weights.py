@@ -175,43 +175,31 @@ class YOLOv3(nn.Module):
             bn_layer = block.bn
             num_b = bn_layer.bias.numel()  # Number of biases
             # Bias
-            bn_b = torch.from_numpy(self.weights[ptr : ptr + num_b]).view_as(
-                bn_layer.bias
-            )
+            bn_b = torch.from_numpy(self.weights[ptr : ptr + num_b]).view_as(bn_layer.bias)
             bn_layer.bias.data.copy_(bn_b)
             ptr += num_b
             # Weight
-            bn_w = torch.from_numpy(self.weights[ptr : ptr + num_b]).view_as(
-                bn_layer.weight
-            )
+            bn_w = torch.from_numpy(self.weights[ptr : ptr + num_b]).view_as(bn_layer.weight)
             bn_layer.weight.data.copy_(bn_w)
             ptr += num_b
             # Running Mean
-            bn_rm = torch.from_numpy(self.weights[ptr : ptr + num_b]).view_as(
-                bn_layer.running_mean
-            )
+            bn_rm = torch.from_numpy(self.weights[ptr : ptr + num_b]).view_as(bn_layer.running_mean)
             bn_layer.running_mean.data.copy_(bn_rm)
             ptr += num_b
             # Running Var
-            bn_rv = torch.from_numpy(self.weights[ptr : ptr + num_b]).view_as(
-                bn_layer.running_var
-            )
+            bn_rv = torch.from_numpy(self.weights[ptr : ptr + num_b]).view_as(bn_layer.running_var)
             bn_layer.running_var.data.copy_(bn_rv)
             ptr += num_b
         else:
             # Load conv. bias
             num_b = conv_layer.bias.numel()
 
-            conv_b = torch.from_numpy(self.weights[ptr : ptr + num_b]).view_as(
-                conv_layer.bias
-            )
+            conv_b = torch.from_numpy(self.weights[ptr : ptr + num_b]).view_as(conv_layer.bias)
             conv_layer.bias.data.copy_(conv_b)
             ptr += num_b
             # Load conv. weights
         num_w = conv_layer.weight.numel()
-        conv_w = torch.from_numpy(self.weights[ptr : ptr + num_w]).view_as(
-            conv_layer.weight
-        )
+        conv_w = torch.from_numpy(self.weights[ptr : ptr + num_w]).view_as(conv_layer.weight)
         conv_layer.weight.data.copy_(conv_w)
         ptr += num_w
         return ptr
@@ -221,9 +209,7 @@ class YOLOv3(nn.Module):
 
         # Open the weights file
         with open(weights_path, "rb") as f:
-            header = np.fromfile(
-                f, dtype=np.int32, count=5
-            )  # First five are header values
+            header = np.fromfile(f, dtype=np.int32, count=5)  # First five are header values
             self.header_info = header  # Needed to write header when saving weights
             self.seen = header[3]  # number of images seen during training
             self.weights = np.fromfile(f, dtype=np.float32)  # The rest are weights
@@ -245,10 +231,8 @@ class YOLOv3(nn.Module):
                 ptr = self.load_CNN_weights(ptr, cnn_block)
                 ptr = self.load_CNN_weights(ptr, last_block)
 
-                # RuntimeError: shape '[512, 256, 3, 3]' is invalid for input of size 318206
                 # ptr = self.load_CNN_weights(ptr, cnn_block)
             # print("Scale prediction ")
-
         print(ptr) # number of parameters: 62001757
 
 
@@ -265,7 +249,7 @@ if __name__ == "__main__":
     model.layers[29].pred[1] = CNNBlock(256, 25 * 3, bn_act=False, kernel_size=1)
     optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
-    save_weights = True
+    save_weights = False
     if save_weights == True:
         from datetime import date
         file_name = f"checkpoint-{date.today()}.pth.tar"
