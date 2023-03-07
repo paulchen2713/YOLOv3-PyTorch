@@ -15,10 +15,12 @@ Created on Tue Oct 31 10:15:19 2022
     scipy==1.7.3
 """
 
-import json
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.io
 import time
+import json
+
 
 # set the dataset path
 DATASET = 'D:/Datasets/CARRADA/'
@@ -80,12 +82,15 @@ def main(debug_mode=False):
             plt.matshow(rd_matrix, interpolation="nearest")
             plt.plasma()
             plt.axis('off')
+
             store_folder = ['images', 'mats']
             store_path = f"D:/Datasets/RADA/RD_JPG/{store_folder[1]}/" 
-            # print(f"store path: \"{store_path}\"") # e.g. "D:/Datasets/CARRADA/2020-02-28-13-09-58/RD_maps/images/""
+
+            if debug_mode == True: print(f"store path: \"{store_path}\"") # e.g. "D:/Datasets/CARRADA/2020-02-28-13-09-58/RD_maps/images/""
+            
             count += 1
             print(count)
-            # plt.savefig(store_path + f'{count}.jpg', bbox_inches='tight', pad_inches=0)
+            plt.savefig(store_path + f'{count}.jpg', bbox_inches='tight', pad_inches=0)
 
             # RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface 
             # (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. 
@@ -94,13 +99,64 @@ def main(debug_mode=False):
             plt.clf() # clears the entire current figure 
             plt.close(plt.gcf()) # ref. https://heitorpb.github.io/bla/2020/03/18/close-matplotlib-figures/
 
-            # plt.show()
+            if debug_mode == True: 
+                plt.show()
+
+
+def convert_mats(debug_mode=False):
+    count = 0
+    for dir_name in dir_names: # [23:24]:
+        # e.g. "D:/Datasets/CARRADA/2020-02-28-13-09-58/annotations/box/"
+        if debug_mode == True: print(f"current directory: {dir_name}")
+
+        # set the file path
+        seq_path = DATASET + dir_name + '/'
+        if debug_mode == True: print(f"current seq path: {seq_path}")
+
+        # "range_doppler_light.json", "range_angle_light.json"
+        with open(DATASET + f"{dir_name}/annotations/box/" + "range_doppler_light.json", "r") as json_file:
+            data = json.loads(json_file.read())
+        # extract all keys from the dict, and store them in a list()
+        all_keys = list(data.keys())
+
+        for key in all_keys: # [62:63]:
+            if debug_mode == True: print(f"frame name: \"{key}\"")
+
+            # set matrix and image path
+            rd_path = seq_path + 'range_doppler_numpy/' + key + '.npy'
+            # ra_path = seq_path + 'range_angle_numpy/' + key + '.npy'
+            # img_path = seq_path + 'camera_images/' + key + '.jpg'
+
+            # load the RDM, RAM
+            rd_matrix = np.load(rd_path)
+            # ra_matrix = np.load(ra_path)
+            if debug_mode == True: 
+                print(f"rd_matrix.shape = {rd_matrix.shape}") # (256, 64)
+                # print(f"ra_matrix.shape = {ra_matrix.shape}") # (256, 256)
+
+            store_folder = ['images', 'mats']
+            store_path = f"D:/Datasets/RADA/RD_JPG/{store_folder[1]}/" + f'{count}.mat'
+            # print(f"store path: \"{store_path}\"") # e.g. "D:/Datasets/CARRADA/2020-02-28-13-09-58/RD_maps/images/""
+            count += 1
+            print(count)
+            scipy.io.savemat(store_path, {})
+
+            if debug_mode == True: 
+                plt.matshow(rd_matrix, interpolation="nearest")
+                plt.plasma()
+                plt.axis('off')
+
+                plt.clf() # clears the entire current figure 
+                plt.close(plt.gcf()) # ref. https://heitorpb.github.io/bla/2020/03/18/close-matplotlib-figures/
+                
+                plt.show()
+
 
 
 if __name__ == "__main__":
     tic = time.perf_counter()
 
-    main()
+    # main()
     store_path = f"D:/Datasets/RADA/RD_JPG/images/"
     print(f"converting RD maps into .jpg images stored in {store_path}")
 
