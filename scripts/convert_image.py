@@ -7,6 +7,12 @@ Created on Tue Oct 31 10:15:19 2022
 @file: convert_image.py
 @dependencies:
     envs        pt3.7
+    python 3.7.13
+    pytorch==1.7.1     py3.7_cuda110_cudnn8_0 pytorch
+    torchaudio==0.7.2  py37 pytorch
+    torchvision==0.8.2 py37_cu110 pytorch
+    matplotlib==3.3.4
+    scipy==1.7.3
 """
 
 import json
@@ -74,11 +80,12 @@ def main(debug_mode=False):
             plt.matshow(rd_matrix, interpolation="nearest")
             plt.plasma()
             plt.axis('off')
-            store_path = f"D:/Datasets/RADA/RD_JPG/images/" # seq_path + "RD_maps/images/"
+            store_folder = ['images', 'mats']
+            store_path = f"D:/Datasets/RADA/RD_JPG/{store_folder[1]}/" 
             # print(f"store path: \"{store_path}\"") # e.g. "D:/Datasets/CARRADA/2020-02-28-13-09-58/RD_maps/images/""
             count += 1
             print(count)
-            plt.savefig(store_path + f'{count}.jpg', bbox_inches='tight', pad_inches=0)
+            # plt.savefig(store_path + f'{count}.jpg', bbox_inches='tight', pad_inches=0)
 
             # RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface 
             # (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. 

@@ -9,6 +9,10 @@ Created on Tue Oct 30 17:17:12 2022
 @file: convert_label.py
 @dependencies:
     envs        pt3.7
+    python 3.7.13
+    pytorch==1.7.1     py3.7_cuda110_cudnn8_0 pytorch
+    torchaudio==0.7.2  py37 pytorch
+    torchvision==0.8.2 py37_cu110 pytorch
 """
 
 import json
