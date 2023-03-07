@@ -134,14 +134,16 @@ def convert_mats(debug_mode=False):
                 print(f"rd_matrix.shape = {rd_matrix.shape}") # (256, 64)
                 # print(f"ra_matrix.shape = {ra_matrix.shape}") # (256, 256)
 
-            store_folder = ['images', 'mats']
-            store_path = f"D:/Datasets/RADA/RD_JPG/{store_folder[1]}/" + f'{count}.mat'
-            # print(f"store path: \"{store_path}\"") # e.g. "D:/Datasets/CARRADA/2020-02-28-13-09-58/RD_maps/images/""
             count += 1
             print(count)
-            scipy.io.savemat(store_path, {})
 
-            if debug_mode == True: 
+            store_folder = ['images', 'mats']
+            store_path = f"D:/Datasets/RADA/RD_JPG/{store_folder[1]}/" + f'{count}.mat'
+
+            scipy.io.savemat(store_path, {f'rd_{count}': rd_matrix})
+
+            if debug_mode == True:
+                print(f"store path: \"{store_path}\"")
                 plt.matshow(rd_matrix, interpolation="nearest")
                 plt.plasma()
                 plt.axis('off')
@@ -156,9 +158,14 @@ def convert_mats(debug_mode=False):
 if __name__ == "__main__":
     tic = time.perf_counter()
 
-    # main()
-    store_path = f"D:/Datasets/RADA/RD_JPG/images/"
-    print(f"converting RD maps into .jpg images stored in {store_path}")
+    store_folder = ['images', 'mats']
+    store_path = f"D:/Datasets/RADA/RD_JPG/{store_folder[1]}/"
+    
+    # main(debug_mode=False)
+    # print(f"converting RD maps into .jpg images stored in {store_path}")
+    
+    convert_mats(debug_mode=False)
+    print(f"converting RD maps into .mat files stored in {store_path}")
 
     toc = time.perf_counter()
     duration = toc - tic
@@ -168,4 +175,7 @@ if __name__ == "__main__":
     # converting RD maps into .jpg images stored in D:/Datasets/RADA/RD_JPG/images/
     # duration: 1265.5128 seconds
 
-
+    # 7193
+    # converting RD maps into .mat files stored in D:/Datasets/RADA/RD_JPG/mats/
+    # duration: 7.2711 seconds
+    
