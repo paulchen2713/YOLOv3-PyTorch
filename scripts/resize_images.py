@@ -25,7 +25,7 @@ from os import listdir
 import time
 
 # set the dataset path
-DATASET = 'D:/Datasets/RADA/RD/'
+DATASET = 'D:/Datasets/RADA/RD_JPG/'
 
 # directory names, number of directorie: 30
 dir_names = ['2019-09-16-12-52-12', '2019-09-16-12-55-51', '2019-09-16-12-58-42', '2019-09-16-13-03-38', '2019-09-16-13-06-41', 
@@ -182,7 +182,9 @@ def main(n=64, debug_mode=False):
     count = 0
 
     # set the file path
-    seq_path = 'D:/Datasets/RADA/RD_JPG/images/'
+    folder = ['images', 'imagesc', 'imwrite']
+    folder_index = 2
+    seq_path = f'D:/Datasets/RADA/RD_JPG/{folder[folder_index]}/'
     if debug_mode == True: print(f"current seq path: {seq_path}")
 
     for images in os.listdir(seq_path):
@@ -216,11 +218,11 @@ def main(n=64, debug_mode=False):
             count += 1
             print(count)
             if debug_mode == True: 
-                print(f"store_path: D:/Datasets/RADA/RD_JPG/RD_{n}/images/{count}.jpg")
+                print(f"store_path: D:/Datasets/RADA/RD_JPG/RD_{n}/{folder[folder_index]}/{count}.jpg")
                 break # under debug mode, we do not want to save the images
 
             # overwrite the original image with the resized one
-            img = img.save(f'D:/Datasets/RADA/RD_JPG/RD_{n}/images/{count}.jpg')
+            img = img.save(f'D:/Datasets/RADA/RD_JPG/RD_{n}/{folder[folder_index]}/{count}.jpg')
 
 
 if __name__ == '__main__':
@@ -232,7 +234,7 @@ if __name__ == '__main__':
     # resize_to_64_256()
     # resize_to_n_by_n(n=416, debug_mode=False)
 
-    n = 416 # 64, 256, 416
+    n = 64 # 64, 256, 416
     # main(n=n, debug_mode=False)
     print(f"Resizing every images to {n}-by-{n}")
 
@@ -241,11 +243,11 @@ if __name__ == '__main__':
     print(f"duration: {duration:0.4f} seconds") 
 
     # Resizing every images to 64-by-64
-    # duration: 45.3211 seconds
+    # duration: 45.3211, 69.3299, 5.1218 seconds 
 
     # Resizing every images to 256-by-256
-    # duration: 65.3794 seconds
+    # duration: 65.3794, 83.6971, 9.9373 seconds
 
     # Resizing every images to 416-by-416
-    # duration: 91.9069 seconds
+    # duration: 91.9069, 121.0671, 28.8054 seconds
 
