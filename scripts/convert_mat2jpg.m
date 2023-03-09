@@ -7,7 +7,7 @@ clc;
 % NOTE. for "how to import or export a sequence of files" please refer to 
 % https://www.mathworks.com/help/matlab/import_export/process-a-sequence-of-files.html
 
-% Script seetings
+% Script settings
 load_data = 1;      % 1 means "do load"; 0 means "don't load"
 save_imagesc = 1;   % 1 means "do save scaled color image"; 0 means "don't"
 save_imwrite = 0;   % 1 means "do save gray scale image"; 0 means "don't"
