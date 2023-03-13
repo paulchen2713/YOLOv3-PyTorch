@@ -2,22 +2,22 @@
 """
 Created on Mon Jul 18 17:02:28 2022
 
-@patch: 
-    2022.08.01
-    2023.02.17
+@patch: 2022.02.16
 @author: Paul
-@file: dataset.py
+@file: dataset2.py
 @dependencies:
-    env pt3.7
-    python==3.7.13
-    numpy==1.19.2
-    pytorch==1.7.1
-    torchaudio==0.7.2
-    torchvision==0.8.2
-    pandas==1.2.1
-    pillow==8.1.0 
-    tqdm==4.56.0
-    matplotlib==3.3.4
+    env pt3.8
+    python==3.8.16
+    numpy==1.23.5
+    matplotlib==3.6.2
+    pytorch==1.13.1
+    pytorch-cuda==11.7
+    torchaudio==0.13.1
+    torchvision==0.14.1
+    tqdm==4.64.1
+    albumentations==1.3.0
+    pandas==1.5.2
+    pillow==9.3.0
 
 @references:
     Redmon, Joseph and Farhadi, Ali, YOLOv3: An Incremental Improvement, April 8, 2018. (https://doi.org/10.48550/arXiv.1804.02767)
@@ -26,6 +26,7 @@ Created on Mon Jul 18 17:02:28 2022
 
 Creates a Pytorch dataset to load the Pascal VOC datasets
 """
+
 
 import config # for hyper-parameter tuning stuffs
 from utils import (
@@ -144,6 +145,11 @@ class YOLODataset(Dataset):
                 # how we check which scale it belongs to? 
                 # scale_idx should be 0, 1, or 2, indicates which target we need to take out from the list of targets that we have above
                 scale_idx = anchor_idx // self.num_anchors_per_scale      # which scale
+
+                # UserWarning: __floordiv__ is deprecated, and its behavior will change in a future version of pytorch. 
+                # To keep the current behavior, use torch.div(a, b, rounding_mode='trunc'), or for actual floor division, 
+                # use torch.div(a, b, rounding_mode='floor') # https://pytorch.org/docs/stable/generated/torch.div.html
+                # scale_idx = torch.div(anchor_idx, self.num_anchors_per_scale, rounding_mode='floor')
 
                 # we also want to know which anchor on this particular scale are we assigning it to? 
                 # anchor_on_scale should also be 0, 1, or 2, indicates which anchor in that particular scale that we want to use 

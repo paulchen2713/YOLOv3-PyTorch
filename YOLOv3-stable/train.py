@@ -138,7 +138,7 @@ def main():
         #     num_classes=config.NUM_CLASSES,
         # )
         # print(f"mAP: {mapval.item()}")
-
+        
         if epoch % 10 == 0 and epoch > 0:
             print("On Test loader:")
             check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)

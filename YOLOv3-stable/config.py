@@ -24,13 +24,13 @@ import torch
 from albumentations.pytorch import ToTensorV2
 # from utils import seed_everything
 
-DATASET = 'D:/Datasets/RD_maps' # 'D:/Datasets/PASCAL_VOC', 'D:/Datasets/RD_maps'
+DATASET = 'D:/Datasets/RD_maps/' # 'D:/Datasets/PASCAL_VOC', 'D:/Datasets/RD_maps'
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 # seed_everything()  # If you want deterministic behavior
 
 NUM_WORKERS = 1      # 4
-BATCH_SIZE = 16      # 32
+BATCH_SIZE = 10      # 32
 IMAGE_SIZE = 416     # 416
 NUM_CLASSES = 1     # PASCAL VOV has 20 classes, MS COCO has 80 classes
 LEARNING_RATE = 1e-4 # 3e-5
@@ -50,9 +50,9 @@ LOAD_MODEL = False # True
 SAVE_MODEL = False # True
 
 # "D:/Datasets/PASCAL_VOC/checkpoint.pth.tar", "D:/Datasets/RD_maps/checkpoint.pth.tar"
-CHECKPOINT_FILE = "D:/Datasets/RD_maps/checkpoint.pth.tar" # 
-IMG_DIR = DATASET + "/scaled_colors/"   # "/images/"
-LABEL_DIR = DATASET + "/labels/" # "/labels/"
+CHECKPOINT_FILE = DATASET + "checkpoint.pth.tar" # 
+IMAGE_DIR = DATASET + "scaled_colors/"   # "/images/"
+LABEL_DIR = DATASET + "labels/" # "/labels/"
 
 # how we handle the anchor boxes? we will specify the anchor boxes in the following manner as a list of lists 
 # of tuples, where each tuple corresponds to the width and the height of a anchor box relative to the image size 
@@ -285,7 +285,7 @@ def test():
     print(f"image: {img_idx}.txt") 
     # we can read the image through cv2.imread() in BGR or PIL.Image.open() in RGB, but the visualiz() 
     # and visualize_bbox() functions are implemented with cv2, so we should stick to it to avoid errors
-    img_path = IMG_DIR + f'{img_idx}_sc.jpg'
+    img_path = IMAGE_DIR + f'{img_idx}_sc.jpg'
     image = cv2.imread(img_path) # NOTE cv2.imread() read the image in BGR, 0~255, (W, H, C)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # must first convert BGR into RGB
 

@@ -391,6 +391,7 @@ def cells_to_bboxes(predictions, anchors, S, is_preds=True):
     converted_bboxes = torch.cat((best_class, scores, x, y, w_h), dim=-1).reshape(BATCH_SIZE, num_anchors * S * S, 6)
     return converted_bboxes.tolist()
 
+
 def check_class_accuracy(model, loader, threshold):
     model.eval()
     tot_class_preds, correct_class = 0, 0
@@ -399,7 +400,7 @@ def check_class_accuracy(model, loader, threshold):
 
     # for idx, (x, y) in enumerate(tqdm(loader)):
     for idx, (x, y) in enumerate(tqdm(loader)):
-        if idx == 100: break  # NOTE why break at idx == 100?
+        # if idx == 100: break  # NOTE why break at idx == 100?
 
         # IndexError (https://discuss.pytorch.org/t/indexerror-index-3-is-out-of-bounds-for-dimension-0-with-size-3/39333/4)
         
@@ -476,7 +477,7 @@ def get_loaders(train_csv_path, test_csv_path):
 
     train_dataset = YOLODataset(
         csv_file=train_csv_path,
-        img_dir=config.IMG_DIR,
+        image_dir=config.IMAGE_DIR,
         label_dir=config.LABEL_DIR,
         anchors=config.ANCHORS,
         S=config.S, # [13, 26, 52]
@@ -493,7 +494,7 @@ def get_loaders(train_csv_path, test_csv_path):
 
     test_dataset = YOLODataset(
         csv_file=test_csv_path,
-        img_dir=config.IMG_DIR,
+        image_dir=config.IMAGE_DIR,
         label_dir=config.LABEL_DIR,
         anchors=config.ANCHORS,
         S=config.S, # [13, 26, 52]
