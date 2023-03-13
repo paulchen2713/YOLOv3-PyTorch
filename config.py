@@ -1,3 +1,21 @@
+# -*- coding: utf-8 -*-
+"""
+@patch: 
+    2022.08.01
+    2023.02.17
+    2023.03.13
+@author: Paul
+@file: config.py
+@dependencies:
+    env pt3.7
+    python 3.7.13
+    numpy==1.19.2
+    pytorch==1.7.1
+    torchaudio==0.7.2
+    torchvision==0.8.2
+    albumentations==0.5.2
+"""
+
 import albumentations as A
 import cv2
 import torch
@@ -22,7 +40,7 @@ def seed_everything(seed=42):
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
-seed_everything()  # If you want deterministic behavior
+# seed_everything()  # If you want deterministic behavior
 
 NUM_WORKERS = 1 # 4
 BATCH_SIZE = 10 # 32
@@ -40,13 +58,13 @@ stride = [32, 16, 8]
 S = [IMAGE_SIZE // stride[0], IMAGE_SIZE // stride[1], IMAGE_SIZE // stride[2]] # [13, 26, 52]
 
 PIN_MEMORY = False # True
-LOAD_MODEL = True # True
+LOAD_MODEL = False # True
 SAVE_MODEL = False # True
 
 # "checkpoint.pth.tar" "YOLOv3-pretrained-weights/pytorch_format/yolov3_pascal_78.1map.pth.tar"
 CHECKPOINT_FILE = PATH + "yolov3_pascal_voc.pth.tar" 
 
-IMG_DIR = DATASET + "images/"
+IMAGE_DIR = DATASET + "images/"
 LABEL_DIR = DATASET + "labels/"
 
 # how we handle the anchor boxes? we will specify the anchor boxes in the following manner as a list of lists 
@@ -103,7 +121,119 @@ test_transforms = A.Compose(
     bbox_params=A.BboxParams(format="yolo", min_visibility=0.4, label_fields=[]),
 )
 
-PASCAL_CLASSES = [
+# PASCAL_CLASSES = [
+#     "aeroplane",
+#     "bicycle",
+#     "bird",
+#     "boat",
+#     "bottle",
+#     "bus",
+#     "car",
+#     "cat",
+#     "chair",
+#     "cow",
+#     "diningtable",
+#     "dog",
+#     "horse",
+#     "motorbike",
+#     "person",
+#     "pottedplant",
+#     "sheep",
+#     "sofa",
+#     "train",
+#     "tvmonitor"
+# ]
+
+# COCO_CLASSES = [
+#  'person',
+#  'bicycle',
+#  'car',
+#  'motorcycle',
+#  'airplane',
+#  'bus',
+#  'train',
+#  'truck',
+#  'boat',
+#  'traffic light',
+#  'fire hydrant',
+#  'stop sign',
+#  'parking meter',
+#  'bench',
+#  'bird',
+#  'cat',
+#  'dog',
+#  'horse',
+#  'sheep',
+#  'cow',
+#  'elephant',
+#  'bear',
+#  'zebra',
+#  'giraffe',
+#  'backpack',
+#  'umbrella',
+#  'handbag',
+#  'tie',
+#  'suitcase',
+#  'frisbee',
+#  'skis',
+#  'snowboard',
+#  'sports ball',
+#  'kite',
+#  'baseball bat',
+#  'baseball glove',
+#  'skateboard',
+#  'surfboard',
+#  'tennis racket',
+#  'bottle',
+#  'wine glass',
+#  'cup',
+#  'fork',
+#  'knife',
+#  'spoon',
+#  'bowl',
+#  'banana',
+#  'apple',
+#  'sandwich',
+#  'orange',
+#  'broccoli',
+#  'carrot',
+#  'hot dog',
+#  'pizza',
+#  'donut',
+#  'cake',
+#  'chair',
+#  'couch',
+#  'potted plant',
+#  'bed',
+#  'dining table',
+#  'toilet',
+#  'tv',
+#  'laptop',
+#  'mouse',
+#  'remote',
+#  'keyboard',
+#  'cell phone',
+#  'microwave',
+#  'oven',
+#  'toaster',
+#  'sink',
+#  'refrigerator',
+#  'book',
+#  'clock',
+#  'vase',
+#  'scissors',
+#  'teddy bear',
+#  'hair drier',
+#  'toothbrush'
+# ]
+
+
+CLASSES1 = [
+    "target"
+]
+
+# PASCAL_CLASSES, remember to rename it back to "CLASSES" when using Pascal VOC Dataset
+CLASSES = [
     "aeroplane",
     "bicycle",
     "bird",
@@ -126,87 +256,88 @@ PASCAL_CLASSES = [
     "tvmonitor"
 ]
 
-COCO_CLASSES = [
- 'person',
- 'bicycle',
- 'car',
- 'motorcycle',
- 'airplane',
- 'bus',
- 'train',
- 'truck',
- 'boat',
- 'traffic light',
- 'fire hydrant',
- 'stop sign',
- 'parking meter',
- 'bench',
- 'bird',
- 'cat',
- 'dog',
- 'horse',
- 'sheep',
- 'cow',
- 'elephant',
- 'bear',
- 'zebra',
- 'giraffe',
- 'backpack',
- 'umbrella',
- 'handbag',
- 'tie',
- 'suitcase',
- 'frisbee',
- 'skis',
- 'snowboard',
- 'sports ball',
- 'kite',
- 'baseball bat',
- 'baseball glove',
- 'skateboard',
- 'surfboard',
- 'tennis racket',
- 'bottle',
- 'wine glass',
- 'cup',
- 'fork',
- 'knife',
- 'spoon',
- 'bowl',
- 'banana',
- 'apple',
- 'sandwich',
- 'orange',
- 'broccoli',
- 'carrot',
- 'hot dog',
- 'pizza',
- 'donut',
- 'cake',
- 'chair',
- 'couch',
- 'potted plant',
- 'bed',
- 'dining table',
- 'toilet',
- 'tv',
- 'laptop',
- 'mouse',
- 'remote',
- 'keyboard',
- 'cell phone',
- 'microwave',
- 'oven',
- 'toaster',
- 'sink',
- 'refrigerator',
- 'book',
- 'clock',
- 'vase',
- 'scissors',
- 'teddy bear',
- 'hair drier',
- 'toothbrush'
+# COCO_LABELS, remember to rename it back to "CLASSES" when using COCO Dataset
+CLASSES3 = [
+    'person',
+    'bicycle',
+    'car',
+    'motorcycle',
+    'airplane',
+    'bus',
+    'train',
+    'truck',
+    'boat',
+    'traffic light',
+    'fire hydrant',
+    'stop sign',
+    'parking meter',
+    'bench',
+    'bird',
+    'cat',
+    'dog',
+    'horse',
+    'sheep',
+    'cow',
+    'elephant',
+    'bear',
+    'zebra',
+    'giraffe',
+    'backpack',
+    'umbrella',
+    'handbag',
+    'tie',
+    'suitcase',
+    'frisbee',
+    'skis',
+    'snowboard',
+    'sports ball',
+    'kite',
+    'baseball bat',
+    'baseball glove',
+    'skateboard',
+    'surfboard',
+    'tennis racket',
+    'bottle',
+    'wine glass',
+    'cup',
+    'fork',
+    'knife',
+    'spoon',
+    'bowl',
+    'banana',
+    'apple',
+    'sandwich',
+    'orange',
+    'broccoli',
+    'carrot',
+    'hot dog',
+    'pizza',
+    'donut',
+    'cake',
+    'chair',
+    'couch',
+    'potted plant',
+    'bed',
+    'dining table',
+    'toilet',
+    'tv',
+    'laptop',
+    'mouse',
+    'remote',
+    'keyboard',
+    'cell phone',
+    'microwave',
+    'oven',
+    'toaster',
+    'sink',
+    'refrigerator',
+    'book',
+    'clock',
+    'vase',
+    'scissors',
+    'teddy bear',
+    'hair drier',
+    'toothbrush'
 ]
 
 
@@ -259,12 +390,11 @@ def test():
         plt.show()
 
     # Load the image and the annotations for it
-    # img_idx = random.randint(100, 999) # get a random image index
-    img_idx = '003077'
+    img_idx = '000001' # random.randint(100, 999) # get a random image index
     print(f"image: {img_idx}.txt") 
     # we can read the image through cv2.imread() in BGR or PIL.Image.open() in RGB, but the visualiz() 
     # and visualize_bbox() functions are implemented with cv2, so we should stick to it to avoid errors
-    img_path = IMG_DIR + f'{img_idx}.jpg'
+    img_path = IMAGE_DIR + f'{img_idx}.jpg'
     image = cv2.imread(img_path) # NOTE cv2.imread() read the image in BGR, 0~255, (W, H, C)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # must first convert BGR into RGB
 
@@ -284,8 +414,8 @@ def test():
     rdmap_id_to_name = {0: 'target'}
 
     # PASCAL_VOC dataset
-    pascal_voc_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] # [i for i in range(0, 20)]
-    pascal_voc_id_to_name = {
+    category_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] # pascal_voc_ids = [i for i in range(0, 20)]
+    category_id_to_name = {
         0: "aeroplane",
         1: "bicycle",
         2: "bird",
@@ -337,14 +467,18 @@ def test():
         ),
     )
     # random.seed(33)
-    # transformed = transform(image=image, bboxes=bboxes, category_ids=pascal_voc_ids)
-    # visualize(transformed['image'], transformed['bboxes'], transformed['pascal_voc_ids'], pascal_voc_id_to_name)
+    transformed = transform(image=image, bboxes=bboxes, category_ids=category_ids)
     visualize(
-        image=image, 
-        bboxes=bboxes,
-        category_ids=pascal_voc_ids,
-        category_id_to_name=pascal_voc_id_to_name
-    )
+        image=transformed['image'], 
+        bboxes=transformed['bboxes'], 
+        category_ids=transformed['category_ids'], 
+        category_id_to_name=category_id_to_name)
+    # visualize(
+    #     image=image, 
+    #     bboxes=bboxes,
+    #     category_ids=pascal_voc_ids,
+    #     category_id_to_name=pascal_voc_id_to_name
+    # )
     # Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers)
 
 

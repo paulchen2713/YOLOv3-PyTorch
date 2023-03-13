@@ -54,7 +54,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 class YOLODataset(Dataset):
     def __init__(self, 
         csv_file, 
-        img_dir, 
+        image_dir, 
         label_dir, 
         anchors, 
         image_size=416, # image_size=416, 
@@ -63,7 +63,7 @@ class YOLODataset(Dataset):
         transform=None,
     ):
         self.annotations = pd.read_csv(csv_file) # "D:/Datasets/PASCAL_VOC/train.csv"
-        self.img_dir = img_dir
+        self.image_dir = image_dir
         self.label_dir = label_dir
         self.image_size = image_size #
         self.transform = transform   # transform
@@ -96,8 +96,8 @@ class YOLODataset(Dataset):
         # np.roll(array, shift=4, axis=1) will roll the array to the right by 4 on the x-axis (axis=1 means horizontally)
         bboxes = np.roll(np.loadtxt(fname=label_path, delimiter=" ", ndmin=2), shift=4, axis=1).tolist()
 
-        # get the image directory path (self.img_dir), then get the csv file name (self.annotations), then get the .jpg file
-        img_path = os.path.join(self.img_dir, self.annotations.iloc[index, 0]) # on the first column (which is 0)
+        # get the image directory path (self.image_dir), then get the csv file name (self.annotations), then get the .jpg file
+        img_path = os.path.join(self.image_dir, self.annotations.iloc[index, 0]) # on the first column (which is 0)
         # after getting the .jpg file path, we then load the .jpg file and we're going to convert it into RGB, for using albumentations 
         # library, we need to also make sure that it's a np array, it requires the image and bounding boxes both to be numpy arrays
         image = np.array(Image.open(img_path).convert("RGB"))
@@ -145,12 +145,14 @@ class YOLODataset(Dataset):
 
                 # how we check which scale it belongs to? 
                 # scale_idx should be 0, 1, or 2, indicates which target we need to take out from the list of targets that we have above
-                # scale_idx = anchor_idx // self.num_anchors_per_scale      # which scale
+                # NOTE when running under python 3.7 env, we can and have to use '//' 
+                scale_idx = anchor_idx // self.num_anchors_per_scale # which scale
 
                 # UserWarning: __floordiv__ is deprecated, and its behavior will change in a future version of pytorch. 
                 # To keep the current behavior, use torch.div(a, b, rounding_mode='trunc'), or for actual floor division, 
                 # use torch.div(a, b, rounding_mode='floor') # https://pytorch.org/docs/stable/generated/torch.div.html
-                scale_idx = torch.div(anchor_idx, self.num_anchors_per_scale, rounding_mode='floor')
+                # NOTE when running under python 3.8 or above env, we have to use 'div()' 
+                # scale_idx = torch.div(anchor_idx, self.num_anchors_per_scale, rounding_mode='floor')
 
                 # we also want to know which anchor on this particular scale are we assigning it to? 
                 # anchor_on_scale should also be 0, 1, or 2, indicates which anchor in that particular scale that we want to use 
@@ -225,12 +227,11 @@ def test():
     S = config.S 
 
     # PASCAL VOC "D:/Datasets/PASCAL_VOC/train.csv", "D:/Datasets/PASCAL_VOC/images", "D:/Datasets/PASCAL_VOC/labels",
-    # MS COCO    "COCO/train.csv", "COCO/images/images/", "COCO/labels/labels_new/"
-    data_folder = "PASCAL_VOC" 
+    # MS COCO    "COCO/train.csv", "COCO/images/images/", "COCO/labels/labels_new/" 
     dataset = YOLODataset(
-        f"D:/Datasets/{data_folder}/train.csv", # csv_file 
-        f"D:/Datasets/{data_folder}/images",    # img_dir 
-        f"D:/Datasets/{data_folder}/labels",    # label_dir 
+        csv_file=config.DATASET + "train.csv", # csv_file 
+        image_dir=config.IMAGE_DIR,    # img_dir 
+        label_dir=config.LABEL_DIR,    # label_dir 
         S=S, # S=[13, 26, 52],   
         anchors=anchors, 
         transform=transform, 

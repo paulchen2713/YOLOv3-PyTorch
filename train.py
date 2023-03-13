@@ -66,7 +66,7 @@ def main():
     # first test with "/8examples.csv" and "/100examples.csv" before moving on to "/train.csv" and "/test.csv"
     # train_loader, test_loader, train_eval_loader = get_loaders(
     train_loader, test_loader = get_loaders(
-        train_csv_path=config.DATASET + "100examples.csv", test_csv_path=config.DATASET + "100examples.csv"
+        train_csv_path=config.DATASET + "100examples.csv", test_csv_path=config.DATASET + "8examples.csv"
     )
 
     if config.LOAD_MODEL:
