@@ -1,6 +1,18 @@
 # YOLOv3-PyTorch
 
 ## Notes
+- 2023.03.14
+  - Ref. Albumentations Documentation [Full API Reference](https://albumentations.ai/docs/api_reference/full_reference/)
+    - testing different border modes
+    ![](https://i.imgur.com/5m01r0U.png)
+    - comparison of the 4 different modes: 
+    ![](https://i.imgur.com/EOvisqk.png)
+    - ```cv2.BORDER_CONSTANT```, ```cv2.BORDER_REFLECT```, ```cv2.BORDER_DEFAULT```, ```cv2.BORDER_REPLICATE``` with the value of ```0```, ```2```, ```4``` and ```1```, respectively
+  - Remove useless transforms of ```YOLOv3-VOC```
+    - we need ```LongestMaxSize()``` and ```PadIfNeeded()``` to avoid ```RuntimeError: Trying to resize storage that is not resizable```
+    - we need ```Normalize()``` to avoid ```RuntimeError: Input type (torch.cuda.ByteTensor) and weight type (torch.cuda.HalfTensor) should be the same```
+    - we need ```ToTensorV2()``` to avoid ```RuntimeError: Given groups=1, weight of size [32, 3, 3, 3], expected input[10, 416, 416, 3] to have 3 channels, but got 416 channels instead```
+  - The execution result and the error messages of the same code are different when using my PC compared to the lab PC, which is weird and annoying.
 - 2023.03.04
   - New breach, image file format may be the issue
   - Regenerate all data in .jpg
