@@ -99,6 +99,23 @@ def copy_and_rename_labels():
     if count != 7193: print("Error!")
 
 
+def copy_and_rename_labels2():
+    count = 0
+    # set the file path
+    label_path = 'C:/Users/Paul/Downloads/YOLOv3/src/'
+
+    for labels in os.listdir(label_path):
+        # check if the labels ends with .txt
+        if (labels.endswith(".txt")):
+            # print(f"{labels}")
+            count += 1
+            print(count)
+            dest_path = 'C:/Users/Paul/Downloads/YOLOv3/dest/'
+            shutil.copyfile(label_path + labels, dest_path + f'{count}.txt')
+            if count == 7194: break
+        
+
+
 def copy_and_rename_images():
     count = 0
     # set the file path
@@ -127,7 +144,8 @@ if __name__ == '__main__':
 
     # delete_useless_files()
     # copy_and_rename_labels()
-    copy_and_rename_images()
+    copy_and_rename_labels2()
+    # copy_and_rename_images()
     
     toc = time.perf_counter()
     duration = toc - tic
