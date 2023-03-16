@@ -170,12 +170,66 @@ def resize_to_n_by_n(out_shape=64, debug_mode=False, data_type='RDM', out_type='
 
 
 
+def absolute_scale_xywh():
+    count = 0
+    for dir_name in dir_names: # [23:24]: # 
+        # print(f"current directory: {dir_name}")
+
+        # set the file path
+        file_index = ["range_doppler_light.json", "range_angle_light.json"]
+        with open(f"D:/Datasets/CARRADA/{dir_name}/annotations/box/" + f"{file_index[0]}", "r") as json_file:
+            # read out all the bbox labels 
+            data = json.loads(json_file.read())
+        
+        # extract all keys from the dict, and store them in a list()
+        all_keys = list(data.keys())
+
+        for key in all_keys: # [62:63]: # 
+            # print(f"frame name: \"{key}\"")
+
+            folder = ['absolute_scale', 'relative_scale', 'absolute_xywh', 'relative_xywh']
+            #  set the store path
+            DEST_PATH = f"D:/Datasets/RADA/{folder[3]}/"
+            if (len(data[key]['boxes']) != len(data[key]['labels'])): print("boxes and labels are mismatched!")
+
+            count += 1
+            print(count)
+            with open(DEST_PATH + f"{count}.txt", "w") as label_txt_file:
+                # in each rd_matrix / image it may contain 1~3 possible targets
+                for index in range(0, len(data[key]['boxes'])):
+                    class_index = data[key]['labels'][index] - 1
+                    x_min, y_min, x_max, y_max = data[key]['boxes'][index][0:4]
+                    if x_min < 0 or x_max > 256 or y_min < 0 or y_max > 64: 
+                        print(f"image: {count}.txt, out of range!")
+                        print(f"bbox: {class_index} {x_min} {y_min} {x_max} {y_max}")
+                        break
+                    # y_min, y_max = y_min * 4, y_max * 4
+                    h = x_max - x_min
+                    w = y_max - y_min
+                    y = int((y_min + y_max) / 2)
+                    x = int((x_min + x_max) / 2)
+
+                    # rescale 
+                    x, h = x / 256, h / 256
+                    y, w = y / 64, w / 64
+                    x_min, y_min, x_max, y_max = x_min / 256, y_min / 64, x_max / 256, y_max / 64
+                    if x < 0 or x > 1 or y < 0 or y > 1 or w < 0 or w > 1 or h < 0 or h > 1:
+                        print(f"image: {count}.txt, out of range!")
+                        print(f"bbox: {class_index} {x} {y} {w} {h}")
+                        break
+
+                    # print(f"{class_index} {x_min} {y_min} {x_max} {y_max}", file=label_txt_file)
+                    print(f"{class_index} {y} {x} {w} {h}", file=label_txt_file)
+
+
+
 
 if __name__ == '__main__':
     tic = time.perf_counter()
 
     out_shape = 256
-    resize_to_n_by_n(out_shape=out_shape, debug_mode=True, data_type='RDM', out_type='YOLO', store=False)
+    # resize_to_n_by_n(out_shape=out_shape, debug_mode=True, data_type='RDM', out_type='YOLO', store=False)
+    absolute_scale_xywh()
     # print(f"Resizing every labels to {n}-by-{n}")
 
     toc = time.perf_counter()
