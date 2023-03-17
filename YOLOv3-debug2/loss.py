@@ -80,7 +80,9 @@ class YoloLoss(nn.Module):
         #   FOR NO OBJECT LOSS    #
         # ======================= #
 
-        no_object_loss = self.bce((predictions[..., 0:1][noobj]), (target[..., 0:1][noobj]),)
+        no_object_loss = self.bce(
+            (predictions[..., 0:1][noobj]), (target[..., 0:1][noobj]),
+        )
 
         # ==================== #
         #   FOR OBJECT LOSS    #
@@ -109,12 +111,12 @@ class YoloLoss(nn.Module):
             (predictions[..., 5:][obj]), (target[..., 5][obj].long()),
         )
 
-        print("__________________________________")
-        print(self.lambda_box * box_loss)
-        print(self.lambda_obj * object_loss)
-        print(self.lambda_noobj * no_object_loss)
-        print(self.lambda_class * class_loss)
-        print("\n")
+        #    print("__________________________________")
+        #    print(self.lambda_box * box_loss)
+        #    print(self.lambda_obj * object_loss)
+        #    print(self.lambda_noobj * no_object_loss)
+        #    print(self.lambda_class * class_loss)
+        #    print("\n")
 
         return (
             self.lambda_box * box_loss

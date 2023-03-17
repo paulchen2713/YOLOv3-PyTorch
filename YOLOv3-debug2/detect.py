@@ -156,7 +156,7 @@ def cells_to_bboxes(predictions, anchors, S, is_preds=True):
 def plot_image(image, boxes):
     """Plots predicted bounding boxes on the image"""
     cmap = plt.get_cmap("tab20b")
-    class_labels = config.COCO_LABELS if config.DATASET=='COCO' else config.PASCAL_CLASSES
+    class_labels = config.CLASSES # config.COCO_LABELS if config.DATASET=='COCO' else config.PASCAL_CLASSES
     colors = [cmap(i) for i in np.linspace(0, 1, len(class_labels))]
     im = np.array(image)
     height, width, _ = im.shape
@@ -218,13 +218,13 @@ def plot_couple_examples(model, loader, thresh, iou_thresh, anchors):
 
 
 
-def main():
+def main(batch_size=3):
     model = YOLOv3(num_classes=config.NUM_CLASSES).to(config.DEVICE)
     optimizer = optim.Adam(model.parameters(), lr=config.LEARNING_RATE, weight_decay=config.WEIGHT_DECAY)
 
     dataset = YOLODataset(
-        csv_file=config.DATASET + "8examples.csv", # "2examples.csv", "test.csv"
-        img_dir=config.IMG_DIR,
+        csv_file=config.DATASET + "train.csv", # "2examples.csv", "test.csv"
+        image_dir=config.IMAGE_DIR,
         label_dir=config.LABEL_DIR,
         anchors=config.ANCHORS,
         image_size=416,
@@ -233,12 +233,16 @@ def main():
         transform=config.test_transforms,
     )
 
-    S = [13, 26, 52]
-    scaled_anchors = torch.tensor(config.ANCHORS) / (1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2))
+    # S = [13, 26, 52]
+    # scaled_anchors = torch.tensor(config.ANCHORS) / (1 / torch.tensor(S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)) 
+
+    # NOTE ahchors are part of the data, of course, so we also have to put it on the same DEVICE as the model otherwise we will get a 
+    # RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu
+    scaled_anchors = (torch.tensor(config.ANCHORS) * torch.tensor(config.S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)).to(config.DEVICE)
 
     loader = DataLoader(
         dataset=dataset,
-        batch_size=16,
+        batch_size=batch_size, # 16
         num_workers=config.NUM_WORKERS,
         pin_memory=config.PIN_MEMORY,
         shuffle=True,
@@ -247,12 +251,13 @@ def main():
 
     # "yolov3_pascal_78.1map.pth.tar" "checkpoint-2023-02-07.pth.tar"
     # WEI_PATH = "D:/Datasets/YOLOv3-PyTorch/YOLOv3-pretrained-weights/pytorch_format/" + "checkpoint-2023-02-07.pth.tar"
-    load_checkpoint(
-        "yolov3_pascal_voc.pth.tar", # config.CHECKPOINT_FILE
-        model, 
-        optimizer, 
-        config.LEARNING_RATE
-    ) # 
+    if config.LOAD_MODEL:
+        load_checkpoint(
+            config.PATH + "yolov3_pascal_voc.pth.tar", # config.CHECKPOINT_FILE
+            model, 
+            optimizer, 
+            config.LEARNING_RATE
+        ) 
 
     plot_couple_examples(
         model=model, 
@@ -264,8 +269,9 @@ def main():
 
 
 if __name__ == '__main__':
-    print("Perform some detections!")
-    main()
+    num_of_samples = 1
+    print(f"Perform {num_of_samples} detections!")
+    main(batch_size=num_of_samples)
 
 
 

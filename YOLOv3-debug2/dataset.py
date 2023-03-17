@@ -54,7 +54,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 class YOLODataset(Dataset):
     def __init__(self, 
         csv_file, 
-        img_dir, 
+        image_dir, 
         label_dir, 
         anchors, 
         image_size=416, # image_size=416, 
@@ -63,7 +63,7 @@ class YOLODataset(Dataset):
         transform=None,
     ):
         self.annotations = pd.read_csv(csv_file) # "D:/Datasets/PASCAL_VOC/train.csv"
-        self.img_dir = img_dir
+        self.image_dir = image_dir
         self.label_dir = label_dir
         self.image_size = image_size #
         self.transform = transform   # transform
@@ -80,13 +80,13 @@ class YOLODataset(Dataset):
         return len(self.annotations)
 
     def __getitem__(self, index):
-        
+        # print(f"index: {index}")
         # get the index-th data, in the csv files, data are structured as index.jpg,index.txt, 
         # so (indxe, 0) get us the image and (index, 1) get us the label
 
         # get the label directory path (self.label_dir), then get the csv file name (self.annotations), then get the .txt file 
         label_path = os.path.join(self.label_dir, self.annotations.iloc[index, 1]) # on the second column (which is 1)
-        # print(label_path) # e.g. D:/Datasets/PASCAL_VOC/labels\003077.txt
+        # print(label_path) # e.g. D:/Datasets/PASCAL_VOC/labels/003077.txt
 
         # after getting the .txt file path, we then load the .txt file which is delimited by space, and we set the returned array 
         # will have at least ndmin=2 dimensions, the original label is [class, x, y, w, h]
@@ -96,8 +96,8 @@ class YOLODataset(Dataset):
         # np.roll(array, shift=4, axis=1) will roll the array to the right by 4 on the x-axis (axis=1 means horizontally)
         bboxes = np.roll(np.loadtxt(fname=label_path, delimiter=" ", ndmin=2), shift=4, axis=1).tolist()
 
-        # get the image directory path (self.img_dir), then get the csv file name (self.annotations), then get the .jpg file
-        img_path = os.path.join(self.img_dir, self.annotations.iloc[index, 0]) # on the first column (which is 0)
+        # get the image directory path (self.image_dir), then get the csv file name (self.annotations), then get the .jpg file
+        img_path = os.path.join(self.image_dir, self.annotations.iloc[index, 0]) # on the first column (which is 0)
         # after getting the .jpg file path, we then load the .jpg file and we're going to convert it into RGB, for using albumentations 
         # library, we need to also make sure that it's a np array, it requires the image and bounding boxes both to be numpy arrays
         image = np.array(Image.open(img_path).convert("RGB"))
@@ -145,12 +145,14 @@ class YOLODataset(Dataset):
 
                 # how we check which scale it belongs to? 
                 # scale_idx should be 0, 1, or 2, indicates which target we need to take out from the list of targets that we have above
-                # scale_idx = anchor_idx // self.num_anchors_per_scale      # which scale
+                # NOTE when running under python 3.7 env, we can and have to use '//' 
+                scale_idx = anchor_idx // self.num_anchors_per_scale # which scale
 
                 # UserWarning: __floordiv__ is deprecated, and its behavior will change in a future version of pytorch. 
                 # To keep the current behavior, use torch.div(a, b, rounding_mode='trunc'), or for actual floor division, 
                 # use torch.div(a, b, rounding_mode='floor') # https://pytorch.org/docs/stable/generated/torch.div.html
-                scale_idx = torch.div(anchor_idx, self.num_anchors_per_scale, rounding_mode='floor')
+                # NOTE when running under python 3.8 or above env, we have to use 'div()' 
+                # scale_idx = torch.div(anchor_idx, self.num_anchors_per_scale, rounding_mode='floor')
 
                 # we also want to know which anchor on this particular scale are we assigning it to? 
                 # anchor_on_scale should also be 0, 1, or 2, indicates which anchor in that particular scale that we want to use 
@@ -225,12 +227,11 @@ def test():
     S = config.S 
 
     # PASCAL VOC "D:/Datasets/PASCAL_VOC/train.csv", "D:/Datasets/PASCAL_VOC/images", "D:/Datasets/PASCAL_VOC/labels",
-    # MS COCO    "COCO/train.csv", "COCO/images/images/", "COCO/labels/labels_new/"
-    data_folder = ['RD_Pascal_VOC', 'RD_YOLO', 'RD_COCO', 'RD', 'RD2', 'RD3', 'PASCAL_VOC']
+    # MS COCO    "COCO/train.csv", "COCO/images/images/", "COCO/labels/labels_new/" 
     dataset = YOLODataset(
-        f"D:/Datasets/{data_folder[1]}/train.csv", # csv_file 
-        f"D:/Datasets/{data_folder[1]}/images",    # img_dir 
-        f"D:/Datasets/{data_folder[1]}/labels",    # label_dir 
+        csv_file=config.DATASET + "train.csv", # csv_file 
+        image_dir=config.IMAGE_DIR,    # img_dir 
+        label_dir=config.LABEL_DIR,    # label_dir 
         S=S, # S=[13, 26, 52],   
         anchors=anchors, 
         transform=transform, 
@@ -266,12 +267,15 @@ def test():
         print("-----------------------------------------")
 
         counter += 1 
-        if counter == 1: break # run the test for some times then we stop
+        if counter == 3: break # run the test for some times then we stop
 
         # sometimes would run into out of bound ValueError, NOTE probabily caused by transforms, scale, and bbox_params settings!
         # File "C:\Users\paulc\.conda\envs\pt3.7\lib\site-packages\albumentations\augmentations\bbox_utils.py", line 330, in check_bbox
         #     "to be in the range [0.0, 1.0], got {value}.".format(bbox=bbox, name=name, value=value)
         # ValueError: Expected x_max for bbox (0.9375, 0.875, 1.0625, 1.0, 0.0) to be in the range [0.0, 1.0], got 1.0625.
+
+        # NOTE this ValueError: Expected x_min for bbox (-0.01171875, 0.4296875, 0.09765625, 0.4609375, 2.0) to be in the range [0.0, 1.0], got -0.01171875.
+        # is still unsolvable! I don't know why this error occur
 
 
 if __name__ == "__main__":

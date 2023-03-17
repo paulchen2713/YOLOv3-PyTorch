@@ -28,18 +28,14 @@ def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
     loop = tqdm(train_loader, leave=True)
     losses = []
     for _, (x, y) in enumerate(loop):
-        print(f"\nx:  {x.shape}") # current shape: torch.Size([16, 416, 416, 3]), correct shape: torch.Size([16, 3, 416, 416])
+        # print(x.shape) # current shape: torch.Size([16, 416, 416, 3]), correct shape: torch.Size([16, 3, 416, 416])
         # x.permute(0, 3, 1, 2) # torch.Size([16, 416, 416, 3]) --> torch.Size([16, 3, 416, 416])
 
         # RuntimeError: Input type (torch.cuda.ByteTensor) and weight type (torch.cuda.HalfTensor) should be the same
 
         x = x.to(config.DEVICE)
         # y0, y1, y2 = (y[0].to(config.DEVICE), y[1].to(config.DEVICE), y[2].to(config.DEVICE),)
-        y0, y1, y2 = (y[0].to(config.DEVICE), y[1].to(config.DEVICE), y[2].to(config.DEVICE))
-
-        print(f"y0: {y0.shape}")
-        print(f"y1: {y0.shape}")
-        print(f"y2: {y0.shape}")
+        y0, y1, y2 = y[0].to(config.DEVICE), y[1].to(config.DEVICE), y[2].to(config.DEVICE)
 
         with torch.cuda.amp.autocast():
             out = model(x)
@@ -90,35 +86,41 @@ def main():
         # plot_couple_examples(model, test_loader, 0.6, 0.5, scaled_anchors) # just plotting some images without bboxes
         train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors)
 
-        if config.SAVE_MODEL:
-            from datetime import date
-            file_name = f"checkpoint-{date.today()}.pth.tar"
-            save_checkpoint(model, optimizer, filename=file_name)
+        # if config.SAVE_MODEL:
+        #     from datetime import date
+        #     file_name = config.DATASET + f"checks/checkpoint-{date.today()}.pth.tar"
+        #     save_checkpoint(model, optimizer, filename=file_name)
 
         print(f"Currently epoch {epoch}")
         print("On Train loader:")
         check_class_accuracy(model, train_loader, threshold=config.CONF_THRESHOLD)
 
-        print("On Test loader:")
-        check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
-
-        pred_boxes, true_boxes = get_evaluation_bboxes(
-            test_loader,
-            model,
-            iou_threshold=config.NMS_IOU_THRESH,
-            anchors=config.ANCHORS,
-            threshold=config.CONF_THRESHOLD,
-        )
-        mapval = mean_average_precision(
-            pred_boxes,
-            true_boxes,
-            iou_threshold=config.MAP_IOU_THRESH,
-            box_format="midpoint",
-            num_classes=config.NUM_CLASSES,
-        )
-        print(f"MAP: {mapval.item()}")
-
         if epoch % 10 == 0 and epoch > 0:
+            print("On Test loader:")
+            check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
+
+            if config.SAVE_MODEL:
+                from datetime import date
+                file_name = config.DATASET + f"checks/checkpoint-{date.today()}.pth.tar"
+                save_checkpoint(model, optimizer, filename=file_name)
+
+        # pred_boxes, true_boxes = get_evaluation_bboxes(
+        #     test_loader,
+        #     model,
+        #     iou_threshold=config.NMS_IOU_THRESH,
+        #     anchors=config.ANCHORS,
+        #     threshold=config.CONF_THRESHOLD,
+        # )
+        # mapval = mean_average_precision(
+        #     pred_boxes,
+        #     true_boxes,
+        #     iou_threshold=config.MAP_IOU_THRESH,
+        #     box_format="midpoint",
+        #     num_classes=config.NUM_CLASSES,
+        # )
+        # print(f"MAP: {mapval.item()}")
+
+        if epoch % 100 == 0 and epoch > 0:
             print("On Test loader:")
             check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
 

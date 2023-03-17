@@ -235,8 +235,8 @@ def mean_average_precision(
 def plot_image(image, boxes):
     """Plots predicted bounding boxes on the image"""
     cmap = plt.get_cmap("tab20b")
-    # class_labels = config.COCO_LABELS if config.DATASET=='COCO' else config.PASCAL_CLASSES
-    class_labels = config.CLASSES
+    # config.COCO_LABELS if config.DATASET=='COCO' else config.PASCAL_CLASSES
+    class_labels = config.CLASSES # just name it as CLASSES 
     colors = [cmap(i) for i in np.linspace(0, 1, len(class_labels))]
     im = np.array(image)
     height, width, _ = im.shape
@@ -448,20 +448,19 @@ def load_checkpoint(checkpoint_file, model, optimizer, lr):
 def get_loaders(train_csv_path, test_csv_path):
     from dataset import YOLODataset
 
-    IMAGE_SIZE = config.IMAGE_SIZE
     train_dataset = YOLODataset(
-        train_csv_path,
+        csv_file=train_csv_path,
         transform=config.train_transforms,
-        S=[IMAGE_SIZE // 32, IMAGE_SIZE // 16, IMAGE_SIZE // 8],
-        img_dir=config.IMG_DIR,
+        S=config.S, # [IMAGE_SIZE // 32, IMAGE_SIZE // 16, IMAGE_SIZE // 8],
+        image_dir=config.IMAGE_DIR,
         label_dir=config.LABEL_DIR,
         anchors=config.ANCHORS,
     )
     test_dataset = YOLODataset(
-        test_csv_path,
+        csv_file=test_csv_path,
         transform=config.test_transforms,
-        S=[IMAGE_SIZE // 32, IMAGE_SIZE // 16, IMAGE_SIZE // 8],
-        img_dir=config.IMG_DIR,
+        S=config.S, # [IMAGE_SIZE // 32, IMAGE_SIZE // 16, IMAGE_SIZE // 8],
+        image_dir=config.IMAGE_DIR,
         label_dir=config.LABEL_DIR,
         anchors=config.ANCHORS,
     )
