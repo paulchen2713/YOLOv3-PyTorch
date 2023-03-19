@@ -29,6 +29,31 @@
     - we need ```Normalize()``` to avoid ```RuntimeError: Input type (torch.cuda.ByteTensor) and weight type (torch.cuda.HalfTensor) should be the same```
     - we need ```ToTensorV2()``` to avoid ```RuntimeError: Given groups=1, weight of size [32, 3, 3, 3], expected input[10, 416, 416, 3] to have 3 channels, but got 416 channels instead```
   - The execution result and the error messages of the same code are different when using my PC compared to the lab PC, which is weird and annoying.
+- 2023.03.10
+  - Still untrainable
+    - First, I prepare ```3``` types of square sizes of images, 64-by-64, 256-by-256, and 416-by-416, respectively.
+    - The way I tested it is by simply changing the input images to the previously successful version, without changing anything else, and seeing how it goes.
+    - Even though I resized all the images to a square size, the exact same error persists. Specifically:
+        ```clike!
+        RuntimeError: Given groups=1, weight of size [32, 3, 3, 3], expected input[16, 64, 64, 3] to have 3 channels, but got 64 channels instead
+        ```
+        ```clike!
+        RuntimeError: Given groups=1, weight of size [32, 3, 3, 3], expected input[16, 256, 256, 3] to have 3 channels, but got 256 channels instead
+        ```
+        ```clike!
+        RuntimeError: Given groups=1, weight of size [32, 3, 3, 3], expected input[16, 416, 416, 3] to have 3 channels, but got 416 channels instead
+        ```
+  - It still doesn't work, but every piece of code is the same, so I speculate that maybe it's because the images are not actually encoded in the ```'JPEG'``` format.
+  - So I re-read the dataset, stored the ```.mat``` files out, and converted the ```.mat``` files into scaled color and grayscale.
+    - Plotting 7193 frames of the CARRADA Dataset in scaled color using MATLAB [link](https://www.youtube.com/watch?v=DyZ7rPXPHjE)
+  - Then I used the scaled color images to train, still getting errors, but at least now we have a different error message.
+    ```clike!
+    ValueError: Expected x_min for bbox (-0.103515625, 0.306640625, 0.224609375, 0.365234375, 2.0) to be in the range [0.0, 1.0], got -0.103515625.
+    ```
+- 2023.03.09
+  - The function for converting ```.mat``` files to ```.jpg``` images
+<img src=https://i.imgur.com/HLDGo78.png width=75% height=75%>
+<img src=https://i.imgur.com/XqgPJW8.png width=75% height=75%>
 - 2023.03.04
   - New breach, image file format may be the issue
   - Regenerate all data in .jpg
