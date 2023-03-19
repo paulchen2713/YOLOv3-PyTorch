@@ -1,6 +1,22 @@
 # YOLOv3-PyTorch
 
 ## Notes
+- 2023.03.19
+  - The actual size of each input image is: 
+    - ```875-by-1489``` or ```310-by-1240```
+    ![](https://i.imgur.com/Cjg1AiQ.png)
+  - The resizing results are completely different. We could even conclude that they are wrong (and I don't know why), since we might not need to resize images anymore. Currently, I am just ignoring this issue
+  ![](https://i.imgur.com/QoYz9TP.jpg)
+  ![](https://i.imgur.com/wexdIfa.png)
+  - Some samples of person, cyclist and car:
+    ![](https://i.imgur.com/2axeJNC.jpg)
+    ![](https://i.imgur.com/w3ivjzM.jpg)
+    ![](https://i.imgur.com/bbIMrqB.jpg)
+  - I first tried to run ```train.py``` for ```100``` epochs with the following config settings:
+    ![](https://i.imgur.com/M2u8BtK.png)
+  - The resulted ```mAP``` is ```0.182485```
+    ![](https://i.imgur.com/eGgLni0.png)
+    ![](https://i.imgur.com/faPMJob.png)
 - 2023.03.16
   - It's finally trainable now
     ![](https://i.imgur.com/Q8anAyR.png)
