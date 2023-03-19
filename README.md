@@ -1,6 +1,15 @@
 # YOLOv3-PyTorch
 
 ## Notes
+- 2023.03.16
+  - It's finally trainable now
+    ![](https://i.imgur.com/Q8anAyR.png)
+  - The major mistakes that I made were: Misinterpreting the labels, but actually translating them correctly.
+    - In short, simply switching the ```x``` and ```y``` coordinates will solve our problems
+    - But I do not really know why I was wrong, which makes me wonder, 'How did I get it right when replicating ```YOLO-CFAR``` before?'
+  - The correct way to translate the labels
+    ![](https://i.imgur.com/DoAn99t.png)
+    ![](https://i.imgur.com/skwA1D3.png)
 - 2023.03.15
   - Still not actually trainable
     ```clike!
