@@ -223,7 +223,7 @@ def main(batch_size=3):
     optimizer = optim.Adam(model.parameters(), lr=config.LEARNING_RATE, weight_decay=config.WEIGHT_DECAY)
 
     dataset = YOLODataset(
-        csv_file=config.DATASET + "train.csv", # "2examples.csv", "test.csv"
+        csv_file=config.DATASET + "100examples.csv", # "2examples.csv", "test.csv"
         image_dir=config.IMAGE_DIR,
         label_dir=config.LABEL_DIR,
         anchors=config.ANCHORS,
@@ -251,13 +251,12 @@ def main(batch_size=3):
 
     # "yolov3_pascal_78.1map.pth.tar" "checkpoint-2023-02-07.pth.tar"
     # WEI_PATH = "D:/Datasets/YOLOv3-PyTorch/YOLOv3-pretrained-weights/pytorch_format/" + "checkpoint-2023-02-07.pth.tar"
-    if config.LOAD_MODEL:
-        load_checkpoint(
-            config.PATH + "yolov3_pascal_voc.pth.tar", # config.CHECKPOINT_FILE
-            model, 
-            optimizer, 
-            config.LEARNING_RATE
-        ) 
+    load_checkpoint(
+        config.PATH + "yolov3_pascal_voc.pth.tar", # config.CHECKPOINT_FILE
+        model, 
+        optimizer, 
+        config.LEARNING_RATE
+    ) 
 
     plot_couple_examples(
         model=model, 

@@ -1,5 +1,21 @@
+# -*- coding: utf-8 -*-
 """
-Main file for training Yolo model on Pascal VOC and COCO dataset
+Created on Mon Jul 18 16:57:39 2022
+
+@patch: 
+    2022.08.01
+    2023.02.17
+@author: Paul
+@file: train.py
+@dependencies:
+    env pt3.7
+    python 3.7.13
+    pytorch==1.7.1
+    torchaudio==0.7.2
+    torchvision==0.8.2
+    tqdm==4.56.0
+
+Main file for training YOLOv3 model on RD maps, Pascal VOC and COCO dataset
 """
 
 import config

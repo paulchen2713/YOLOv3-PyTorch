@@ -66,7 +66,7 @@ def main():
     # first test with "/8examples.csv" and "/100examples.csv" before moving on to "/train.csv" and "/test.csv"
     # train_loader, test_loader, train_eval_loader = get_loaders(
     train_loader, test_loader = get_loaders(
-        train_csv_path=config.DATASET + "100examples.csv", test_csv_path=config.DATASET + "8examples.csv"
+        train_csv_path=config.DATASET + "100examples.csv", test_csv_path=config.DATASET + "100examples.csv"
     )
 
     if config.LOAD_MODEL:
@@ -95,8 +95,8 @@ def main():
         print("On Train loader:")
         check_class_accuracy(model, train_loader, threshold=config.CONF_THRESHOLD)
 
-        print("On Test loader:")
-        check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
+        # print("On Test loader:")
+        # check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
 
         # pred_boxes, true_boxes = get_evaluation_bboxes(
         #     test_loader,

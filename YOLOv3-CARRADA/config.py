@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """
+Created on Mon Jul 18 17:01:48 2022
+
 @patch: 
     2022.08.01
     2023.02.17
@@ -44,12 +46,12 @@ def seed_everything(seed=42):
 
 NUM_WORKERS = 1 # 4
 BATCH_SIZE = 20 # 32
-IMAGE_SIZE = 256
+IMAGE_SIZE = 416
 NUM_CLASSES = 3 # 80
 LEARNING_RATE = 1e-4 # 3e-5
 
 WEIGHT_DECAY = 1e-4
-NUM_EPOCHS = 100 # 100
+NUM_EPOCHS = 1 # 100
 CONF_THRESHOLD = 0.6
 MAP_IOU_THRESH = 0.5
 NMS_IOU_THRESH = 0.45
@@ -390,22 +392,21 @@ def test():
         ),
     )
     # random.seed(33)
-    test_trans = transform(image=image, bboxes=bboxes)
     print(bboxes)
     print(label)
-    print(test_trans)
     transformed = transform(image=image, bboxes=bboxes, category_ids=category_ids)
-    visualize(
-        image=transformed['image'], 
-        bboxes=transformed['bboxes'], 
-        category_ids=transformed['category_ids'], 
-        category_id_to_name=category_id_to_name)
     # visualize(
-    #     image=image, 
-    #     bboxes=bboxes,
-    #     category_ids=pascal_voc_ids,
-    #     category_id_to_name=pascal_voc_id_to_name
+    #     image=transformed['image'], 
+    #     bboxes=transformed['bboxes'], 
+    #     category_ids=transformed['category_ids'], 
+    #     category_id_to_name=category_id_to_name
     # )
+    visualize(
+        image=image, 
+        bboxes=bboxes,
+        category_ids=category_ids,
+        category_id_to_name=category_id_to_name
+    )
     # Clipping input data to the valid range for imshow with RGB data ([0..1] for floats or [0..255] for integers)
 
 

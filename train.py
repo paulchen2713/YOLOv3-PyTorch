@@ -66,7 +66,7 @@ def main():
     # first test with "/8examples.csv" and "/100examples.csv" before moving on to "/train.csv" and "/test.csv"
     # train_loader, test_loader, train_eval_loader = get_loaders(
     train_loader, test_loader = get_loaders(
-        train_csv_path=config.DATASET + "train.csv", test_csv_path=config.DATASET + "test.csv"
+        train_csv_path=config.DATASET + "100examples.csv", test_csv_path=config.DATASET + "8examples.csv"
     )
 
     if config.LOAD_MODEL:
@@ -88,16 +88,15 @@ def main():
 
         if config.SAVE_MODEL:
             from datetime import date
-            file_name = config.DATASET + f"checks/checkpoint-{date.today()}.pth.tar"
+            file_name = f"checkpoint-{date.today()}.pth.tar"
             save_checkpoint(model, optimizer, filename=file_name)
 
         print(f"Currently epoch {epoch}")
         print("On Train loader:")
         check_class_accuracy(model, train_loader, threshold=config.CONF_THRESHOLD)
 
-        if epoch % 10 == 0 and epoch > 0:
-            print("On Test loader:")
-            check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
+        print("On Test loader:")
+        check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
 
         # pred_boxes, true_boxes = get_evaluation_bboxes(
         #     test_loader,
@@ -115,7 +114,7 @@ def main():
         # )
         # print(f"MAP: {mapval.item()}")
 
-        if epoch % 100 == 0 and epoch > 0:
+        if epoch % 10 == 0 and epoch > 0:
             print("On Test loader:")
             check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
 

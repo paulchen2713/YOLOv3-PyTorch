@@ -80,13 +80,13 @@ class YOLODataset(Dataset):
         return len(self.annotations)
 
     def __getitem__(self, index):
-        # print(f"index: {index}")
+        
         # get the index-th data, in the csv files, data are structured as index.jpg,index.txt, 
         # so (indxe, 0) get us the image and (index, 1) get us the label
 
         # get the label directory path (self.label_dir), then get the csv file name (self.annotations), then get the .txt file 
         label_path = os.path.join(self.label_dir, self.annotations.iloc[index, 1]) # on the second column (which is 1)
-        # print(label_path) # e.g. D:/Datasets/PASCAL_VOC/labels/003077.txt
+        # print(label_path) # e.g. D:/Datasets/PASCAL_VOC/labels\003077.txt
 
         # after getting the .txt file path, we then load the .txt file which is delimited by space, and we set the returned array 
         # will have at least ndmin=2 dimensions, the original label is [class, x, y, w, h]
@@ -267,15 +267,12 @@ def test():
         print("-----------------------------------------")
 
         counter += 1 
-        if counter == 3: break # run the test for some times then we stop
+        if counter == 1: break # run the test for some times then we stop
 
         # sometimes would run into out of bound ValueError, NOTE probabily caused by transforms, scale, and bbox_params settings!
         # File "C:\Users\paulc\.conda\envs\pt3.7\lib\site-packages\albumentations\augmentations\bbox_utils.py", line 330, in check_bbox
         #     "to be in the range [0.0, 1.0], got {value}.".format(bbox=bbox, name=name, value=value)
         # ValueError: Expected x_max for bbox (0.9375, 0.875, 1.0625, 1.0, 0.0) to be in the range [0.0, 1.0], got 1.0625.
-
-        # NOTE this ValueError: Expected x_min for bbox (-0.01171875, 0.4296875, 0.09765625, 0.4609375, 2.0) to be in the range [0.0, 1.0], got -0.01171875.
-        # is still unsolvable! I don't know why this error occur
 
 
 if __name__ == "__main__":

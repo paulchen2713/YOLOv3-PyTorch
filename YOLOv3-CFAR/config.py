@@ -73,14 +73,14 @@ ANCHORS = [
 ]
 
 # scale cannot be lower than 1.0, otherwise would encounter ValueError: Requested crop size (416, 416) is larger than the image size (332, 332)
-# scale = 1.0 # 1.1, 1.2 
+scale = 1.0 # 1.1, 1.2 
 train_transforms = A.Compose(
     [
-        # A.LongestMaxSize(max_size=int(IMAGE_SIZE * scale)),
-        # A.PadIfNeeded(
-        #     min_height=int(IMAGE_SIZE * scale), min_width=int(IMAGE_SIZE * scale), 
-        #     # border_mode=cv2.BORDER_CONSTANT,
-        # ),
+        A.LongestMaxSize(max_size=int(IMAGE_SIZE * scale)),
+        A.PadIfNeeded(
+            min_height=int(IMAGE_SIZE * scale), min_width=int(IMAGE_SIZE * scale), 
+            # border_mode=cv2.BORDER_CONSTANT,
+        ),
         # A.RandomCrop(width=IMAGE_SIZE, height=IMAGE_SIZE),
         # A.ColorJitter(brightness=0.6, contrast=0.6, saturation=0.6, hue=0.6, p=0.4),
         # A.OneOf(
