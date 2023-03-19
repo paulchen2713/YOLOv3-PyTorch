@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 # import matplotlib.pyplot as plt
 
+
 def my_plot(x1, y1, title, line_color, line_marker):
     plt.plot(x1, y1, color=line_color, marker=line_marker)
     plt.xlabel('epochs')
@@ -22,15 +23,15 @@ def my_plot(x1, y1, title, line_color, line_marker):
         plt.show()
 
 
+PATH = 'D:/Datasets/RADA/RD_JPG/training_logs/'
 logs = [
     'log_0316.txt',
     'log_0317.txt',
     'log_0318.txt',
 ]
-
 # set the file path for the training logs
 file_index = 0
-file_path = f"D:/Datasets/RADA/RD_JPG/training_logs/{logs[file_index]}"
+file_path = PATH + f"{logs[file_index]}"
 data = [] 
 with open(file_path, "r", encoding="utf-8") as text_file:
     # print(f"current file: {file_path}")
@@ -53,12 +54,14 @@ for i in range(len(data)):
         loss.append(float(data[i][173:176]))
     if data[i][170:174] == "loss":  # line 312
         loss.append(float(data[i][175]))
+    
     # Training Obj Accuracy
     if data[i][3:8] == "Train":
         train_flag = True
     if train_flag == True and data[i][0:3] == "Obj":
         train_acc.append(float(data[i][17:22]))
         train_flag = False
+    
     # Testing Obj Accuracy
     if data[i][3:7] == "Test":
         valid_flag = True
@@ -66,15 +69,19 @@ for i in range(len(data)):
         valid_acc.append(float(data[i][17:22]))
         valid_flag = False
 
+
 def print_vals():
-    print(f"training loss = {loss}")
-    print(f"num of loss samples: {len(loss)}")        # 100
+    # print(logs[file_index][4:8])
+    with open(PATH + f"{logs[file_index][4:8]}/{logs[file_index][4:8]}.txt", "w") as txt_file:
+        print(f"training loss = {loss}", file=txt_file)
+        print(f"num of loss samples: {len(loss)}", file=txt_file)        # 100
 
-    print(f"train obj accuracy = {train_acc}")
-    print(f"num of train samples: {len(train_acc)}")  # 100
+        print(f"train obj accuracy = {train_acc}", file=txt_file)
+        print(f"num of train samples: {len(train_acc)}", file=txt_file)  # 100
 
-    print(f"test obj accuracy = {valid_acc}")
-    print(f"num of test samples: {len(valid_acc)}")   # 11
+        print(f"test obj accuracy = {valid_acc}", file=txt_file)
+        print(f"num of test samples: {len(valid_acc)}", file=txt_file)   # 11
+
 
 def plot_results():
     my_plot([i for i in range(1, len(loss) + 1)], loss, 'training loss', 'red', 'o')
