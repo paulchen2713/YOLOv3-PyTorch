@@ -6,7 +6,9 @@
     ![](https://i.imgur.com/Q8anAyR.png)
   - The major mistakes that I made were: Misinterpreting the labels, but actually translating them correctly.
     - In short, simply switching the ```x``` and ```y``` coordinates will solve our problems
-    - But I do not really know why I was wrong, which makes me wonder, 'How did I get it right when replicating ```YOLO-CFAR``` before?'
+    - This makes me wonder, How did I get it right when replicating ```YOLO-CFAR``` before?
+    - Since the shape of the feature map is printed as ```torch.Size([256, 64, 3])```, it shows the same coordinate system as the ```RD map``` where the origin ```(0, 0)``` is located at the top left corner
+    - But it turns out that's not the case. The model still recognizes the bottom left corner as the origin, which is the same as we usually do.
   - The correct way to translate the labels
     ![](https://i.imgur.com/DoAn99t.png)
     ![](https://i.imgur.com/skwA1D3.png)
