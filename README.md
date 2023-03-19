@@ -1,6 +1,34 @@
 # YOLOv3-PyTorch
 
 ## Notes
+- 2023.03.15
+  - Still not actually trainable
+    ```clike!
+    ValueError: Expected x_min for bbox (-0.103515625, 0.306640625, 0.224609375, 0.365234375, 2.0) to be in the range [0.0, 1.0], got -0.103515625.
+    ```
+    - The issue stems from my erroneous translation of the labels
+    - The way we figured this out is by feeding the model with correct but actually wrong answers, so that we can distinguish whether the issue lies in the content of the label or my code implementation
+  - What I mean by wrong labels is that I use the previously well-tested synthetic radar dataset labels for training
+![](https://i.imgur.com/H4HTexN.jpg)
+  - It is trainable with correct but actually wrong labels
+![](https://i.imgur.com/tKcw2LA.png)
+  - When testing ```PASCAL_VOC``` dataset, I actually used padding for the input images, but I forgot that padding existed. So we can now confirm that my code can only take square inputs
+  - Remove useless transforms of ```YOLOv3-VOC```
+    - we need ```LongestMaxSize()``` and ```PadIfNeeded()``` to avoid ```RuntimeError: Trying to resize storage that is not resizable```
+    - we need ```Normalize()``` to avoid ```RuntimeError: Input type (torch.cuda.ByteTensor) and weight type (torch.cuda.HalfTensor) should be the same```
+    - we need ```ToTensorV2()``` to avoid ```RuntimeError: Given groups=1, weight of size [32, 3, 3, 3], expected input[10, 416, 416, 3] to have 3 channels, but got 416 channels instead```
+- 2023.03.14
+  - Ref. Albumentations Documentation [Full API Reference](https://albumentations.ai/docs/api_reference/full_reference/)
+    - testing different border modes
+    ![](https://i.imgur.com/5m01r0U.png)
+    - comparison of the 4 different modes: 
+    ![](https://i.imgur.com/EOvisqk.png)
+    - ```cv2.BORDER_CONSTANT```, ```cv2.BORDER_REFLECT```, ```cv2.BORDER_DEFAULT```, ```cv2.BORDER_REPLICATE``` with the value of ```0```, ```2```, ```4``` and ```1```, respectively
+  - Remove useless transforms of ```YOLOv3-VOC```
+    - we need ```LongestMaxSize()``` and ```PadIfNeeded()``` to avoid ```RuntimeError: Trying to resize storage that is not resizable```
+    - we need ```Normalize()``` to avoid ```RuntimeError: Input type (torch.cuda.ByteTensor) and weight type (torch.cuda.HalfTensor) should be the same```
+    - we need ```ToTensorV2()``` to avoid ```RuntimeError: Given groups=1, weight of size [32, 3, 3, 3], expected input[10, 416, 416, 3] to have 3 channels, but got 416 channels instead```
+  - The execution result and the error messages of the same code are different when using my PC compared to the lab PC, which is weird and annoying.
 - 2023.03.04
   - New breach, image file format may be the issue
   - Regenerate all data in .jpg
