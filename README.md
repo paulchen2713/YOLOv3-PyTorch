@@ -17,6 +17,11 @@
   - The resulted ```mAP``` is ```0.182485```
     ![](https://i.imgur.com/eGgLni0.png)
     ![](https://i.imgur.com/faPMJob.png)
+    - The code for extracting the data from the log files ```read_logs.py```
+      ![](https://i.imgur.com/yzPEsUE.png)
+      ![](https://i.imgur.com/CEeq9LO.png)
+      ![](https://i.imgur.com/EGTWlkP.png)
+      ![](https://i.imgur.com/XIehPQV.png)
 - 2023.03.16
   - It's finally trainable now
     ![](https://i.imgur.com/Q8anAyR.png)
