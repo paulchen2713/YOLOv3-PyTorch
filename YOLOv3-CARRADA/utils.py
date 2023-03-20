@@ -30,9 +30,6 @@ def iou_width_height(boxes1, boxes2):
 
 def intersection_over_union(boxes_preds, boxes_labels, box_format="midpoint"):
     """
-    Video explanation of this function:
-    https://youtu.be/XXYG5ZWtjj0
-
     This function calculates intersection over union (iou) given pred boxes
     and target boxes.
 
@@ -79,9 +76,6 @@ def intersection_over_union(boxes_preds, boxes_labels, box_format="midpoint"):
 
 def non_max_suppression(bboxes, iou_threshold, threshold, box_format="corners"):
     """
-    Video explanation of this function:
-    https://youtu.be/YDkjWEN8jNA
-
     Does Non Max Suppression given bboxes
 
     Parameters:
@@ -121,13 +115,8 @@ def non_max_suppression(bboxes, iou_threshold, threshold, box_format="corners"):
     return bboxes_after_nms
 
 
-def mean_average_precision(
-    pred_boxes, true_boxes, iou_threshold=0.5, box_format="midpoint", num_classes=20
-):
+def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format="midpoint", num_classes=3):
     """
-    Video explanation of this function:
-    https://youtu.be/FppOzcDvaDI
-
     This function calculates mean average precision (mAP)
 
     Parameters:
@@ -141,6 +130,7 @@ def mean_average_precision(
     Returns:
         float: mAP value across all classes given a specific IoU threshold
     """
+    # pred_boxes (list): [[train_index, class_pred, prob_score, x, y, w, h], ...]
 
     # list storing all AP for respective classes
     average_precisions = []
@@ -164,9 +154,8 @@ def mean_average_precision(
                 ground_truths.append(true_box)
 
         # find the amount of bboxes for each training example
-        # Counter here finds how many ground truth bboxes we get
-        # for each training example, so let's say img 0 has 3,
-        # img 1 has 5 then we will obtain a dictionary with:
+        # Counter here finds how many ground truth bboxes we get for each training example, 
+        # so let's say img 0 has 3 bboxes, img 1 has 5 bboxes, then we will obtain a dictionary with:
         # amount_bboxes = {0:3, 1:5}
         amount_bboxes = Counter([gt[0] for gt in ground_truths])
 

@@ -80,7 +80,7 @@ class YOLODataset(Dataset):
         return len(self.annotations)
 
     def __getitem__(self, index):
-        # print(f"index: {index}")
+        print(f"index: {index}")
         # get the index-th data, in the csv files, data are structured as index.jpg,index.txt, 
         # so (indxe, 0) get us the image and (index, 1) get us the label
 
@@ -246,15 +246,15 @@ def test():
 
         for i in range(y[0].shape[1]):
             anchor = scaled_anchors[i]
-            print(f"anchor.shape: {anchor.shape}") # torch.Size([3, 2])
-            print(f"y[{i}].shape: {y[i].shape}")
+            # print(f"anchor.shape: {anchor.shape}") # torch.Size([3, 2])
+            # print(f"y[{i}].shape: {y[i].shape}")
             # y[0].shape: torch.Size([1, 3, 13, 13, 6])
             # y[1].shape: torch.Size([1, 3, 26, 26, 6])
             # y[2].shape: torch.Size([1, 3, 52, 52, 6])
             boxes += cells_to_bboxes(y[i], is_preds=False, S=y[i].shape[2], anchors=anchor)[0]
 
         boxes = nms(boxes, iou_threshold=1, threshold=0.7, box_format="midpoint")
-        print(f"boxes: {boxes}")
+        # print(f"boxes: {boxes}")
         # plot_image(x[0].permute(1, 2, 0).to("cpu"), boxes) # torch.Size([416, 416, 3])
 
         # 
@@ -262,12 +262,12 @@ def test():
 
         # x[0].permute(0, 1, 2).shape is the original shape with torch.Size([3, 416, 416]) and it's an Invalid shape for image data
         # so x[0].permute(1, 2, 0).shape is the valid shape with torch.Size([416, 416, 3]) 
-        print("original shape: ", x[0].permute(0, 1, 2).shape) # torch.Size([3, 416, 416])
+        # print("original shape: ", x[0].permute(0, 1, 2).shape) # torch.Size([3, 416, 416])
         plot_image(x[0].permute(1, 2, 0).to("cpu"), boxes) # 
         print("-----------------------------------------")
 
         counter += 1 
-        if counter == 3: break # run the test for some times then we stop
+        if counter == 10: break # run the test for some times then we stop
 
         # sometimes would run into out of bound ValueError, NOTE probabily caused by transforms, scale, and bbox_params settings!
         # File "C:\Users\paulc\.conda\envs\pt3.7\lib\site-packages\albumentations\augmentations\bbox_utils.py", line 330, in check_bbox

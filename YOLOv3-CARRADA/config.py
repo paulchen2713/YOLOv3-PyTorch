@@ -39,19 +39,19 @@ def seed_everything(seed=42):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
+    # torch.backends.cudnn.deterministic = True
+    # torch.backends.cudnn.benchmark = False
 
 # seed_everything()  # If you want deterministic behavior
 
-NUM_WORKERS = 1 # 4
+NUM_WORKERS = 1 # num of threads
 BATCH_SIZE = 20 # 32
 IMAGE_SIZE = 416
 NUM_CLASSES = 3 # 80
 LEARNING_RATE = 1e-4 # 3e-5
 
 WEIGHT_DECAY = 1e-4
-NUM_EPOCHS = 1 # 100
+NUM_EPOCHS = 1 
 CONF_THRESHOLD = 0.6
 MAP_IOU_THRESH = 0.5
 NMS_IOU_THRESH = 0.45
@@ -66,7 +66,7 @@ SAVE_MODEL = True # True
 # "checkpoint.pth.tar" "YOLOv3-pretrained-weights/pytorch_format/yolov3_pascal_78.1map.pth.tar"
 CHECKPOINT_FILE = PATH + "yolov3_pascal_voc.pth.tar" 
 
-IMAGE_DIR = DATASET + "imagesc/"
+IMAGE_DIR = DATASET + "images/"
 LABEL_DIR = DATASET + "labels/"
 
 # how we handle the anchor boxes? we will specify the anchor boxes in the following manner as a list of lists 
@@ -411,8 +411,8 @@ def test():
 
 
 if __name__ == "__main__":
-    print("runing test() from config.py")
-    test()   
+    print("test() from config.py has been disabled")
+    # test()   
     
 
 
