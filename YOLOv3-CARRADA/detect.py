@@ -20,9 +20,6 @@ from dataset import YOLODataset
 
 def intersection_over_union(boxes_preds, boxes_labels, box_format="midpoint"):
     """
-    Video explanation of this function:
-    https://youtu.be/XXYG5ZWtjj0
-
     This function calculates intersection over union (iou) given pred boxes
     and target boxes.
 
@@ -69,9 +66,6 @@ def intersection_over_union(boxes_preds, boxes_labels, box_format="midpoint"):
 
 def non_max_suppression(bboxes, iou_threshold, threshold, box_format="corners"):
     """
-    Video explanation of this function:
-    https://youtu.be/YDkjWEN8jNA
-
     Does Non Max Suppression given bboxes
 
     Parameters:
