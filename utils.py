@@ -30,9 +30,6 @@ def iou_width_height(boxes1, boxes2):
 
 def intersection_over_union(boxes_preds, boxes_labels, box_format="midpoint"):
     """
-    Video explanation of this function:
-    https://youtu.be/XXYG5ZWtjj0
-
     This function calculates intersection over union (iou) given pred boxes
     and target boxes.
 
@@ -79,9 +76,6 @@ def intersection_over_union(boxes_preds, boxes_labels, box_format="midpoint"):
 
 def non_max_suppression(bboxes, iou_threshold, threshold, box_format="corners"):
     """
-    Video explanation of this function:
-    https://youtu.be/YDkjWEN8jNA
-
     Does Non Max Suppression given bboxes
 
     Parameters:
@@ -121,13 +115,8 @@ def non_max_suppression(bboxes, iou_threshold, threshold, box_format="corners"):
     return bboxes_after_nms
 
 
-def mean_average_precision(
-    pred_boxes, true_boxes, iou_threshold=0.5, box_format="midpoint", num_classes=20
-):
+def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format="midpoint", num_classes=20):
     """
-    Video explanation of this function:
-    https://youtu.be/FppOzcDvaDI
-
     This function calculates mean average precision (mAP)
 
     Parameters:
@@ -533,7 +522,7 @@ def seed_everything(seed=42):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
+    # torch.backends.cudnn.deterministic = True
+    # torch.backends.cudnn.benchmark = False
 
 

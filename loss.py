@@ -11,9 +11,6 @@ import torch.nn as nn
 
 def intersection_over_union(boxes_preds, boxes_labels, box_format="midpoint"):
     """
-    Video explanation of this function:
-    https://youtu.be/XXYG5ZWtjj0
-
     This function calculates intersection over union (iou) given pred boxes
     and target boxes.
 

@@ -6,8 +6,8 @@ import config
 import torch
 import torch.optim as optim
 
-# from model import YOLOv3
-from model_with_weights2 import YOLOv3
+from model import YOLOv3
+# from model_with_weights2 import YOLOv3
 from tqdm import tqdm
 from utils import (
     mean_average_precision,
