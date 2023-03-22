@@ -1,8 +1,25 @@
+# -*- coding: utf-8 -*-
 """
+Created on Mon Feb 06 15:48:19 2023
+
+@patch: 
+    2023.02.17
+    2023.03.22
+
+@author: Paul
+@file: config.py
+@dependencies:
+    env pt3.7
+    python 3.7.13
+    pytorch==1.7.1
+    torchaudio==0.7.2
+    torchvision==0.8.2
+
 Implementation of Yolo Loss Function similar to the one in Yolov3 paper,
 the difference from what I can tell is I use CrossEntropy for the classes
 instead of BinaryCrossEntropy.
 """
+
 import random
 import torch
 import torch.nn as nn
@@ -11,9 +28,6 @@ import torch.nn as nn
 
 def intersection_over_union(boxes_preds, boxes_labels, box_format="midpoint"):
     """
-    Video explanation of this function:
-    https://youtu.be/XXYG5ZWtjj0
-
     This function calculates intersection over union (iou) given pred boxes
     and target boxes.
 

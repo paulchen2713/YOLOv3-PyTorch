@@ -1,3 +1,23 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Feb 06 11:10:12 2023
+
+@patch: 
+    2023.03.22
+
+@author: Paul
+@file: utils.py
+@dependencies:
+    env pt3.7
+    python 3.7.13
+    numpy==1.19.2
+    pytorch==1.7.1
+    torchaudio==0.7.2
+    torchvision==0.8.2
+    tqdm==4.56.0
+    matplotlib==3.3.4
+"""
+
 import config
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -19,12 +39,8 @@ def iou_width_height(boxes1, boxes2):
     Returns:
         tensor: Intersection over union of the corresponding boxes
     """
-    intersection = torch.min(boxes1[..., 0], boxes2[..., 0]) * torch.min(
-        boxes1[..., 1], boxes2[..., 1]
-    )
-    union = (
-        boxes1[..., 0] * boxes1[..., 1] + boxes2[..., 0] * boxes2[..., 1] - intersection
-    )
+    intersection = torch.min(boxes1[..., 0], boxes2[..., 0]) * torch.min(boxes1[..., 1], boxes2[..., 1])
+    union = (boxes1[..., 0] * boxes1[..., 1] + boxes2[..., 0] * boxes2[..., 1] - intersection)
     return intersection / union
 
 
@@ -142,9 +158,7 @@ def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format
         detections = []
         ground_truths = []
 
-        # Go through all predictions and targets,
-        # and only add the ones that belong to the
-        # current class c
+        # Go through all predictions and targets, and only add the ones that belong to the current class c 
         for detection in pred_boxes:
             if detection[1] == c:
                 detections.append(detection)
@@ -159,8 +173,7 @@ def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format
         # amount_bboxes = {0:3, 1:5}
         amount_bboxes = Counter([gt[0] for gt in ground_truths])
 
-        # We then go through each key, val in this dictionary
-        # and convert to the following (w.r.t same example):
+        # We then go through each {key, val} in Counter and convert to the following (w.r.t same example):
         # ammount_bboxes = {0:torch.tensor[0,0,0], 1:torch.tensor[0,0,0,0,0]}
         for key, val in amount_bboxes.items():
             amount_bboxes[key] = torch.zeros(val)
@@ -176,20 +189,17 @@ def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format
             continue
 
         for detection_idx, detection in enumerate(detections):
-            # Only take out the ground_truths that have the same
-            # training idx as detection
-            ground_truth_img = [
-                bbox for bbox in ground_truths if bbox[0] == detection[0]
-            ]
+            # Only take out the ground_truths that have the same training idx as detection
+            ground_truth_img = [bbox for bbox in ground_truths if bbox[0] == detection[0]]
 
             num_gts = len(ground_truth_img)
             best_iou = 0
 
             for idx, gt in enumerate(ground_truth_img):
                 iou = intersection_over_union(
-                    torch.tensor(detection[3:]),
-                    torch.tensor(gt[3:]),
-                    box_format=box_format,
+                    torch.tensor(detection[3:]),  # bboxes predictions
+                    torch.tensor(gt[3:]),         # correct bboxes labels
+                    box_format=box_format,        # 
                 )
 
                 if iou > best_iou:
@@ -215,7 +225,8 @@ def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format
         precisions = TP_cumsum / (TP_cumsum + FP_cumsum + epsilon)
         precisions = torch.cat((torch.tensor([1]), precisions))
         recalls = torch.cat((torch.tensor([0]), recalls))
-        # torch.trapz for numerical integration
+
+        # torch.trapz() for numerical integration
         average_precisions.append(torch.trapz(precisions, recalls))
 
     return sum(average_precisions) / len(average_precisions)

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jul 18 16:57:39 2022
+Created on Mon Feb 06 15:51:47 2023
 
 @patch: 
-    2022.08.01
     2023.02.17
+    2023.03.22
+
 @author: Paul
 @file: train.py
 @dependencies:
@@ -22,8 +23,8 @@ import config
 import torch
 import torch.optim as optim
 
-# from model import YOLOv3
-from model_with_weights2 import YOLOv3
+from model import YOLOv3
+# from model_with_weights2 import YOLOv3
 from tqdm import tqdm
 from utils import (
     mean_average_precision,

@@ -2,7 +2,10 @@
 """
 Created on Mon Feb 06 19:27:14 2023
 
-@patch: 2022.02.16
+@patch: 
+    2023.02.16
+    2023.03.22
+
 @author: Paul
 @file: dataset.py
 @dependencies:
@@ -80,7 +83,7 @@ class YOLODataset(Dataset):
         return len(self.annotations)
 
     def __getitem__(self, index):
-        print(f"index: {index}")
+        # print(f"index: {index}")
         # get the index-th data, in the csv files, data are structured as index.jpg,index.txt, 
         # so (indxe, 0) get us the image and (index, 1) get us the label
 
@@ -267,7 +270,7 @@ def test():
         print("-----------------------------------------")
 
         counter += 1 
-        if counter == 10: break # run the test for some times then we stop
+        if counter == 1: break # run the test for some times then we stop
 
         # sometimes would run into out of bound ValueError, NOTE probabily caused by transforms, scale, and bbox_params settings!
         # File "C:\Users\paulc\.conda\envs\pt3.7\lib\site-packages\albumentations\augmentations\bbox_utils.py", line 330, in check_bbox
