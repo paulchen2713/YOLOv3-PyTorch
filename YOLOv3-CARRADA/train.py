@@ -37,8 +37,25 @@ from utils import (
     plot_couple_examples
 )
 from loss import YoloLoss
+from datetime import date as date_function
 
 torch.backends.cudnn.benchmark = True
+
+import numpy as np
+import os
+import random
+
+def seed_everything(seed=33):
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    # torch.backends.cudnn.deterministic = True
+    # torch.backends.cudnn.benchmark = False
+
+seed_everything()  # If you want deterministic behavior
 
 
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
@@ -71,6 +88,15 @@ def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
         # update progress bar
         mean_loss = sum(losses) / len(losses)
         loop.set_postfix(loss=mean_loss)
+    
+    loss_path = config.DATASET + f'training_logs/train/'
+    # store the mean_loss value of every epoch to a text file named as today's date
+    with open(loss_path + f"mean_loss/{date_function.today()}.txt", "a") as loss_file:
+        print(f"{mean_loss}", file=loss_file)
+    
+    with open(loss_path + f"losses/{date_function.today()}.txt", "a") as loss_file:
+        print(f"{losses}", file=loss_file)
+
 
 
 
@@ -103,44 +129,50 @@ def main():
         # plot_couple_examples(model, test_loader, 0.6, 0.5, scaled_anchors) # just plotting some images without bboxes
         train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors)
 
-        # if config.SAVE_MODEL:
-        #     from datetime import date
-        #     file_name = config.DATASET + f"checks/checkpoint-{date.today()}.pth.tar"
-        #     save_checkpoint(model, optimizer, filename=file_name)
-
         print(f"Currently epoch {epoch}")
         print("On Train loader:")
-        check_class_accuracy(model, train_loader, threshold=config.CONF_THRESHOLD)
+        class_acc, no_obj_acc, obj_acc = check_class_accuracy(model, train_loader, threshold=config.CONF_THRESHOLD)
 
-        if epoch % 10 == 0 and epoch > 0:
+        # file path for the training statistics
+        file_path = config.DATASET + f'training_logs/train/'
+
+        # store the class_acc, no_obj_acc, obj_acc values of every epoch to text files named as today's date
+        with open(file_path + f"class_accuracy/{date_function.today()}.txt", "a") as txt_file:
+            print(f"{class_acc}", file=txt_file)
+
+        with open(file_path + f"no_object_accuracy/{date_function.today()}.txt", "a") as txt_file:
+            print(f"{no_obj_acc}", file=txt_file)
+
+        with open(file_path + f"object_accuracy/{date_function.today()}.txt", "a") as txt_file:
+            print(f"{obj_acc}", file=txt_file)
+
+        test_point = 30
+        if epoch % test_point == 0 and epoch > 0:
             print("On Test loader:")
-            check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
+            class_acc, no_obj_acc, obj_acc = check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
 
+            # file path for the testing statistics
+            file_path = config.DATASET + f'training_logs/test/'
+
+            # store the class_acc, no_obj_acc, obj_acc values of every epoch to text files named as today's date
+            with open(file_path + f"class_accuracy/{date_function.today()}.txt", "a") as txt_file:
+                print(f"{class_acc}", file=txt_file)
+
+            with open(file_path + f"no_object_accuracy/{date_function.today()}.txt", "a") as txt_file:
+                print(f"{no_obj_acc}", file=txt_file)
+
+            with open(file_path + f"object_accuracy/{date_function.today()}.txt", "a") as txt_file:
+                print(f"{obj_acc}", file=txt_file)
+
+            # 
             if config.SAVE_MODEL:
-                from datetime import date
-                file_name = config.DATASET + f"checks/checkpoint-{date.today()}.pth.tar"
+                file_name = config.DATASET + f"checks/checkpoint-{date_function.today()}.pth.tar"
                 save_checkpoint(model, optimizer, filename=file_name)
 
-        # pred_boxes, true_boxes = get_evaluation_bboxes(
-        #     test_loader,
-        #     model,
-        #     iou_threshold=config.NMS_IOU_THRESH,
-        #     anchors=config.ANCHORS,
-        #     threshold=config.CONF_THRESHOLD,
-        # )
-        # mapval = mean_average_precision(
-        #     pred_boxes,
-        #     true_boxes,
-        #     iou_threshold=config.MAP_IOU_THRESH,
-        #     box_format="midpoint",
-        #     num_classes=config.NUM_CLASSES,
-        # )
-        # print(f"MAP: {mapval.item()}")
 
-        if epoch % 100 == 0 and epoch > 0:
-            print("On Test loader:")
-            check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
-
+        check_map = 100
+        if epoch % check_map == 0 and epoch > 0:
+            
             pred_boxes, true_boxes = get_evaluation_bboxes(
                 test_loader,
                 model,
@@ -155,7 +187,11 @@ def main():
                 box_format="midpoint",
                 num_classes=config.NUM_CLASSES,
             )
-            print(f"MAP: {mapval.item()}")
+            print(f"mAP: {mapval.item()}")
+
+            file_path = config.DATASET + f'training_logs/mAP/'
+            with open(file_path + f"{date_function.today()}.txt", "a") as txt_file:
+                print(f"{mapval.item()}", file=txt_file)
 
 
 

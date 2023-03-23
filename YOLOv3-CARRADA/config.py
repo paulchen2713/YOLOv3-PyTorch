@@ -32,7 +32,7 @@ PATH = "D:/Datasets/YOLOv3-PyTorch/"
 DATASET = 'D:/Datasets/RADA/RD_JPG/' # RD_416
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-def seed_everything(seed=42):
+def seed_everything(seed=33):
     os.environ['PYTHONHASHSEED'] = str(seed)
     random.seed(seed)
     np.random.seed(seed)
@@ -44,17 +44,17 @@ def seed_everything(seed=42):
 
 # seed_everything()  # If you want deterministic behavior
 
-NUM_WORKERS = 1 # num of threads
-BATCH_SIZE = 20 # 32
+NUM_WORKERS = 1  # num of threads
+BATCH_SIZE = 20  # 32
 IMAGE_SIZE = 416
-NUM_CLASSES = 3 # 80
-LEARNING_RATE = 1e-4 # 3e-5
+NUM_CLASSES = 3  # 80
+LEARNING_RATE = 1e-4  # 3e-5 1e-4
 
 WEIGHT_DECAY = 1e-4
-NUM_EPOCHS = 1 
-CONF_THRESHOLD = 0.6
-MAP_IOU_THRESH = 0.5
-NMS_IOU_THRESH = 0.45
+NUM_EPOCHS = 300
+CONF_THRESHOLD = 0.6  # 0.6
+MAP_IOU_THRESH = 0.5  # 0.5
+NMS_IOU_THRESH = 0.45  # 0.45
 
 stride = [32, 16, 8] 
 S = [IMAGE_SIZE // stride[0], IMAGE_SIZE // stride[1], IMAGE_SIZE // stride[2]] # [13, 26, 52]

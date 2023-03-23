@@ -404,9 +404,17 @@ def check_class_accuracy(model, loader, threshold):
             tot_noobj += torch.sum(noobj)
 
     print(f"Class accuracy is: {(correct_class/(tot_class_preds+1e-16))*100:2f}%")
+
     print(f"No obj accuracy is: {(correct_noobj/(tot_noobj+1e-16))*100:2f}%")
+
     print(f"Obj accuracy is: {(correct_obj/(tot_obj+1e-16))*100:2f}%")
+
+    class_acc = (correct_class/(tot_class_preds+1e-16))*100
+    on_obj_acc = (correct_noobj/(tot_noobj+1e-16))*100
+    obj_acc = (correct_obj/(tot_obj+1e-16))*100
+    
     model.train()
+    return class_acc, on_obj_acc, obj_acc
 
 
 def get_mean_std(loader):
