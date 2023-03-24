@@ -11,10 +11,11 @@ logs = [
     'log_0316.txt',
     'log_0317.txt',
     'log_0318.txt',
+    'log_0322.txt',
 ]
 
 # set the file path for the training logs
-file_index = 0
+file_index = 3
 file_path = PATH + f"{logs[file_index]}"
 data = []  # the buffer for storing all data in the log files
 
@@ -115,11 +116,14 @@ def plot_results():
 if __name__ == '__main__':
     print(f"reading log files")
 
+    # for the training epoch within 100, we could manually copy all the printed output 
+    # at the terminal and store them as a text file named as 'log_<date>.txt' and run 
+    # the following functions to plot the training statistics
     load_data()
     read_data()
     print_vals()
     plot_results()
 
-
-
+    # read the statistical data from 3 folders: mAP, test and train
+    
 
