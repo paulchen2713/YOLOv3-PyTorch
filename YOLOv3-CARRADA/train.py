@@ -45,6 +45,7 @@ import numpy as np
 import os
 import random
 
+
 def seed_everything(seed=33):
     os.environ['PYTHONHASHSEED'] = str(seed)
     random.seed(seed)
@@ -55,7 +56,7 @@ def seed_everything(seed=33):
     # torch.backends.cudnn.deterministic = True
     # torch.backends.cudnn.benchmark = False
 
-seed_everything()  # If you want deterministic behavior
+# seed_everything()  # If you want deterministic behavior
 
 
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
