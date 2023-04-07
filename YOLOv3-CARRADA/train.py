@@ -38,6 +38,7 @@ from utils import (
 )
 from loss import YoloLoss
 from datetime import date as date_function
+import time
 
 torch.backends.cudnn.benchmark = True
 
@@ -57,6 +58,12 @@ def seed_everything(seed=33):
     # torch.backends.cudnn.benchmark = False
 
 # seed_everything()  # If you want deterministic behavior
+
+
+# Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
+# the log messages for the same training will be split into several files with different dates as their file names. However, 
+# they actually belong in the same file. All log files will be named as the start date of the training.
+log_file_name = date_function.today()
 
 
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
@@ -92,11 +99,12 @@ def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
     
     loss_path = config.DATASET + f'training_logs/train/'
     # store the mean_loss value of every epoch to a text file named as today's date
-    with open(loss_path + f"mean_loss/{date_function.today()}.txt", "a") as loss_file:
+    with open(loss_path + f"mean_loss/{log_file_name}.txt", "a") as loss_file:
         print(f"{mean_loss}", file=loss_file)
     
-    with open(loss_path + f"losses/{date_function.today()}.txt", "a") as loss_file:
-        print(f"{losses}", file=loss_file)
+    for i_loss in losses:
+        with open(loss_path + f"losses/{log_file_name}.txt", "a") as loss_file:
+            print(f"{i_loss}", file=loss_file)
 
 
 
@@ -138,13 +146,13 @@ def main():
         file_path = config.DATASET + f'training_logs/train/'
 
         # store the class_acc, no_obj_acc, obj_acc values of every epoch to text files named as today's date
-        with open(file_path + f"class_accuracy/{date_function.today()}.txt", "a") as txt_file:
+        with open(file_path + f"class_accuracy/{log_file_name}.txt", "a") as txt_file:
             print(f"{class_acc}", file=txt_file)
 
-        with open(file_path + f"no_object_accuracy/{date_function.today()}.txt", "a") as txt_file:
+        with open(file_path + f"no_object_accuracy/{log_file_name}.txt", "a") as txt_file:
             print(f"{no_obj_acc}", file=txt_file)
 
-        with open(file_path + f"object_accuracy/{date_function.today()}.txt", "a") as txt_file:
+        with open(file_path + f"object_accuracy/{log_file_name}.txt", "a") as txt_file:
             print(f"{obj_acc}", file=txt_file)
 
         test_point = 30
@@ -156,18 +164,18 @@ def main():
             file_path = config.DATASET + f'training_logs/test/'
 
             # store the class_acc, no_obj_acc, obj_acc values of every epoch to text files named as today's date
-            with open(file_path + f"class_accuracy/{date_function.today()}.txt", "a") as txt_file:
+            with open(file_path + f"class_accuracy/{log_file_name}.txt", "a") as txt_file:
                 print(f"{class_acc}", file=txt_file)
 
-            with open(file_path + f"no_object_accuracy/{date_function.today()}.txt", "a") as txt_file:
+            with open(file_path + f"no_object_accuracy/{log_file_name}.txt", "a") as txt_file:
                 print(f"{no_obj_acc}", file=txt_file)
 
-            with open(file_path + f"object_accuracy/{date_function.today()}.txt", "a") as txt_file:
+            with open(file_path + f"object_accuracy/{log_file_name}.txt", "a") as txt_file:
                 print(f"{obj_acc}", file=txt_file)
 
             # 
             if config.SAVE_MODEL:
-                file_name = config.DATASET + f"checks/checkpoint-{date_function.today()}.pth.tar"
+                file_name = config.DATASET + f"checks/checkpoint-{log_file_name}.pth.tar"
                 save_checkpoint(model, optimizer, filename=file_name)
 
 
@@ -191,12 +199,19 @@ def main():
             print(f"mAP: {mapval.item()}")
 
             file_path = config.DATASET + f'training_logs/mAP/'
-            with open(file_path + f"{date_function.today()}.txt", "a") as txt_file:
+            with open(file_path + f"{log_file_name}.txt", "a") as txt_file:
                 print(f"{mapval.item()}", file=txt_file)
 
 
 
 if __name__ == "__main__":
+
+    tic = time.perf_counter()
+    
     main()
+
+    toc = time.perf_counter()
+    duration = (toc - tic) / 3600
+    print(f"duration: {duration:0.4f} hours")
 
 
