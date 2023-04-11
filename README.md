@@ -34,6 +34,7 @@
     - Tech-with-Tim [Implementing K Means Clustering](https://www.techwithtim.net/tutorials/machine-learning-python/k-means-2/) 
     ![](https://i.imgur.com/bgqHKHr.png)
     - Sentdex [K-Means from Scratch in Python](https://pythonprogramming.net/k-means-from-scratch-machine-learning-tutorial/)
+    ![](https://i.imgur.com/FVv5sMX.png)
 - 2023.04.09
   - 過去 10 天確診啥也沒做
 - 2023.03.28
