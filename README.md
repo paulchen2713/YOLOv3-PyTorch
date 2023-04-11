@@ -1,6 +1,41 @@
 # YOLOv3-PyTorch
 
 ## Notes
+- 2023.04.10
+  - Need to recompute / regenerate anchors for YOLO [Training YOLO? Select Anchor Boxes Like This](https://towardsdatascience.com/training-yolo-select-anchor-boxes-like-this-3226cb8d7f0b)
+  - for YOLOv2 ```AlexeyAB/darknet/scripts/``` [```gen_anchors.py```](https://github.com/AlexeyAB/darknet/blob/master/scripts/gen_anchors.py)
+    - The anchor boxes were calculated with a k-means clustering algorithm only
+    - With ```1 - IoU``` as a distance metric
+    - Doing k-means clustering only is a good approach already
+  - for YOLOv5 / YOLOv7 ```ultralytics/yolov5/utils/``` [```autoanchor.py```](https://github.com/ultralytics/yolov5/blob/master/utils/autoanchor.py)
+  - ultralytics YOLOv5 Docs [Train Custom Data](https://docs.ultralytics.com/yolov5/train_custom_data/)
+- Auto-anchor algorithm
+  - ```Step 0.``` K-means (with simple Euclidean distance) is used to get the initial guess for anchor boxes
+    - We also can do it with ```1 - IoU``` as a distance metric
+  - ```Step 1.``` Get bounding box sizes from the train data
+  - ```Step 2.``` Choose a metric to define anchor fitness
+    - Ideally, the metric should be connected to the loss function
+  - ```Step 3.``` Do clustering to get an initial guess for anchors
+  - ```Step 4.``` Evolve anchors to improve anchor fitness
+- Things I'm Googling but haven't finished reading
+  - Faster RCNN with PyTorch
+    - PyTorch Docs [TORCHVISION OBJECT DETECTION FINETUNING TUTORIAL](https://pytorch.org/tutorials/intermediate/torchvision_tutorial.html)
+    - PyTorch Docs [MODELS AND PRE-TRAINED WEIGHTS](https://pytorch.org/vision/main/models.html)
+    - PyTorch Source Code [```fasterrcnn_resnet50_fpn()```](https://pytorch.org/vision/stable/_modules/torchvision/models/detection/faster_rcnn.html#fasterrcnn_resnet50_fpn)
+    - 知呼 FasterRCNN 解析 [pytorch官方FasterRCNN代碼](https://zhuanlan.zhihu.com/p/145842317)
+  - Faster RCNN reproduction
+    - Kaggle object detection [Aquarium Dataset](https://www.kaggle.com/datasets/sharansmenon/aquarium-dataset)
+    - Kaggle Pytorch Starter -  [FasterRCNN Train](https://www.kaggle.com/code/pestipeti/pytorch-starter-fasterrcnn-train/notebook) 
+    - github search for [faster-r-cnn](https://github.com/search?q=faster-r-cnn&type=repositories&p=5)
+  - Kmeans implementation
+    - scikit-learn [Clustering with kmeans](https://scikit-learn.org/stable/modules/clustering.html#k-means)
+    - scikit-learn [Clustering performance evaluation](https://scikit-learn.org/stable/modules/clustering.html#clustering-evaluation)
+    - scikit-learn [```sklearn.cluster.KMeans()```](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html)
+    - Tech-with-Tim [Implementing K Means Clustering](https://www.techwithtim.net/tutorials/machine-learning-python/k-means-2/) 
+    ![](https://i.imgur.com/bgqHKHr.png)
+    - Sentdex [K-Means from Scratch in Python](https://pythonprogramming.net/k-means-from-scratch-machine-learning-tutorial/)
+- 2023.04.09
+  - 過去 10 天確診啥也沒做
 - 2023.03.28
   - I tried to train the model until a point where we're satisfied with its performance, then we can do the edge computing modifications on it
   - Quick recap:
