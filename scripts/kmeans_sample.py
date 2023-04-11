@@ -1,10 +1,10 @@
 import numpy as np
-from time import time
 import sklearn
 from sklearn.preprocessing import scale
 from sklearn.datasets import load_digits
 from sklearn.cluster import KMeans
 from sklearn import metrics
+from time import time
 
 digits = load_digits()
 data = scale(digits.data)
@@ -13,7 +13,6 @@ labels = digits.target
 k = 10
 samples, features = data.shape
 sample_size = 300
-
 
 def bench_k_means(estimator, name, data):
     t0 = time()
