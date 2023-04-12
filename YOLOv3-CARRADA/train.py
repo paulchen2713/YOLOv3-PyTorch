@@ -155,7 +155,7 @@ def main():
         with open(file_path + f"object_accuracy/{log_file_name}.txt", "a") as txt_file:
             print(f"{obj_acc}", file=txt_file)
 
-        test_point = 30
+        test_point = 10
         if epoch % test_point == 0 and epoch > 0:
             print("On Test loader:")
             class_acc, no_obj_acc, obj_acc = check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
@@ -207,8 +207,9 @@ def main():
 if __name__ == "__main__":
 
     tic = time.perf_counter()
-    
+
     main()
+    # epoch: 1000, duration: 80.3616 hours
 
     toc = time.perf_counter()
     duration = (toc - tic) / 3600

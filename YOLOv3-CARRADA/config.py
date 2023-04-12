@@ -51,7 +51,7 @@ NUM_CLASSES = 3  # 80
 LEARNING_RATE = 1e-4  # 3e-5 1e-4
 
 WEIGHT_DECAY = 1e-4
-NUM_EPOCHS = 1 # 300
+NUM_EPOCHS = 1000 # 300
 CONF_THRESHOLD = 0.6  # 0.6
 MAP_IOU_THRESH = 0.5  # 0.5
 NMS_IOU_THRESH = 0.45  # 0.45
@@ -66,7 +66,7 @@ SAVE_MODEL = True # True
 # "checkpoint.pth.tar" "YOLOv3-pretrained-weights/pytorch_format/yolov3_pascal_78.1map.pth.tar"
 CHECKPOINT_FILE = PATH + "yolov3_pascal_voc.pth.tar" 
 
-IMAGE_DIR = DATASET + "images/"
+IMAGE_DIR = DATASET + "imagesc/"
 LABEL_DIR = DATASET + "labels/"
 
 # how we handle the anchor boxes? we will specify the anchor boxes in the following manner as a list of lists 
