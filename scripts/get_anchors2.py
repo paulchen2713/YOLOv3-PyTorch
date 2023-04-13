@@ -6,10 +6,12 @@ import os
 import random
 from tqdm import tqdm 
 import sklearn.cluster as cluster
+from sklearn import metrics
 import pandas as pd
 
 import time
 from datetime import date
+from functools import cmp_to_key
 
 
 def iou(x, centroids):
@@ -38,21 +40,46 @@ def avg_iou(x, centroids):
     return sums / n
 
 
-def write_anchors_to_file(centroids, distance, anchor_file):
-    anchors = centroids # * 416 / 32 
-    anchors = [str(i) for i in anchors.ravel()]
-    print(f"Clusters: {len(centroids)}")
+def write_anchors_to_file(centroids, distance, inertia, anchor_file):
+    print(f"")
+    print(f"Number of clusters: {len(centroids)}")
     print(f"Average IoU: {distance}")
+    print(f"Inertia: {inertia}")
     print(f"Anchors: ")
-    # print(", ".join(anchors))
     for i, centroid in enumerate(centroids):
         w, h = centroid[0], centroid[1]
         # print(f"{i + 1}: ({w}, {h})")
         print(f"{{{w:0.3f}, {h:0.3f}}}", end=', ')
-
+        # print(f"({w}, {h})", end=', ')
+    print(f"\n")
+    
     with open(anchor_file, 'w') as f:
-        f.write(", ".join(anchors))
-        # f.write(f'\n{distance}\n')
+        print(f"Number of clusters: {len(centroids)}", file=f)
+        print(f"Average IoU: {distance}", file=f)
+        print(f"Inertia: {inertia}\n", file=f)
+
+        print(f"Anchors original: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            print(f"({w}, {h})", end=', ', file=f)
+            if (i + 1) % 3 == 0:
+                print(f"", file=f)
+        print(f"", file=f)
+
+        print(f"Anchors rounded to 2 decimal places: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            print(f"({w:0.2f}, {h:0.2f})", end=', ', file=f)
+        print(f"\n", file=f)
+    
+        print(f"Anchors rounded to 3 decimal places: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            print(f"({w:0.3f}, {h:0.3f})", end=', ', file=f)
+        print(f"", file=f)
+        
+    print(f"Writing anchors to {anchor_file}.txt")
+
 
 
 def k_means(x, n_clusters, eps):
@@ -96,7 +123,7 @@ def get_file_content(fnm):
         return [line.strip() for line in f]
 
 
-def main(args):
+def sample(args):
     print("Reading Data ...")
 
     file_list = []
@@ -130,6 +157,102 @@ def main(args):
     write_anchors_to_file(result, distance, args.output)
 
 
+def cmp_by_area(a, b):
+    area_a = a[0] * a[1]
+    area_b = b[0] * b[1]
+    if area_a == area_b:
+        return 0
+    elif area_a < area_b:
+        return -1 
+    else: 
+        return 1
+
+
+def bench_KMeans(estimator, data, anchor_file, show=False):
+    tic = time.perf_counter()
+    estimator.fit(data) # the clustering result may be differnt each time
+    toc = time.perf_counter()
+    duration = toc - tic
+    # print(estimator)    # e.g. KMeans(n_clusters=9, verbose=True)
+
+    result = estimator.cluster_centers_
+    # print(type(result))  # <class 'numpy.ndarray'>
+    # print(result.shape)  # (9, 2)
+    # print(f"{len(data)}, {len(estimator.labels_)}, {len(result)}")  # 7086, 7086, 9
+
+    inertia = estimator.inertia_
+    silhouette_score = metrics.silhouette_score(data, estimator.labels_, metric='euclidean', sample_size=len(data))
+    distance = avg_iou(data, result)
+    
+    if show == True:
+        print(100 * '-')
+        print(f"Estimator Settings: {estimator}")
+        print(f"Number of Clusters: {len(result)}")
+        print(f"Average IoU: {distance}")
+        print(f"Inertia: {inertia}")
+        print(f"Silhouette Score: {silhouette_score}")
+        print(f"Date and Duration: {date.today()} / {duration:0.4f} seconds")
+        print(f"Anchors: ")
+
+    centroids = result.tolist()
+    # print(len(centroids))      # 9
+    # print(len(centroids[0]))   # 2
+    # print(type(centroids))     # <class 'list'>
+    # print(type(centroids[0]))  # <class 'list'>
+
+    cmp_key = cmp_to_key(cmp_by_area)
+    centroids.sort(key=cmp_key)
+
+    if show == True: 
+        for i, centroid in enumerate(centroids):
+            w, h = centroid
+            # Print out the width and height (w, h) of an anchor along with its cross-sectional area multiplied by 10000. 
+            # This will help us distinguish between high and low anchor values easily.
+            print(f"  {i + 1}: ({w:0.20f}, {h:0.20f})   {w*h*10000:<12}")
+
+    with open(anchor_file, 'w') as f:
+        print(f"Estimator: {estimator}", file=f)
+        print(f"Number of Clusters: {len(result)}", file=f)
+        print(f"Average IoU: {distance}", file=f)
+        print(f"Inertia: {inertia}", file=f)
+        print(f"Silhouette Score: {silhouette_score}", file=f)
+        print(f"Date and Duration: {date.today()} / {duration:0.4f} seconds\n", file=f)
+
+        print(f"Anchors: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid
+            # Print out the width and height (w, h) of an anchor along with its cross-sectional area multiplied by 10000. 
+            # This will help us distinguish between high and low anchor values easily.
+            print(f"  {i + 1}: ({w:0.20f}, {h:0.20f})   {w*h*10000:<12}", file=f)
+        print(f"", file=f)
+
+        print(f"Anchors original: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid
+            print(f"({w}, {h})", end=', ', file=f)
+            if (i + 1) % 3 == 0:
+                print(f"", file=f)
+        print(f"", file=f)
+
+        print(f"Anchors rounded to 2 decimal places: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid
+            print(f"({w:0.2f}, {h:0.2f})", end=', ', file=f)
+            if (i + 1) % 3 == 0:
+                print(f"", file=f)
+        print(f"", file=f)
+    
+        print(f"Anchors rounded to 3 decimal places: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid
+            print(f"({w:0.3f}, {h:0.3f})", end=', ', file=f)
+            if (i + 1) % 3 == 0:
+                print(f"", file=f)
+        print(f"", file=f)
+        
+    print(f"Writing anchors to {anchor_file}.txt")
+    if show == True: print(100 * '-')
+
 
 if __name__ == "__main__":
     tic = time.perf_counter()
@@ -151,16 +274,15 @@ if __name__ == "__main__":
     
     num_clusters = 9
     tol = 0.0001  # 0.005
-    km = cluster.KMeans(n_clusters=num_clusters, tol=tol, verbose=True)
-    km.fit(data)
-    result = km.cluster_centers_
-    # print(result)
-    # distance = km.inertia_ / data.shape[0]
-    distance = avg_iou(data, result)
-    output = DATASET + f"anchors-{date.today()}.txt"
-    write_anchors_to_file(centroids=result, distance=distance, anchor_file=output)
-    
 
+    sklearnKMeans = cluster.KMeans(n_clusters=num_clusters, tol=tol, verbose=True)
+    file_name1 = DATASET + f"anchors-sklearn-KMeans.txt"
+    # bench_KMeans(estimator=sklearnKMeans, data=data, anchor_file=file_name1, show=False)
+    
+    miniBatchKMeans = cluster.MiniBatchKMeans(n_clusters=num_clusters, tol=tol, verbose=True)
+    file_name2 = DATASET + f"anchors-miniBatch-KMeans.txt"
+    # bench_KMeans(estimator=miniBatchKMeans, data=data, anchor_file=file_name2, show=False)
+    
     
     toc = time.perf_counter()
     duration = toc - tic
