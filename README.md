@@ -1,6 +1,21 @@
 # YOLOv3-PyTorch
 
 ## Notes
+- 2023.04.13
+  - stackoverflow [Custom Python list sorting](https://stackoverflow.com/questions/11850425/custom-python-list-sorting)
+    ```python
+    from functools import cmp_to_key
+    cmp_key = cmp_to_key(cmp_function)
+    mylist.sort(key=cmp_key)
+    ```
+  - ```get_anchors2.py```
+    - Finishing the part where I use  ```sklearn.cluster.KMeans()``` and ```sklearn.cluster.MiniBatchKMeans()``` for clustering
+    - The custom-designed / handcrafted-from-scratch version of ```k_means()``` is also finished, but it hasn't been well-tested yet
+  - The part of the code
+    ![](https://i.imgur.com/2S6N6t9.png)
+    ![](https://i.imgur.com/254IZGY.png)
+    ![](https://i.imgur.com/FLtmwaM.png)
+    ![](https://i.imgur.com/fUJmBSC.png)
 - 2023.04.10
   - Need to recompute / regenerate anchors for YOLO [Training YOLO? Select Anchor Boxes Like This](https://towardsdatascience.com/training-yolo-select-anchor-boxes-like-this-3226cb8d7f0b)
   - for YOLOv2 ```AlexeyAB/darknet/scripts/``` [```gen_anchors.py```](https://github.com/AlexeyAB/darknet/blob/master/scripts/gen_anchors.py)
