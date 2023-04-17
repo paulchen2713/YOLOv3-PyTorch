@@ -3,8 +3,8 @@
 ## Notes
 - 2023.04.17
   - The code for handcrafted-from-scratch version of ```k_means()``` which consider IoU in its distance metric
-    ![](https://i.imgur.com/1g1Sxbp.png)
-    ![](https://i.imgur.com/W6HZE5d.png)
+    ![](https://i.imgur.com/L4O0tu4.png)
+    ![](https://i.imgur.com/i730QvA.png)
   - The first clustering result using ```sklearn.cluster.KMeans()``` 
     ```python
     Estimator: KMeans(n_clusters=9, verbose=True)
