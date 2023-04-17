@@ -1,15 +1,37 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Sat Apr 11 14:23:51 2023
+
+@patch: 
+    2023.04.11
+@author: Paul
+@file: get_anchors2.py
+@dependencies:
+    env pt3.8 (lab PC)
+    python 3.8.16
+    pytorch==1.13.1     py3.8_cuda11.7_cudnn8_0 pytorch
+    pytorch-cuda==11.7
+    torchaudio==0.13.1  pypi_0    pypi
+    torchvision==0.14.1 pypi_0    pypi
+    numpy==1.23.5
+    scikit-learn==1.2.0
+    pandas==1.5.2
+    tqdm==4.64.1
+
+Recompute YOLO anchors
+"""
 
 import argparse
-import numpy as np
 import os
-import random
+
+import numpy as np
 from tqdm import tqdm 
 import sklearn.cluster as cluster
 from sklearn import metrics
 import pandas as pd
 
 import time
+import random
 from datetime import date
 from functools import cmp_to_key
 
@@ -25,7 +47,8 @@ def iou(x, centroids):
             dist = w * c_h / (w * h + (c_w - w) * c_h)
         elif c_w <= w and c_h >= h:
             dist = c_w * h / (w * h + c_w * (c_h - h))
-        else:  # means both w, h are bigger than c_w and c_h respectively
+        else:  
+            # means both w, h are bigger than c_w and c_h respectively
             dist = (c_w * c_h) / (w * h)
         dists.append(dist)
     return np.array(dists)
@@ -35,7 +58,8 @@ def avg_iou(x, centroids):
     n, d = x.shape
     sums = 0.0
     for i in range(x.shape[0]):
-        # note IOU() will return array which contains IoU for each centroid and X[i] slightly ineffective, but I am too lazy
+        # note IOU() will return array which contains IoU for each centroid and 
+        # X[i] slightly ineffective, but I am too lazy to change
         sums += max(iou(x[i], centroids))
     return sums / n
 
@@ -83,7 +107,7 @@ def write_anchors_to_file(centroids, distance, inertia, anchor_file):
 
 
 def k_means(x, n_clusters, eps):
-    init_index = [random.randrange(x.shape[0]) for _ in range(n_clusters)]
+    init_index = [random.randrange(x.shape[0]) for _ in range(n_clusters)]  #
     centroids = x[init_index]
 
     dist = old_dist = []
@@ -113,7 +137,7 @@ def k_means(x, n_clusters, eps):
             centroid_sums[belonging_centroids[i]] += x[i]
 
         for j in range(c):
-            centroids[j] = centroid_sums[j] / np.sum(belonging_centroids == j)
+            centroids[j] = centroid_sums[j] / np.sum(belonging_centroids == j)  #
 
         old_dist = dist.copy()
 
@@ -276,11 +300,11 @@ if __name__ == "__main__":
     tol = 0.0001  # 0.005
 
     sklearnKMeans = cluster.KMeans(n_clusters=num_clusters, tol=tol, verbose=True)
-    file_name1 = DATASET + f"anchors-sklearn-KMeans.txt"
+    file_name1 = DATASET + f"Anchors-sklearn-KMeans.txt"
     # bench_KMeans(estimator=sklearnKMeans, data=data, anchor_file=file_name1, show=False)
     
     miniBatchKMeans = cluster.MiniBatchKMeans(n_clusters=num_clusters, tol=tol, verbose=True)
-    file_name2 = DATASET + f"anchors-miniBatch-KMeans.txt"
+    file_name2 = DATASET + f"Anchors-miniBatch-KMeans.txt"
     # bench_KMeans(estimator=miniBatchKMeans, data=data, anchor_file=file_name2, show=False)
     
     
