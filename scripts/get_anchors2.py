@@ -24,15 +24,15 @@ Recompute YOLO anchors
 import argparse
 import os
 
-import numpy as np
 from tqdm import tqdm 
+import pandas as pd
+from datetime import date
+import time
+
+import numpy as np
 import sklearn.cluster as cluster
 from sklearn import metrics
-import pandas as pd
-
-import time
 import random
-from datetime import date
 from functools import cmp_to_key
 
 
@@ -64,11 +64,11 @@ def avg_iou(x, centroids):
     return sums / n
 
 
-def write_anchors_to_file(centroids, distance, inertia, anchor_file):
+def write_anchors_to_file(centroids, distance, anchor_file):
     print(f"")
     print(f"Number of clusters: {len(centroids)}")
     print(f"Average IoU: {distance}")
-    print(f"Inertia: {inertia}")
+    # print(f"Inertia: {inertia}")
     print(f"Anchors: ")
     for i, centroid in enumerate(centroids):
         w, h = centroid[0], centroid[1]
@@ -80,7 +80,8 @@ def write_anchors_to_file(centroids, distance, inertia, anchor_file):
     with open(anchor_file, 'w') as f:
         print(f"Number of clusters: {len(centroids)}", file=f)
         print(f"Average IoU: {distance}", file=f)
-        print(f"Inertia: {inertia}\n", file=f)
+        # print(f"Inertia: {inertia}", file=f)
+        print(f"", file=f)
 
         print(f"Anchors original: ", file=f)
         for i, centroid in enumerate(centroids):
@@ -307,6 +308,10 @@ if __name__ == "__main__":
     file_name2 = DATASET + f"Anchors-miniBatch-KMeans.txt"
     # bench_KMeans(estimator=miniBatchKMeans, data=data, anchor_file=file_name2, show=False)
     
+    result = k_means(data, num_clusters, tol)
+    distance = avg_iou(data, result)
+    file_name3 = DATASET + f"Anchors-custom-k_means.txt"
+    write_anchors_to_file(result, distance, file_name3)
     
     toc = time.perf_counter()
     duration = toc - tic
