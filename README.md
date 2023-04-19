@@ -1,4 +1,73 @@
 # YOLOv3-PyTorch
+- This is the research topic for my master's thesis. You are welcome to play with the code, but please don't hijack my research. I'll die.
+- A guide on 'how to use this code'
+  - First, download the ```CARRADA Dataset```, the ```Pascal_VOC Dataset``` from kaggle, or the ```CFAR Dataset``` and structure the folders as shown in the file tree below
+  - Second, set up a virtual environment using Anaconda, e.g. 
+    - ```conda create --name pt3.7 python=3.7``` 
+    - ```conda create --name pt3.8 python=3.8```
+  - Before installing any packages, remember to enter your conda virtual environment, e.g. 
+    - ```conda activate pt3.7```
+    - ```conda activate pt3.8```
+  - Third, you can manually install all the packages that you need, or you can install with ```pip install -r requirements.txt```
+  - Then, copy the code to anywhere you like, and make sure you have changed the file path in ```config.py``` before running the code
+    - Just click the 'run' button and see the results
+  - Caveats:
+    - There are a bunch of dead code, commented code, and outdated comments in my program
+    - I use ```albumentations``` library solely for the purpose of padding
+  - Dataset file tree 
+    ```python
+    D:\Datasets\RADA\RD_JPG>tree
+    D:.
+    ├─checks
+    ├─images
+    ├─imagesc
+    ├─imwrite
+    ├─labels
+    ├─mats
+    └─training_logs
+        ├─mAP
+        ├─test
+        │  ├─class_accuracy
+        │  ├─no_object_accuracy
+        │  └─object_accuracy
+        └─train
+            ├─class_accuracy
+            ├─losses
+            ├─mean_loss
+            ├─no_object_accuracy
+            └─object_accuracy
+    ```
+  - Stable dependency
+    - for python 3.7 
+        ```python
+        python==3.7.13
+        numpy==1.19.2
+        pytorch==1.7.1
+        torchaudio==0.7.2
+        torchvision==0.8.2
+        pandas==1.2.1
+        pillow==8.1.0 
+        tqdm==4.56.0
+        albumentations==0.5.2 
+        matplotlib==3.3.4
+        ```
+    - for python 3.8
+        ```python
+        python==3.8.16
+        numpy==1.23.5
+        pytorch==1.13.1
+        pytorch-cuda==11.7
+        torchaudio==0.13.1
+        torchvision==0.14.1
+        pandas==1.5.2
+        pillow==9.3.0
+        tqdm==4.64.1
+        albumentations==1.3.0
+        matplotlib==3.6.2
+        ```
+    - It's well tested, and the code can be properly executed under these settings
+
+
 
 ## Notes
 - 2023.04.17
