@@ -558,14 +558,14 @@
 ## Reference
 - The implementation is based on the following paper
   - Redmon, Joseph, and Ali Farhadi. "[Yolov3: An incremental improvement](https://arxiv.org/abs/1804.02767)." *arXiv preprint arXiv:1804.02767* (2018).
-  ```
-    @article{yolov3,
-    title={YOLOv3: An Incremental Improvement},
-    author={Redmon, Joseph and Farhadi, Ali},
-    journal = {arXiv},
-    year={2018}
-  }
-  ```
+    ```
+      @article{yolov3,
+      title={YOLOv3: An Incremental Improvement},
+      author={Redmon, Joseph and Farhadi, Ali},
+      journal = {arXiv},
+      year={2018}
+    }
+    ```
 - The original code was copied from [YOLOv3-PyTorch](https://github.com/SannaPersson/YOLOv3-PyTorch) and for more details please read their Medium post [YOLOv3 — Implementation with Training setup from Scratch](https://sannaperzon.medium.com/yolov3-implementation-with-training-setup-from-scratch-30ecb9751cb0)
   
   
