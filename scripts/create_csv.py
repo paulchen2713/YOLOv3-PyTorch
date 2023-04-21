@@ -17,6 +17,7 @@ Generate .csv or .txt files for training and testing use
 """
 
 import csv
+import random
 import time
 from datetime import date
 
@@ -33,12 +34,28 @@ def create_csv(split, last):
             print(f"{i}.jpg,{i}.txt", file=test_file)
 
 
+indices = [i for i in range(1, 7193 + 1)]
+def random_csv(num_train, num_test):
+    print(len(indices)) # 7193
+    random.shuffle(indices)
+
+    with open(DATASET + "csv_files/rand_csv/" + f"train.csv", "w") as train_file:
+        for i in indices[0:num_train]:
+            print(f"{i}.jpg,{i}.txt", file=train_file)
+
+    with open(DATASET + "csv_files/rand_csv/" + f"test.csv", "w") as test_file:
+        for i in indices[-num_test::1]:
+            print(f"{i}.jpg,{i}.txt", file=test_file)
+
+
+
 if __name__ == "__main__":
     tic = time.perf_counter()
 
     split, last = 6000, 7193
     # create_csv(split=split, last=last)
-    print(f"Creating tran.csv with {split} samples and test.csv with {last - split} samples")
+    # print(f"Creating tran.csv with {split} samples and test.csv with {last - split} samples")
+    random_csv(num_train=split, num_test=last-split)
 
     toc = time.perf_counter()
     duration = toc - tic
