@@ -61,8 +61,8 @@ CONF_THRESHOLD = 0.6  # 0.6
 MAP_IOU_THRESH = 0.5  # 0.5
 NMS_IOU_THRESH = 0.45  # 0.45
 
-CHECK_TEST = 10 # means we check the test accuracy for every CHECK_TEST number of epochs
-CHECK_MAP = 10  # means we compute the mAP for every CHECK_MAP number of epochs
+CHECK_TEST = 10 # means we check the test accuracies for every CHECK_TEST number of epochs
+CHECK_MAP = 10  # means we check the mAP for every CHECK_MAP number of epochs
 
 stride = [32, 16, 8] 
 S = [IMAGE_SIZE // stride[0], IMAGE_SIZE // stride[1], IMAGE_SIZE // stride[2]] # [13, 26, 52]
@@ -170,10 +170,12 @@ test_transforms = A.Compose(
 )
 
 
+# CFAR_CLASS
 CLASSES0 = [
     "target"
 ]
 
+# CARRADA_CLASSES
 CLASSES = [
     'person',
     'cyclist',

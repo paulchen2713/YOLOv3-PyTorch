@@ -69,7 +69,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-04-24' # date_function.today()
+log_file_name = date_function.today()
 
 
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
