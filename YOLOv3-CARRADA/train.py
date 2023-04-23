@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Feb 06 15:51:47 2023
+Created on Fri Feb 17 15:51:47 2023
 
 @patch: 
     2023.02.17
@@ -9,12 +9,18 @@ Created on Mon Feb 06 15:51:47 2023
 @author: Paul
 @file: train.py
 @dependencies:
-    env pt3.7
-    python 3.7.13
-    pytorch==1.7.1
-    torchaudio==0.7.2
-    torchvision==0.8.2
-    tqdm==4.56.0
+    env pt3.8
+    python==3.8.16
+    numpy==1.23.5
+    pytorch==1.13.1
+    pytorch-cuda==11.7
+    torchaudio==0.13.1
+    torchvision==0.14.1
+    pandas==1.5.2
+    pillow==9.3.0
+    tqdm==4.64.1
+    albumentations==1.3.0
+    matplotlib==3.6.2
 
 Main file for training YOLOv3 model on RD maps, Pascal VOC and COCO dataset
 """
@@ -63,7 +69,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = date_function.today()
+log_file_name = '2023-04-24' # date_function.today()
 
 
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
@@ -156,7 +162,7 @@ def main():
             print(f"{obj_acc}", file=txt_file)
 
         test_point = 10
-        if epoch % test_point == 0 and epoch > 0:
+        if epoch % config.CHECK_TEST == 0 and epoch > 0:
             print("On Test loader:")
             class_acc, no_obj_acc, obj_acc = check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
 
@@ -179,9 +185,9 @@ def main():
                 save_checkpoint(model, optimizer, filename=file_name)
 
 
-        check_map = 100
-        if epoch % check_map == 0 and epoch > 0:
-            
+        check_map = 10
+        if epoch % config.CHECK_MAP == 0 and epoch > 0:
+            # 
             pred_boxes, true_boxes = get_evaluation_bboxes(
                 test_loader,
                 model,
@@ -209,7 +215,11 @@ if __name__ == "__main__":
     tic = time.perf_counter()
 
     main()
-    # epoch: 1000, duration: 80.3616 hours
+    
+    # 2023/04/23 epoch: 300,  duration: 20.8263 hours
+    # 2023/04/22 epoch: 100,  duration: 7.2117 hours
+    # 2023/04/15 epoch: 100,  duration: 6.6698 hours, 8.0922 hours
+    # 2023/04/07 epoch: 1000, duration: 80.3616 hours
 
     toc = time.perf_counter()
     duration = (toc - tic) / 3600

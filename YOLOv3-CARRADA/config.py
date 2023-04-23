@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Feb 06 11:10:36 2023
+Created on Mon Mar 13 11:10:36 2023
 
 @patch: 
     2023.03.13
@@ -9,13 +9,18 @@ Created on Mon Feb 06 11:10:36 2023
 @author: Paul
 @file: config.py
 @dependencies:
-    env pt3.7
-    python 3.7.13
-    numpy==1.19.2
-    pytorch==1.7.1
-    torchaudio==0.7.2
-    torchvision==0.8.2
-    albumentations==0.5.2
+    env pt3.8
+    python==3.8.16
+    numpy==1.23.5
+    pytorch==1.13.1
+    pytorch-cuda==11.7
+    torchaudio==0.13.1
+    torchvision==0.14.1
+    pandas==1.5.2
+    pillow==9.3.0
+    tqdm==4.64.1
+    albumentations==1.3.0
+    matplotlib==3.6.2
 """
 
 import albumentations as A
@@ -48,13 +53,16 @@ NUM_WORKERS = 1  # num of threads
 BATCH_SIZE = 20  # 32
 IMAGE_SIZE = 416
 NUM_CLASSES = 3  # 80
-LEARNING_RATE = 1e-4  # 3e-5 1e-4
+LEARNING_RATE = 3e-5  # 3e-5 1e-4
 
 WEIGHT_DECAY = 1e-4
-NUM_EPOCHS = 1000 # 300
+NUM_EPOCHS = 300 # 300
 CONF_THRESHOLD = 0.6  # 0.6
 MAP_IOU_THRESH = 0.5  # 0.5
 NMS_IOU_THRESH = 0.45  # 0.45
+
+CHECK_TEST = 10 # means we check the test accuracy for every CHECK_TEST number of epochs
+CHECK_MAP = 10  # means we compute the mAP for every CHECK_MAP number of epochs
 
 stride = [32, 16, 8] 
 S = [IMAGE_SIZE // stride[0], IMAGE_SIZE // stride[1], IMAGE_SIZE // stride[2]] # [13, 26, 52]
@@ -73,17 +81,38 @@ LABEL_DIR = DATASET + "labels/"
 # of tuples, where each tuple corresponds to the width and the height of a anchor box relative to the image size 
 # and each list grouping together three tuples correspond to the anchors used on a specific prediction scale
 
-ANCHORS = [
-    [(0.28, 0.22), (0.38, 0.48), (0.9, 0.78)], 
-    [(0.07, 0.15), (0.15, 0.11), (0.14, 0.29)], 
-    [(0.02, 0.03), (0.04, 0.07), (0.08, 0.06)], 
-]  # Note these have been rescaled to be between [0, 1]
+# ANCHORS = [
+#     [(0.28, 0.22), (0.38, 0.48), (0.9, 0.78)], 
+#     [(0.07, 0.15), (0.15, 0.11), (0.14, 0.29)], 
+#     [(0.02, 0.03), (0.04, 0.07), (0.08, 0.06)], 
+# ]  # Note these have been rescaled to be between [0, 1]
 
 # ANCHORS = [
 #     [(0.1250, 0.1250), (0.1250, 0.1250), (0.1250, 0.1250)],
 #     [(0.1250, 0.1250), (0.1250, 0.1250), (0.1250, 0.1250)],
 #     [(0.1250, 0.1250), (0.1250, 0.1250), (0.1250, 0.1250)],
 # ]
+
+# # result of sklearn.cluster.KMeans() 
+# ANCHORS = [
+#     [(0.21, 0.10), (0.34, 0.09), (0.50, 0.09)],
+#     [(0.16, 0.03), (0.23, 0.04), (0.12, 0.08)], 
+#     [(0.03, 0.02), (0.06, 0.03), (0.11, 0.02)], 
+# ]
+
+# ANCHORS = [
+#     [(0.211, 0.098), (0.339, 0.087), (0.495, 0.092)], 
+#     [(0.158, 0.033), (0.232, 0.043), (0.125, 0.082)],
+#     [(0.033, 0.017), (0.065, 0.027), (0.107, 0.024)],
+# ]
+
+ANCHORS = [
+    [(0.125, 0.073), (0.219, 0.097), (0.424, 0.095)],
+    [(0.040, 0.048), (0.121, 0.025), (0.219, 0.041)],
+    [(0.016, 0.016), (0.039, 0.009), (0.058, 0.019)],
+]
+
+
 
 scale = 1.0 # 1.1
 train_transforms = A.Compose(

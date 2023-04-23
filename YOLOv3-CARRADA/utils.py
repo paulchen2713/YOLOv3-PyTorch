@@ -3,19 +3,26 @@
 Created on Mon Feb 06 11:10:12 2023
 
 @patch: 
+    2023.02.06
     2023.03.22
 
 @author: Paul
 @file: utils.py
 @dependencies:
-    env pt3.7
-    python 3.7.13
-    numpy==1.19.2
-    pytorch==1.7.1
-    torchaudio==0.7.2
-    torchvision==0.8.2
-    tqdm==4.56.0
-    matplotlib==3.3.4
+    env pt3.8
+    python==3.8.16
+    numpy==1.23.5
+    pytorch==1.13.1
+    pytorch-cuda==11.7
+    torchaudio==0.13.1
+    torchvision==0.14.1
+    pandas==1.5.2
+    pillow==9.3.0
+    tqdm==4.64.1
+    albumentations==1.3.0
+    matplotlib==3.6.2
+
+Some useful utility function copied from the internet
 """
 
 import config

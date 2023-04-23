@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Feb 06 19:27:14 2023
+Created on Thu Feb 16 19:27:14 2023
 
 @patch: 
     2023.02.16
@@ -12,15 +12,15 @@ Created on Mon Feb 06 19:27:14 2023
     env pt3.8
     python==3.8.16
     numpy==1.23.5
-    matplotlib==3.6.2
     pytorch==1.13.1
     pytorch-cuda==11.7
     torchaudio==0.13.1
     torchvision==0.14.1
-    tqdm==4.64.1
-    albumentations==1.3.0
     pandas==1.5.2
     pillow==9.3.0
+    tqdm==4.64.1
+    albumentations==1.3.0
+    matplotlib==3.6.2
 
 @references:
     Redmon, Joseph and Farhadi, Ali, YOLOv3: An Incremental Improvement, April 8, 2018. (https://doi.org/10.48550/arXiv.1804.02767)
