@@ -70,6 +70,115 @@
 
 
 ## Notes
+- 2023.04.18
+  - The third clustering result using custom ```k_means()```
+    ```python
+    Number of clusters: 9
+    Average IoU: 0.6639814720619468
+
+    Anchors original: 
+    (0.42412935323383083, 0.09495491293532338), (0.040049518201284794, 0.04793729925053533), (0.12121121241202815, 0.02474208253358925), 
+    (0.21935948581560283, 0.041091810726950354), (0.015625, 0.016347497459349592), (0.21888516435986158, 0.09671009948096886), 
+    (0.038657583841463415, 0.008815858422256097), (0.125454418344519, 0.07256711409395973), (0.058373810467882634, 0.018722739888977002), 
+
+    Anchors rounded to 2 decimal places: 
+    (0.42, 0.09), (0.04, 0.05), (0.12, 0.02), 
+    (0.22, 0.04), (0.02, 0.02), (0.22, 0.10), 
+    (0.04, 0.01), (0.13, 0.07), (0.06, 0.02), 
+
+    Anchors rounded to 3 decimal places: 
+    (0.424, 0.095), (0.040, 0.048), (0.121, 0.025), 
+    (0.219, 0.041), (0.016, 0.016), (0.219, 0.097), 
+    (0.039, 0.009), (0.125, 0.073), (0.058, 0.019), 
+    ```
+  - The comparison of 
+    - original anchor for general image dataset 
+    ```python
+    (0.28, 0.22), (0.38, 0.48), (0.9,  0.78),
+    (0.07, 0.15), (0.15, 0.11), (0.14, 0.29),
+    (0.02, 0.03), (0.04, 0.07), (0.08, 0.06)
+    ```
+    - ```sklearn.cluster.KMeans()``` result
+    ```python
+    (0.211, 0.098), (0.339, 0.087), (0.495, 0.092),
+    (0.158, 0.033), (0.232, 0.043), (0.125, 0.082), 
+    (0.033, 0.017), (0.065, 0.027), (0.107, 0.024),
+    ```
+    - ```sklearn.cluster.MiniBatchKMeans()``` result
+    ```python
+    (0.329, 0.085), (0.424, 0.096), (0.530, 0.089),
+    (0.157, 0.031), (0.232, 0.064), (0.164, 0.094),
+    (0.027, 0.016), (0.056, 0.024), (0.105, 0.029),
+    ```
+    - Custom ```k_means()``` result
+    ```python
+    (0.125, 0.073), (0.219, 0.097), (0.424, 0.095),
+    (0.040, 0.048), (0.121, 0.025), (0.219, 0.041),
+    (0.016, 0.016), (0.039, 0.009), (0.058, 0.019),
+    ```
+  - training for 1000 epochs with original anchors
+    ```
+    max mAP:  0.18192845582962036 (the highest mAP obtained out of 10 tests)
+    mean mAP: 0.1663009986281395  (the average mAP obtained out of 10 tests)
+    
+    max training loss: 125.03005981445312
+    min training loss: 0.6005923748016357
+    
+    max training loss on average: 19.55863230228424
+    min training loss on average: 0.8333272246519724
+    
+    min training accuracy: 2.8318750858306885
+    max training accuracy: 98.84278869628906
+
+    min testing accuracy: 33.172786712646484
+    max testing accuracy: 70.57997131347656
+    ```
+    - The figures fot the stats
+    ![](https://i.imgur.com/XzHCdeK.png)
+    ![](https://i.imgur.com/4uwzdv8.png)
+    ![](https://i.imgur.com/n1YbQBr.png)
+    ![](https://i.imgur.com/T6eq1gA.png)
+    ![](https://i.imgur.com/w1rvagY.png)
+  - training for 100 epochs with ```sklearn.cluster.KMeans()``` anchor that rounded to 2 decimal places
+    ```
+    max training loss on average: 17.887332406044006
+    min training loss on average: 1.1761843407154082
+    
+    min training accuracy: 1.1478031873703003
+    max training accuracy: 96.33079528808594
+
+    min testing accuracy: 28.48825454711914
+    max testing accuracy: 67.01465606689453
+    
+    max mAP:  0.1628512293100357
+    mean mAP: 0.1628512293100357 (only test once)
+    ```
+  - training for 100 epochs with ```sklearn.cluster.KMeans()``` anchor that rounded to 3 decimal places
+    ```
+    max training loss on average: 18.193040917714438
+    min training loss on average: 1.2186308292547863
+    
+    min training accuracy: 4.069056510925293
+    max training accuracy: 94.63731384277344
+
+    min testing accuracy: 28.80947494506836
+    max testing accuracy: 66.93435668945312
+    
+    max mAP:  0.17361223697662354
+    mean mAP: 0.17361223697662354 (only test once)
+    ```
+- The YOLO network seems not able to properly learn this task
+  - Keep improving the anchor settings
+    - Plot the comparison between different anchor settings
+  - Redesign the feture extractor structure
+    - Change the detection head network
+  - Apply certain training strategy for our task, e.g. Weight Initialization:
+    - Random Initialization (current method)
+    - Xavier Initialization, or Glorot Initialization
+    - Kaiming Initialization, or He Initialization
+    - LeCun Initialization
+    - Ref. Deeplizard [Weight Initialization Explained](https://deeplizard.com/learn/video/8krd5qKVw-Q)
+  - Using k-fold cross-validation to ensure that there's no training data selection bias
 - 2023.04.17
   - The code for handcrafted-from-scratch version of ```k_means()``` which consider IoU in its distance metric
     ![](https://i.imgur.com/L4O0tu4.png)
