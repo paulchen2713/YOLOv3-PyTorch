@@ -51,7 +51,7 @@ def seed_everything(seed=33):
 
 NUM_WORKERS = 1  # num of threads
 BATCH_SIZE = 20  # 32
-IMAGE_SIZE = 416
+IMAGE_SIZE = 416 # 
 NUM_CLASSES = 3  # 80
 LEARNING_RATE = 3e-5  # 3e-5 1e-4
 
@@ -61,6 +61,7 @@ CONF_THRESHOLD = 0.6  # 0.6
 MAP_IOU_THRESH = 0.5  # 0.5
 NMS_IOU_THRESH = 0.45  # 0.45
 
+TEST_POINT = 10
 CHECK_TEST = 10 # means we check the test accuracies for every CHECK_TEST number of epochs
 CHECK_MAP = 10  # means we check the mAP for every CHECK_MAP number of epochs
 

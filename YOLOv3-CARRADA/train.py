@@ -162,7 +162,7 @@ def main():
             print(f"{obj_acc}", file=txt_file)
 
         test_point = 10
-        if epoch % config.CHECK_TEST == 0 and epoch > 0:
+        if epoch % config.TEST_POINT == 0 and epoch > 0:
             print("On Test loader:")
             class_acc, no_obj_acc, obj_acc = check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
 
@@ -186,7 +186,7 @@ def main():
 
 
         check_map = 10
-        if epoch % config.CHECK_MAP == 0 and epoch > 0:
+        if epoch % config.TEST_POINT == 0 and epoch > 0:
             # 
             pred_boxes, true_boxes = get_evaluation_bboxes(
                 test_loader,
@@ -214,7 +214,7 @@ if __name__ == "__main__":
 
     tic = time.perf_counter()
 
-    main()
+    # main()
     
     # 2023/04/23 epoch: 300,  duration: 20.8263 hours
     # 2023/04/22 epoch: 100,  duration: 7.2117 hours
