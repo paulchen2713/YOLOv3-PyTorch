@@ -37,7 +37,7 @@ logs = [
     '2023-04-22.txt',
     '2023-04-23.txt',
 ]
-log_index = len(logs) - 1
+log_index = 3
 
 # make sure we are using valid list subscripts
 assert log_index <= len(logs)
@@ -213,17 +213,17 @@ def print_stats():
     print(f"The stats of {curr_txt_file[:10]} training: ")
     print(f"-"*50)
     
-    print(f"max mAP: {max(mAP)}")
-    print(f"mean mAP: {sum(mAP) / len(mAP)}")
+    print(f"max mAP:  {max(mAP)}")
+    print(f"mean mAP: {sum(mAP) / len(mAP)}\n")
 
     print(f"max training loss: {max(losses)}")
-    print(f"min training loss: {min(losses)}")
+    print(f"min training loss: {min(losses)}\n")
 
     print(f"max training loss on average: {max(mean_loss)}")
-    print(f"min training loss on average: {min(mean_loss)}")
+    print(f"min training loss on average: {min(mean_loss)}\n")
 
     print(f"min training accuracy: {min(train_obj_acc)}")
-    print(f"max training accuracy: {max(train_obj_acc)}")
+    print(f"max training accuracy: {max(train_obj_acc)}\n")
 
     print(f"min testing accuracy: {min(test_obj_acc)}")
     print(f"max testing accuracy: {max(test_obj_acc)}")
