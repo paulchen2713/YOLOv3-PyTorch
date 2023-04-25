@@ -70,6 +70,10 @@
 
 
 ## Notes
+- 2023.04.21
+  - Script for creating random samples ```create_csv.py```
+    ![](https://i.imgur.com/FGOJ31Z.png)
+    ![](https://i.imgur.com/aIZdzWG.png)
 - 2023.04.18
   - The third clustering result using custom ```k_means()```
     ```python
