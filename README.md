@@ -73,59 +73,59 @@
 - 2023.04.24
   - The train and test settings
     ![](https://i.imgur.com/6FZ7c9e.png)
-  - The result of training for ```100``` epochs, with ```k_means()``` anchor that rounded to ```3``` decimal places 
-    - The training duration: ```7.2117``` hours
-      ```
-      --------------------------------------------------
-      The stats of 2023-04-22 training: 
-      --------------------------------------------------
-      max mAP:  0.37920689582824707
-      mean mAP: 0.3020245939493179
+- The result of training for ```100``` epochs, with ```k_means()``` anchor that rounded to ```3``` decimal places 
+  - The training duration: ```7.2117``` hours
+    ```
+    --------------------------------------------------
+    The stats of 2023-04-22 training: 
+    --------------------------------------------------
+    max mAP:  0.37920689582824707
+    mean mAP: 0.3020245939493179
 
-      max training loss: 72.82600402832031
-      min training loss: 0.8917444944381714
+    max training loss: 72.82600402832031
+    min training loss: 0.8917444944381714
 
-      max training loss on average: 25.31787603378296
-      min training loss on average: 1.1737037108341852
+    max training loss on average: 25.31787603378296
+    min training loss on average: 1.1737037108341852
 
-      min training accuracy: 0.5489227175712585
-      max training accuracy: 96.67901611328125
+    min training accuracy: 0.5489227175712585
+    max training accuracy: 96.67901611328125
 
-      min testing accuracy: 28.838693618774414
-      max testing accuracy: 70.72781372070312
-      --------------------------------------------------
-      ```
-  - The result of training for ```300``` epochs, with same anchors above
-    - The training duration: ```20.8263``` hours
-      ```
-      --------------------------------------------------
-      The stats of 2023-04-23 training: 
-      --------------------------------------------------
-      max mAP:  0.4179251194000244
-      mean mAP: 0.3632150818904241
+    min testing accuracy: 28.838693618774414
+    max testing accuracy: 70.72781372070312
+    --------------------------------------------------
+    ```
+- The result of training for ```300``` epochs, with same anchors above
+  - The training duration: ```20.8263``` hours
+    ```
+    --------------------------------------------------
+    The stats of 2023-04-23 training: 
+    --------------------------------------------------
+    max mAP:  0.4179251194000244
+    mean mAP: 0.3632150818904241
 
-      max training loss: 72.01780700683594
-      min training loss: 0.5801995992660522
+    max training loss: 72.01780700683594
+    min training loss: 0.5801995992660522
 
-      max training loss on average: 24.274858560562134
-      min training loss on average: 0.7920041881004969
+    max training loss on average: 24.274858560562134
+    min training loss on average: 0.7920041881004969
 
-      min training accuracy: 0.45743560791015625
-      max training accuracy: 99.13544464111328
+    min training accuracy: 0.45743560791015625
+    max training accuracy: 99.13544464111328
 
-      min testing accuracy: 35.75177001953125
-      max testing accuracy: 72.34770965576172
-      --------------------------------------------------
-      ```
+    min testing accuracy: 35.75177001953125
+    max testing accuracy: 72.34770965576172
+    --------------------------------------------------
+    ```
 - The figures for the stats
   - max mAP:  ```0.4179251194000244```
-  ![](https://i.imgur.com/aB3nZLB.png)
+    ![](https://i.imgur.com/aB3nZLB.png)
   - loss range: ```[72.82600402832031, 0.8917444944381714]```
-  ![](https://i.imgur.com/qTgtTPY.png)
+    ![](https://i.imgur.com/qTgtTPY.png)
   - max training accuracy: ```99.13544464111328```
-  ![](https://i.imgur.com/kODi2F4.png)
+    ![](https://i.imgur.com/kODi2F4.png)
   - max testing accuracy: ```72.34770965576172```
-  ![](https://i.imgur.com/bWHb0MP.png)
+    ![](https://i.imgur.com/bWHb0MP.png)
 - 2023.04.23
   - Script for plotting the figures ```plot_training_state.py```
     ![](https://i.imgur.com/lRGOLFg.png)
