@@ -70,6 +70,15 @@
 
 
 ## Notes
+- 2023.04.23
+  - Script for plotting the figures ```plot_training_state.py```
+    ![](https://i.imgur.com/lRGOLFg.png)
+    ![](https://i.imgur.com/VXSmBJJ.png)
+    ![](https://i.imgur.com/rTh7e1x.png)
+    ![](https://i.imgur.com/EOHHXsY.png)
+    ![](https://i.imgur.com/CDqXE74.png)
+    ![](https://i.imgur.com/R08ByyL.png)
+    ![](https://i.imgur.com/CQO3qML.png)
 - 2023.04.21
   - Script for creating random samples ```create_csv.py```
     ![](https://i.imgur.com/FGOJ31Z.png)
