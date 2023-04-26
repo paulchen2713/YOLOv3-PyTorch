@@ -214,10 +214,12 @@ if __name__ == "__main__":
 
     tic = time.perf_counter()
 
-    # main()
+    main()
     
+    # 2023/04/26 epoch: 100,   WEIGHT_DECAY = 1e-2
+    # 2023/04/25 epoch: 100,  duration: 6.2753 hours  WEIGHT_DECAY = 1e-3
     # 2023/04/23 epoch: 300,  duration: 20.8263 hours
-    # 2023/04/22 epoch: 100,  duration: 7.2117 hours
+    # 2023/04/22 epoch: 100,  duration: 7.2117 hours  WEIGHT_DECAY = 1e-4
     # 2023/04/15 epoch: 100,  duration: 6.6698 hours, 8.0922 hours
     # 2023/04/07 epoch: 1000, duration: 80.3616 hours
 
