@@ -117,15 +117,15 @@
       max testing accuracy: 72.34770965576172
       --------------------------------------------------
       ```
-    - The figures for the stats
-      - max mAP:  ```0.4179251194000244```
-        ![](https://i.imgur.com/aB3nZLB.png)
-      - loss range: ```[72.82600402832031, 0.8917444944381714]```
-        ![](https://i.imgur.com/qTgtTPY.png)
-      - max training accuracy: ```99.13544464111328```
-        ![](https://i.imgur.com/kODi2F4.png)
-      - max testing accuracy: ```72.34770965576172```
-        ![](https://i.imgur.com/bWHb0MP.png)
+- The figures for the stats
+  - max mAP:  ```0.4179251194000244```
+    ![](https://i.imgur.com/aB3nZLB.png)
+  - loss range: ```[72.82600402832031, 0.8917444944381714]```
+    ![](https://i.imgur.com/qTgtTPY.png)
+  - max training accuracy: ```99.13544464111328```
+    ![](https://i.imgur.com/kODi2F4.png)
+  - max testing accuracy: ```72.34770965576172```
+    ![](https://i.imgur.com/bWHb0MP.png)
 - 2023.04.23
   - Script for plotting the figures ```plot_training_state.py```
     ![](https://i.imgur.com/lRGOLFg.png)
