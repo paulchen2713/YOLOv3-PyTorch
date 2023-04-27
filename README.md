@@ -70,6 +70,51 @@
 
 
 ## Notes
+- 2023.04.26
+  - Performing a grid search to find the optimal weight decay setting, all tests have the same settings except for the weight decay parameter
+    ![](https://i.imgur.com/iUf6L9i.png)
+  - The training duration is ```6.2753 hours``` with  ```WEIGHT_DECAY = 1e-3``` 
+    ```
+    --------------------------------------------------
+    The stats of 2023-04-25 training: 
+    --------------------------------------------------
+    max mAP:  0.3603482246398926
+    mean mAP: 0.2835115119814873
+
+    max training loss: 61.669921875
+    min training loss: 0.9460040330886841
+
+    max training loss on average: 23.978200359344484
+    min training loss on average: 1.233974441687266
+
+    min training accuracy: 1.289968490600586
+    max training accuracy: 95.745849609375
+
+    min testing accuracy: 23.180469512939453
+    max testing accuracy: 69.15354919433594
+    --------------------------------------------------
+    ```
+  - The training duration is ```7.7900 hours``` with  ```WEIGHT_DECAY = 1e-2```
+    ```
+    --------------------------------------------------
+    The stats of 2023-04-26 training: 
+    --------------------------------------------------
+    max mAP:  0.36460867524147034
+    mean mAP: 0.2820669665932655
+
+    max training loss: 59.46959686279297
+    min training loss: 1.341576099395752
+
+    max training loss on average: 24.546935682296752
+    min training loss on average: 1.5733012755711873
+
+    min training accuracy: 0.7913635969161987
+    max training accuracy: 89.63908386230469
+
+    min testing accuracy: 29.956649780273438
+    max testing accuracy: 64.81861114501953
+    --------------------------------------------------
+    ```
 - 2023.04.24
   - The train and test settings
     ![](https://i.imgur.com/6FZ7c9e.png)
