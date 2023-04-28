@@ -37,19 +37,20 @@ data_folders = [
 ]
 
 logs = [
-    '2023-04-07.txt',
-    '2023-04-15.txt',
-    '2023-04-16.txt',
-    '2023-04-22.txt',
-    '2023-04-23.txt',
-    '2023-04-25.txt',
-    '2023-04-26.txt',
-    '2023-04-27.txt',
-    '2023-04-27-2.txt',
-    '2023-04-28.txt',
-    '2023-04-28-2.txt',
+    '2023-04-07',
+    '2023-04-15',
+    '2023-04-16',
+    '2023-04-22',
+    '2023-04-23',
+    '2023-04-25',
+    '2023-04-26',
+    '2023-04-27',
+    '2023-04-27-2',
+    '2023-04-28',
+    '2023-04-28-2',
+    '2023-04-28-3',
 ]
-log_index = 3
+log_index = 8
 
 # make sure we are using valid list subscripts
 assert log_index <= len(logs)
@@ -75,13 +76,19 @@ D:.
 """
 D:\Datasets\RADA\RD_JPG\stats_figures>tree
 D:.
-├─0316
-├─0327
-├─0407
-├─0415
-├─0416
-├─0422
-└─0423
+├─2023-03-16
+├─2023-03-27
+├─2023-04-07
+├─2023-04-15
+├─2023-04-16
+├─2023-04-22
+├─2023-04-23
+├─2023-04-25
+├─2023-04-26
+├─2023-04-27-1
+├─2023-04-27-2
+├─2023-04-28-1
+└─2023-04-28-2
 """
 
 
@@ -100,31 +107,30 @@ def load_data(file_path):
 
 
 # read the training and testing statistics results
-curr_txt_file = logs[log_index]  # get the current file name, which is "<date>.txt"
-assert curr_txt_file.endswith('txt') == True 
+curr_txt_file = logs[log_index]  # get the current file name
 
-mAP = load_data(LOG_PATH + f"mAP/{curr_txt_file}")                                    # store mean Average Precision
+mAP = load_data(LOG_PATH + f"mAP/{curr_txt_file}.txt")                                    # store mean Average Precision
 
 # store the actual loss for every batch, the total number would be 'epoch x split', 
 # split = num_train_samples=6000 / batch_size=20 = 300
-losses = load_data(LOG_PATH + f"train/losses/{curr_txt_file}") 
+losses = load_data(LOG_PATH + f"train/losses/{curr_txt_file}.txt") 
 # store the average loss for every epoch
-mean_loss = load_data(LOG_PATH + f"train/mean_loss/{curr_txt_file}")
+mean_loss = load_data(LOG_PATH + f"train/mean_loss/{curr_txt_file}.txt")
 
-train_class_acc = load_data(LOG_PATH + f"train/class_accuracy/{curr_txt_file}")       # store train class accuracy
-train_no_obj_acc = load_data(LOG_PATH + f"train/no_object_accuracy/{curr_txt_file}")  # store train no object accuracy
-train_obj_acc = load_data(LOG_PATH + f"train/object_accuracy/{curr_txt_file}")        # store train object accuracy
+train_class_acc = load_data(LOG_PATH + f"train/class_accuracy/{curr_txt_file}.txt")       # store train class accuracy
+train_no_obj_acc = load_data(LOG_PATH + f"train/no_object_accuracy/{curr_txt_file}.txt")  # store train no object accuracy
+train_obj_acc = load_data(LOG_PATH + f"train/object_accuracy/{curr_txt_file}.txt")        # store train object accuracy
 
-test_class_acc = load_data(LOG_PATH + f"test/class_accuracy/{curr_txt_file}")         # store test class accuracy
-test_no_obj_acc = load_data(LOG_PATH + f"test/no_object_accuracy/{curr_txt_file}")    # store test no object accuracy
-test_obj_acc = load_data(LOG_PATH + f"test/object_accuracy/{curr_txt_file}")          # store test object accuracy
+test_class_acc = load_data(LOG_PATH + f"test/class_accuracy/{curr_txt_file}.txt")         # store test class accuracy
+test_no_obj_acc = load_data(LOG_PATH + f"test/no_object_accuracy/{curr_txt_file}.txt")    # store test no object accuracy
+test_obj_acc = load_data(LOG_PATH + f"test/object_accuracy/{curr_txt_file}.txt")          # store test object accuracy
 
 
 def my_plot(x, y, title, x_label, y_label, line_color, line_marker):
     plt.plot(x, y, color=line_color, marker=line_marker)
     
     # Initialize the store_path for all the figures, the folder_name should be the same as the log text file
-    folder_name = curr_txt_file[:10]     # <class 'str'>
+    folder_name = curr_txt_file          # <class 'str'>
     store_path = FIG_PATH + folder_name  # 
     
     # If the folder doesn't exist, then we create that folder 
@@ -222,7 +228,7 @@ def plot_test_results():
 
 def print_stats():
     print(f"-"*50)
-    print(f"The stats of {curr_txt_file[:10]} training: ")
+    print(f"The stats of {curr_txt_file} training: ")
     print(f"-"*50)
     
     print(f"max mAP:  {max(mAP)}")
@@ -247,7 +253,7 @@ if __name__ == "__main__":
 
     print("plot training state!")
 
-    print_stats()
+    # print_stats()
     # plot_mAP()
     # plot_train_results()
     # plot_test_results()
