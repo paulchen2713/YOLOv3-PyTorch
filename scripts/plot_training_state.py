@@ -5,6 +5,7 @@ Created on Wen Apr 12 16:58:30 2023
 @patch: 
     2023.04.12
     2023.04.23
+    2023.04.28
 
 @author: Paul
 @file: plot_training_state.py
@@ -22,13 +23,18 @@ import matplotlib.colors as mcolors
 from datetime import date
 import os
 
-
 # the path where we placed the log files
 LOG_PATH = f"D:/Datasets/RADA/RD_JPG/training_logs/"
 FIG_PATH = f"D:/Datasets/RADA/RD_JPG/stats_figures/"
 
 folders = ['mAP', 'train', 'test']
-data_folders = ['losses', 'mean_loss', 'class_accuracy', 'no_object_accuracy', 'object_accuracy']
+data_folders = [
+    'losses', 
+    'mean_loss', 
+    'class_accuracy', 
+    'no_object_accuracy', 
+    'object_accuracy'
+]
 
 logs = [
     '2023-04-07.txt',
@@ -36,6 +42,12 @@ logs = [
     '2023-04-16.txt',
     '2023-04-22.txt',
     '2023-04-23.txt',
+    '2023-04-25.txt',
+    '2023-04-26.txt',
+    '2023-04-27.txt',
+    '2023-04-27-2.txt',
+    '2023-04-28.txt',
+    '2023-04-28-2.txt',
 ]
 log_index = 3
 
@@ -233,8 +245,9 @@ def print_stats():
 
 if __name__ == "__main__":
 
-    print_stats()
+    print("plot training state!")
 
+    print_stats()
     # plot_mAP()
     # plot_train_results()
     # plot_test_results()
