@@ -95,7 +95,7 @@
   - The training duration is ```7.2838 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 2e-5```
     ```
     --------------------------------------------------
-    The stats of 2023-04-27 training:
+    The stats of 2023-04-27-2 training:
     --------------------------------------------------
     max mAP:  0.3233576714992523
     mean mAP: 0.23364422097802162
@@ -137,7 +137,7 @@
   - The training duration is ```8.1383 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 4e-5```
     ```
     --------------------------------------------------
-    The stats of 2023-04-28 training:
+    The stats of 2023-04-28-2 training:
     --------------------------------------------------
     max mAP:  0.3963651657104492
     mean mAP: 0.3341544926166534
