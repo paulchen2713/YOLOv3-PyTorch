@@ -50,7 +50,7 @@ logs = [
     '2023-04-28-2',
     '2023-04-28-3',
 ]
-log_index = 8
+log_index = 11
 
 # make sure we are using valid list subscripts
 assert log_index <= len(logs)
