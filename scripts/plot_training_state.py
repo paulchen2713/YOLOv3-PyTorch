@@ -44,13 +44,17 @@ logs = [
     '2023-04-23',
     '2023-04-25',
     '2023-04-26',
-    '2023-04-27',
+    '2023-04-27',   # 2023-04-27-1
     '2023-04-27-2',
-    '2023-04-28',
+    '2023-04-28',   # 2023-04-28-1
     '2023-04-28-2',
     '2023-04-28-3',
+    '2023-04-29-1',
 ]
-log_index = 11
+log_index = 12
+
+weight_decay_indices = [7, 6, 5, 3]
+learning_rate_indices = [9, 8, 3, 10, 11, 12]
 
 # make sure we are using valid list subscripts
 assert log_index <= len(logs)
@@ -88,7 +92,8 @@ D:.
 ├─2023-04-27-1
 ├─2023-04-27-2
 ├─2023-04-28-1
-└─2023-04-28-2
+├─2023-04-28-2
+└─2023-04-28-3
 """
 
 
@@ -106,10 +111,16 @@ def load_data(file_path):
     return data
 
 
+# empty containers
+mAP_list = []
+losses_list = []
+train_acc_list = []
+test_acc_list = []
+
 # read the training and testing statistics results
 curr_txt_file = logs[log_index]  # get the current file name
 
-mAP = load_data(LOG_PATH + f"mAP/{curr_txt_file}.txt")                                    # store mean Average Precision
+mAP = load_data(LOG_PATH + f"mAP/{curr_txt_file}.txt")                                   # store mean Average Precision
 
 # store the actual loss for every batch, the total number would be 'epoch x split', 
 # split = num_train_samples=6000 / batch_size=20 = 300
@@ -226,36 +237,162 @@ def plot_test_results():
     )
 
 
-def print_stats():
-    print(f"-"*50)
-    print(f"The stats of {curr_txt_file} training: ")
-    print(f"-"*50)
+def print_stats(show=True):
+    if show:
+        print(f"-"*50)
+        print(f"The stats of {curr_txt_file} training: ")
+        print(f"-"*50)
+        
+        print(f"max mAP:  {max(mAP)}")
+        print(f"mean mAP: {sum(mAP) / len(mAP)}\n")
+
+        print(f"max training loss: {max(losses)}")
+        print(f"min training loss: {min(losses)}\n")
+
+        print(f"max training loss on average: {max(mean_loss)}")
+        print(f"min training loss on average: {min(mean_loss)}\n")
+
+        print(f"min training accuracy: {min(train_obj_acc)}")
+        print(f"max training accuracy: {max(train_obj_acc)}\n")
+
+        print(f"min testing accuracy: {min(test_obj_acc)}")
+        print(f"max testing accuracy: {max(test_obj_acc)}")
+
+        print(f"-"*50)
     
-    print(f"max mAP:  {max(mAP)}")
-    print(f"mean mAP: {sum(mAP) / len(mAP)}\n")
+    else:
+        file_path = FIG_PATH + curr_txt_file + "/"
+        with open(file_path + f"stats-{curr_txt_file}.txt", "w") as txt_file:
+            print(f"-"*50, file=txt_file)
+            print(f"The stats of {curr_txt_file} training: ", file=txt_file)
+            print(f"-"*50, file=txt_file)
+            
+            print(f"max mAP:  {max(mAP)}", file=txt_file)
+            print(f"mean mAP: {sum(mAP) / len(mAP)}\n", file=txt_file)
 
-    print(f"max training loss: {max(losses)}")
-    print(f"min training loss: {min(losses)}\n")
+            print(f"max training loss: {max(losses)}", file=txt_file)
+            print(f"min training loss: {min(losses)}\n", file=txt_file)
 
-    print(f"max training loss on average: {max(mean_loss)}")
-    print(f"min training loss on average: {min(mean_loss)}\n")
+            print(f"max training loss on average: {max(mean_loss)}", file=txt_file)
+            print(f"min training loss on average: {min(mean_loss)}\n", file=txt_file)
 
-    print(f"min training accuracy: {min(train_obj_acc)}")
-    print(f"max training accuracy: {max(train_obj_acc)}\n")
+            print(f"min training accuracy: {min(train_obj_acc)}", file=txt_file)
+            print(f"max training accuracy: {max(train_obj_acc)}\n", file=txt_file)
 
-    print(f"min testing accuracy: {min(test_obj_acc)}")
-    print(f"max testing accuracy: {max(test_obj_acc)}")
+            print(f"min testing accuracy: {min(test_obj_acc)}", file=txt_file)
+            print(f"max testing accuracy: {max(test_obj_acc)}", file=txt_file)
 
-    print(f"-"*50)
+            print(f"-"*50, file=txt_file)
+        
+        print(f"saving stats to {file_path} as stats-{curr_txt_file}.txt")
+
+
+def load_multiple_train_results(indices):
+    mAP_list = []
+    losses_list = []
+    train_acc_list = []
+    test_acc_list = []
+
+    for index in indices:
+        curr_mAP = load_data(LOG_PATH + f"mAP/{logs[index]}.txt")
+        mAP_list.append(curr_mAP)
+
+        curr_losses = load_data(LOG_PATH + f"train/losses/{logs[index]}.txt")
+        losses_list.append(curr_losses)
+
+        curr_train_acc = load_data(LOG_PATH + f"train/object_accuracy/{logs[index]}.txt")
+        train_acc_list.append(curr_train_acc)
+
+        curr_test_acc = load_data(LOG_PATH + f"test/object_accuracy/{logs[index]}.txt")
+        test_acc_list.append(curr_test_acc)
+    
+    return mAP_list, losses_list, train_acc_list, test_acc_list
+
+
+def plot_diff_setting(x, data, title, x_label, y_label, folder_name, mode, show=False):
+    fig_name = f"{title}-with-different-{mode}.png"
+    if mode == 'weight-decay':
+        for i, curr in enumerate(data):
+            # print(len(x), len(curr))
+            assert len(x) == len(curr)
+            plt.plot(x, curr, label=f"WEIGHT_DECAY = 1e-{i+1}")
+    elif mode == 'learning-rate':
+        for j, curr in enumerate(data):
+            # print(len(x), len(curr))
+            assert len(x) == len(curr)
+            plt.plot(x, curr, label=f"LEARNING_RATE = {j+1}e-5")
+    
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.title(fig_name)
+    plt.legend()
+
+    if show:
+        plt.show()
+    else:
+        store_path = FIG_PATH + folder_name
+        plt.savefig(store_path + "/" + fig_name, bbox_inches='tight') 
+        plt.clf()             # clears the entire current figure 
+        plt.close(plt.gcf())  # to avoid RuntimeWarning: More than 20 figures have been opened.
+
+
+def plot_multi_results(mode):
+    plot_diff_setting(
+        x=[j*test_point for j in range(1, len(mAP_list[0]) + 1)],
+        data=mAP_list,
+        title='mAP',
+        x_label='epochs',
+        y_label='Area Under the Curve',
+        folder_name=f'different-{mode}-results',
+        mode=mode,
+    )
+    plot_diff_setting(
+        x=[j for j in range(1, len(losses_list[0]) + 1)],
+        data=losses_list,
+        title='losses',
+        x_label='number of updates',
+        y_label='loss value',
+        folder_name=f'different-{mode}-results',
+        mode=mode,
+    )
+    plot_diff_setting(
+        x=[j for j in range(1, len(train_acc_list[0]) + 1)], 
+        data=train_acc_list, 
+        title='train-accuracy', 
+        x_label='epochs', 
+        y_label='accuracy', 
+        folder_name=f'different-{mode}-results',
+        mode=mode,
+    )
+    plot_diff_setting(
+        x=[j for j in range(1, len(test_acc_list[0]) + 1)], 
+        data=test_acc_list, 
+        title='test-accuracy', 
+        x_label='epochs', 
+        y_label='accuracy', 
+        folder_name=f'different-{mode}-results',
+        mode=mode,
+    )
 
 
 if __name__ == "__main__":
 
     print("plot training state!")
 
-    # print_stats()
+    # print_stats(show=True)
     # plot_mAP()
     # plot_train_results()
     # plot_test_results()
+
+
+    mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=weight_decay_indices)
+    plot_multi_results(mode='weight-decay')
+    
+    mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_indices)
+    plot_multi_results(mode='learning-rate')
+    
+    
+
+
 
 
