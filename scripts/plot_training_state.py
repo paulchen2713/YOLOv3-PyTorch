@@ -50,8 +50,9 @@ logs = [
     '2023-04-28-2',
     '2023-04-28-3',
     '2023-04-29-1',
+    '2023-04-29-2',
 ]
-log_index = 12
+log_index = 13
 
 weight_decay_indices = [7, 6, 5, 3]
 learning_rate_indices = [9, 8, 3, 10, 11, 12]
@@ -365,7 +366,7 @@ def plot_multi_results(mode):
         mode=mode,
     )
     plot_diff_setting(
-        x=[j for j in range(1, len(test_acc_list[0]) + 1)], 
+        x=[j*test_point for j in range(1, len(test_acc_list[0]) + 1)], 
         data=test_acc_list, 
         title='test-accuracy', 
         x_label='epochs', 
@@ -373,6 +374,39 @@ def plot_multi_results(mode):
         folder_name=f'different-{mode}-results',
         mode=mode,
     )
+
+
+def plot_training_duration():
+    time_with_diff_lr = [7.5511, 7.2838, 7.2117, 7.1383, 7.1785, 7.0542, 7.1015,]
+    time_with_diff_wd = [7.1676, 7.7900, 6.2753, 7.2117,]
+
+    lr = [f'{i+1}e-5' for i in range(len(time_with_diff_lr))]
+    wd = [f'1e-{i+1}' for i in range(len(time_with_diff_wd))]
+
+    store_path = f'D:/Datasets/RADA/RD_JPG/stats_figures/training-time-comparison/'
+
+    # plot different learning rate vs training duration
+    plt.plot(lr, time_with_diff_lr)
+    plt.xlabel('learning rate')
+    plt.ylabel('training duration')
+    title1 = f'learning-rate-vs-training-duration'
+    plt.title(title1)
+    # plt.show()
+    plt.savefig(store_path + f"{title1}.png", bbox_inches='tight')
+    plt.clf()             # clears the entire current figure 
+    plt.close(plt.gcf())
+
+    # plot different weight decay vs training duration
+    plt.plot(wd, time_with_diff_wd, color='b')
+    plt.xlabel('weight decay')
+    plt.ylabel('training duration')
+    title2 = f'weight-deca-vs-training-duration'
+    plt.title(title2)
+    # plt.show()
+    plt.savefig(store_path + f"{title2}.png", bbox_inches='tight')
+    plt.clf()             # clears the entire current figure 
+    plt.close(plt.gcf())
+
 
 
 if __name__ == "__main__":
@@ -385,14 +419,13 @@ if __name__ == "__main__":
     # plot_test_results()
 
 
-    mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=weight_decay_indices)
-    plot_multi_results(mode='weight-decay')
+    # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=weight_decay_indices)
+    # plot_multi_results(mode='weight-decay')
     
-    mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_indices)
-    plot_multi_results(mode='learning-rate')
+    # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_indices)
+    # plot_multi_results(mode='learning-rate')
     
+    plot_training_duration()
     
-
-
 
 
