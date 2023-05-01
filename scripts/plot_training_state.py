@@ -60,8 +60,9 @@ logs = [
 log_index = 17
 
 weight_decay_indices = [7, 6, 5, 3]
-learning_rate_indices = [9, 8, 3, 10, 11, 12]
-lr_7_12_indices = [13, 14, 15, 16, 17, 18]
+learning_rate_01_04 = [9, 8, 3, 10]
+learning_rate_05_08 = [11, 12, 13, 14]
+learning_rate_09_12 = [15, 16, 17, ]
 
 # make sure we are using valid list subscripts
 assert log_index <= len(logs)
@@ -327,7 +328,7 @@ def plot_diff_setting(x, data, title, x_label, y_label, folder_name, mode, show=
         for j, curr in enumerate(data):
             # print(len(x), len(curr))
             assert len(x) == len(curr)
-            plt.plot(x, curr, label=f"LEARNING_RATE = {j+1}e-5")
+            plt.plot(x, curr, label=f"LEARNING_RATE = {j+1+4+4}e-5")
     
     plt.xlabel(x_label)
     plt.ylabel(y_label)
@@ -342,7 +343,7 @@ def plot_diff_setting(x, data, title, x_label, y_label, folder_name, mode, show=
         plt.clf()             # clears the entire current figure 
         plt.close(plt.gcf())  # to avoid RuntimeWarning: More than 20 figures have been opened.
 
-
+folder_index = 3
 def plot_multi_results(mode):
     plot_diff_setting(
         x=[j*test_point for j in range(1, len(mAP_list[0]) + 1)],
@@ -350,7 +351,7 @@ def plot_multi_results(mode):
         title='mAP',
         x_label='epochs',
         y_label='Area Under the Curve',
-        folder_name=f'different-{mode}-results',
+        folder_name=f'different-{mode}-results-{folder_index}',
         mode=mode,
     )
     plot_diff_setting(
@@ -359,7 +360,7 @@ def plot_multi_results(mode):
         title='losses',
         x_label='number of updates',
         y_label='loss value',
-        folder_name=f'different-{mode}-results',
+        folder_name=f'different-{mode}-results-{folder_index}',
         mode=mode,
     )
     plot_diff_setting(
@@ -368,7 +369,7 @@ def plot_multi_results(mode):
         title='train-accuracy', 
         x_label='epochs', 
         y_label='accuracy', 
-        folder_name=f'different-{mode}-results',
+        folder_name=f'different-{mode}-results-{folder_index}',
         mode=mode,
     )
     plot_diff_setting(
@@ -377,14 +378,14 @@ def plot_multi_results(mode):
         title='test-accuracy', 
         x_label='epochs', 
         y_label='accuracy', 
-        folder_name=f'different-{mode}-results',
+        folder_name=f'different-{mode}-results-{folder_index}',
         mode=mode,
     )
 
 
 def plot_training_duration():
-    time_with_diff_lr = [7.5511, 7.2838, 7.2117, 7.1383, 7.1785, 7.0542, 7.1015,]
-    time_with_diff_wd = [7.1676, 7.7900, 6.2753, 7.2117,]
+    time_with_diff_lr = [7.5511, 7.2838, 7.2117, 7.1383, 7.1785, 7.0542, 7.1015, 6.7780, 5.5800, 5.7350, 7.0366, ]
+    time_with_diff_wd = [7.1676, 7.7900, 6.2753, 7.2117, ]
 
     lr = [f'{i+1}e-5' for i in range(len(time_with_diff_lr))]
     wd = [f'1e-{i+1}' for i in range(len(time_with_diff_wd))]
@@ -394,7 +395,7 @@ def plot_training_duration():
     # plot different learning rate vs training duration
     plt.plot(lr, time_with_diff_lr)
     plt.xlabel('learning rate')
-    plt.ylabel('training duration')
+    plt.ylabel('training duration (hour)')
     title1 = f'learning-rate-vs-training-duration'
     plt.title(title1)
     # plt.show()
@@ -405,7 +406,7 @@ def plot_training_duration():
     # plot different weight decay vs training duration
     plt.plot(wd, time_with_diff_wd, color='b')
     plt.xlabel('weight decay')
-    plt.ylabel('training duration')
+    plt.ylabel('training duration (hour)')
     title2 = f'weight-decay-vs-training-duration'
     plt.title(title2)
     # plt.show()
@@ -419,17 +420,19 @@ if __name__ == "__main__":
 
     print("plot training state!")
 
-    # print_stats(show=False)
     # plot_mAP()
     # plot_train_results()
     # plot_test_results()
-
+    print_stats(show=True)
 
     # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=weight_decay_indices)
     # plot_multi_results(mode='weight-decay')
     
-    # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_indices)
-    # plot_multi_results(mode='learning-rate')
+    mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_01_04)
+    mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_05_08)
+    mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_09_12)
+    plot_multi_results(mode='learning-rate')
+
     
     # plot_training_duration()
     
