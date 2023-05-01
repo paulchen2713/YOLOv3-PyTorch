@@ -214,29 +214,37 @@ if __name__ == "__main__":
 
     tic = time.perf_counter()
 
-    main()
+    # main()
 
-    # 2023/05/01 epoch: 100,  duration:  hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 12e-5
-    # 2023/05/01 epoch: 100,  duration: 7.0366 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 11e-5
-    # 2023/05/01 epoch: 100,  duration: 5.7350 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 10e-5
-    # 2023/04/30 epoch: 100,  duration: 5.5800 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 9e-5
-    # 2023/04/30 epoch: 100,  duration: 6.7780 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 8e-5
-    # 2023/04/29 epoch: 100,  duration: 7.1015 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 7e-5
-    # 2023/04/29 epoch: 100,  duration: 7.0542 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 6e-5
-    # 2023/04/28 epoch: 100,  duration: 7.1785 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 5e-5
-    # 2023/04/28 epoch: 100,  duration: 8.1383 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 4e-5
-    # 2023/04/28 epoch: 100,  duration: 7.5511 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 1e-5
-    # 2023/04/27 epoch: 100,  duration: 7.2838 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 2e-5
-    # 2023/04/27 epoch: 100,  duration: 7.1676 hours  WEIGHT_DECAY = 1e-1  
-    # 2023/04/26 epoch: 100,  duration: 7.7900 hours  WEIGHT_DECAY = 1e-2
-    # 2023/04/25 epoch: 100,  duration: 6.2753 hours  WEIGHT_DECAY = 1e-3
-    # 2023/04/23 epoch: 300,  duration: 20.8263 hours 
-    # 2023/04/22 epoch: 100,  duration: 7.2117 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-5
-    # 2023/04/15 epoch: 100,  duration: 6.6698 hours, 8.0922 hours
-    # 2023/04/07 epoch: 1000, duration: 80.3616 hours
+    # 2023-05-01-3  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 12e-5
+    # 2023-05-01-2  epoch: 100   duration:  7.0366 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 11e-5  max mAP:  0.4490
+    # 2023-05-01-1  epoch: 100   duration:  5.7350 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 10e-5  max mAP:  0.4386
+    # 2023-04-30-2  epoch: 100   duration:  5.5800 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 9e-5   max mAP:  0.4356
+    # 2023-04-30-1  epoch: 100   duration:  6.7780 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 8e-5   max mAP:  0.4340
+    # 2023-04-29-2  epoch: 100   duration:  7.1015 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 7e-5   max mAP:  0.4309
+    # 2023-04-29-1  epoch: 100   duration:  7.0542 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 6e-5   max mAP:  0.4267
+    # 2023-04-28-3  epoch: 100   duration:  7.1785 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 5e-5   max mAP:  0.4143
+    # 2023-04-28-2  epoch: 100   duration:  8.1383 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 4e-5   max mAP:  0.3963
+    
+    # 2023-04-22    epoch: 100   duration:  7.2117 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-5   max mAP:  0.3792
+    # 2023-04-27-2  epoch: 100   duration:  7.2838 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 2e-5   max mAP:  0.3233
+    # 2023-04-28    epoch: 100   duration:  7.5511 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 1e-5   max mAP:  0.2697
+    
+    # 2023-04-27    epoch: 100   duration:  7.1676 hours  WEIGHT_DECAY = 1e-1  LEARNING_RATE = 3e-5   max mAP:  0.3289
+    # 2023-04-26    epoch: 100   duration:  7.7900 hours  WEIGHT_DECAY = 1e-2  LEARNING_RATE = 3e-5   max mAP:  0.3646
+    # 2023-04-25    epoch: 100   duration:  6.2753 hours  WEIGHT_DECAY = 1e-3  LEARNING_RATE = 3e-5   max mAP:  0.3603
+    # 2023-04-22    epoch: 100   duration:  7.2117 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-5   max mAP:  0.3792
+
+    # 2023-04-23    epoch: 300   duration: 20.8263 hours                                                                             max mAP:  0.4179
+    # 2023-04-22    epoch: 100   duration:  7.2117 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-5  'k_means() anchor'  'Shuffled'  max mAP:  0.3792
+    # 2023-04-16    epoch: 100   duration:  8.0922 hours  'sklearn.cluster.MiniBatchKMeans'                                          max mAP:  0.1736
+    # 2023-04-15    epoch: 100   duration:  6.6698 hours  'sklearn.cluster.KMeans() anchor'                                          max mAP:  0.1628
+    # 2023-04-07    epoch: 1000  duration: 80.3616 hours  'YOLOv3-original anchor'  'Serialized'
 
     toc = time.perf_counter()
     duration = (toc - tic) / 3600
-    print(f"duration: {duration:0.4f} hours")
+    print(f"{log_file_name}  epoch: {config.NUM_EPOCHS}   duration:  {duration:0.4f} hours")
+    # print(f"WEIGHT_DECAY = {config.WEIGHT_DECAY}  LEARNING_RATE = {config.LEARNING_RATE}  max mAP:  ")
+
 
 
