@@ -61,6 +61,7 @@ log_index = 17
 
 weight_decay_indices = [7, 6, 5, 3]
 learning_rate_indices = [9, 8, 3, 10, 11, 12]
+lr_7_12_indices = [13, 14, 15, 16, 17, 18]
 
 # make sure we are using valid list subscripts
 assert log_index <= len(logs)
@@ -405,7 +406,7 @@ def plot_training_duration():
     plt.plot(wd, time_with_diff_wd, color='b')
     plt.xlabel('weight decay')
     plt.ylabel('training duration')
-    title2 = f'weight-deca-vs-training-duration'
+    title2 = f'weight-decay-vs-training-duration'
     plt.title(title2)
     # plt.show()
     plt.savefig(store_path + f"{title2}.png", bbox_inches='tight')
@@ -418,7 +419,7 @@ if __name__ == "__main__":
 
     print("plot training state!")
 
-    # print_stats(show=True)
+    # print_stats(show=False)
     # plot_mAP()
     # plot_train_results()
     # plot_test_results()
@@ -430,7 +431,7 @@ if __name__ == "__main__":
     # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_indices)
     # plot_multi_results(mode='learning-rate')
     
-    plot_training_duration()
+    # plot_training_duration()
     
 
 
