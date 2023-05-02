@@ -69,7 +69,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-05-02-3' # date_function.today()
+log_file_name = '2023-05-02-4' # date_function.today()
 
 # TODO write a simple check, make sure that we don't accidentlt overwrite previous results, due to naming error
 
@@ -218,19 +218,22 @@ if __name__ == "__main__":
 
     main()
 
-    # 2023-05-02-3  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  
+    # 2023-05-02-4  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 16e-5  
+    # 2023-05-02-3  epoch: 100   duration:  5.5819 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4520
     # 2023-05-02-2  epoch: 100   duration:  5.8219 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4521
     # 2023-05-02-1  epoch: 100   duration:  6.8200 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 13e-5  max mAP:  0.4374
+    
     # 2023-05-01-3  epoch: 100   duration:  7.1689 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 12e-5  max mAP:  0.4372
     # 2023-05-01-2  epoch: 100   duration:  7.0366 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 11e-5  max mAP:  0.4490
     # 2023-05-01-1  epoch: 100   duration:  5.7350 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 10e-5  max mAP:  0.4386
     # 2023-04-30-2  epoch: 100   duration:  5.5800 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 9e-5   max mAP:  0.4356
+
     # 2023-04-30-1  epoch: 100   duration:  6.7780 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 8e-5   max mAP:  0.4340
     # 2023-04-29-2  epoch: 100   duration:  7.1015 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 7e-5   max mAP:  0.4309
     # 2023-04-29-1  epoch: 100   duration:  7.0542 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 6e-5   max mAP:  0.4267
     # 2023-04-28-3  epoch: 100   duration:  7.1785 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 5e-5   max mAP:  0.4143
+
     # 2023-04-28-2  epoch: 100   duration:  8.1383 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 4e-5   max mAP:  0.3963
-    
     # 2023-04-22    epoch: 100   duration:  7.2117 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-5   max mAP:  0.3792
     # 2023-04-27-2  epoch: 100   duration:  7.2838 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 2e-5   max mAP:  0.3233
     # 2023-04-28    epoch: 100   duration:  7.5511 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 1e-5   max mAP:  0.2697
