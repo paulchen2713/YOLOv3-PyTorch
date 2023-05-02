@@ -58,8 +58,10 @@ logs = [
     '2023-05-01-3',
     '2023-05-02-1',
     '2023-05-02-2',
+    '2023-05-02-3',
+    '2023-05-02-4',
 ]
-log_index = 20
+log_index = 21
 
 weight_decay_indices = [7, 6, 5, 3]
 learning_rate_01_04 = [9, 8, 3, 10]
@@ -388,12 +390,12 @@ def plot_multi_results(mode):
 def plot_training_duration():
     time_with_diff_lr = [7.5511, 7.2838, 7.2117, 7.1383, 7.1785, 
                          7.0542, 7.1015, 6.7780, 5.5800, 5.7350, 
-                         7.0366, 7.1689, 6.8200, 5.8219, ]
+                         7.0366, 7.1689, 6.8200, 5.8219, 5.5819,]
     time_with_diff_wd = [7.1676, 7.7900, 6.2753, 7.2117, ]
 
     # lr = [f"{i}" for i in range(1, len(time_with_diff_lr) + 1)]
     # lr = [1e-5, 2e-5, 3e-5, 4e-5, 5e-5, 6e-5, 7e-5, 8e-5, 9e-5, 10e-5, 11e-5, 12e-5, 13e-5, 14e-5, ]
-    lr = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
+    lr = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', ]
     wd = [f'1e-{i+1}' for i in range(len(time_with_diff_wd))]
 
     store_path = f'D:/Datasets/RADA/RD_JPG/stats_figures/training-time-comparison/'
