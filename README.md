@@ -70,6 +70,22 @@
 
 
 ## Notes
+- 2023.04.29
+  - The comparison between different ```WEIGHT_DECAY``` under the same ```LEARNING_RATE = 3e-5```
+    - The ```loss``` value for every updates
+      ![](https://i.imgur.com/c3i8F03.png)
+    - The ```train-object-accuracy``` for every epochs
+      ![](https://i.imgur.com/5oO2CyN.png)
+    - The ```test-object-accuracy``` for every ```10``` epochs
+      ![](https://i.imgur.com/XNy01W4.png)
+    - The ```mAP``` for every ```10``` epochs
+        ```cpp
+        2023-04-27, epoch: 100, duration: 7.1676 hours, WEIGHT_DECAY = 1e-1, LEARNING_RATE = 3e-5, max mAP: 0.3289
+        2023-04-26, epoch: 100, duration: 7.7900 hours, WEIGHT_DECAY = 1e-2, LEARNING_RATE = 3e-5, max mAP: 0.3646
+        2023-04-25, epoch: 100, duration: 6.2753 hours, WEIGHT_DECAY = 1e-3, LEARNING_RATE = 3e-5, max mAP: 0.3603
+        2023-04-22, epoch: 100, duration: 7.2117 hours, WEIGHT_DECAY = 1e-4, LEARNING_RATE = 3e-5, max mAP: 0.3792
+        ```
+      ![](https://i.imgur.com/eftQ9Tb.png)
 - 2023.04.28
   - The training duration is ```7.5511 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 1e-5```
     ```
