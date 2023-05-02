@@ -56,13 +56,14 @@ logs = [
     '2023-05-01-1',
     '2023-05-01-2',
     '2023-05-01-3',
+    '2023-05-02-1',
 ]
-log_index = 17
+log_index = 19
 
 weight_decay_indices = [7, 6, 5, 3]
 learning_rate_01_04 = [9, 8, 3, 10]
 learning_rate_05_08 = [11, 12, 13, 14]
-learning_rate_09_12 = [15, 16, 17, ]
+learning_rate_09_12 = [15, 16, 17, 18]
 
 # make sure we are using valid list subscripts
 assert log_index <= len(logs)
@@ -420,19 +421,16 @@ if __name__ == "__main__":
 
     print("plot training state!")
 
-    # plot_mAP()
-    # plot_train_results()
-    # plot_test_results()
-    print_stats(show=True)
+    plot_mAP()
+    plot_train_results()
+    plot_test_results()
+    print_stats(show=False)
 
     # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=weight_decay_indices)
     # plot_multi_results(mode='weight-decay')
     
-    mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_01_04)
-    mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_05_08)
-    mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_09_12)
-    plot_multi_results(mode='learning-rate')
-
+    # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_09_12)
+    # plot_multi_results(mode='learning-rate')
     
     # plot_training_duration()
     
