@@ -69,7 +69,9 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-05-02-1' # date_function.today()
+log_file_name = '2023-05-02-3' # date_function.today()
+
+# TODO write a simple check, make sure that we don't accidentlt overwrite previous results, due to naming error
 
 
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
@@ -216,7 +218,8 @@ if __name__ == "__main__":
 
     main()
 
-    # 2023-05-02-2  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  
+    # 2023-05-02-3  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  
+    # 2023-05-02-2  epoch: 100   duration:  5.8219 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4521
     # 2023-05-02-1  epoch: 100   duration:  6.8200 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 13e-5  max mAP:  0.4374
     # 2023-05-01-3  epoch: 100   duration:  7.1689 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 12e-5  max mAP:  0.4372
     # 2023-05-01-2  epoch: 100   duration:  7.0366 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 11e-5  max mAP:  0.4490
@@ -237,11 +240,11 @@ if __name__ == "__main__":
     # 2023-04-25    epoch: 100   duration:  6.2753 hours  WEIGHT_DECAY = 1e-3  LEARNING_RATE = 3e-5   max mAP:  0.3603
     # 2023-04-22    epoch: 100   duration:  7.2117 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-5   max mAP:  0.3792
 
-    # 2023-04-23    epoch: 300   duration: 20.8263 hours                                                                             max mAP:  0.4179
-    # 2023-04-22    epoch: 100   duration:  7.2117 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-5  'k_means() anchor'  'Shuffled'  max mAP:  0.3792
-    # 2023-04-16    epoch: 100   duration:  8.0922 hours  'sklearn.cluster.MiniBatchKMeans'                                          max mAP:  0.1736
-    # 2023-04-15    epoch: 100   duration:  6.6698 hours  'sklearn.cluster.KMeans() anchor'                                          max mAP:  0.1628
-    # 2023-04-07    epoch: 1000  duration: 80.3616 hours  'YOLOv3-original anchor'  'Serialized'
+    # 2023-04-23    epoch: 300   duration: 20.8263 hours                                                                              max mAP:  0.4179
+    # 2023-04-22    epoch: 100   duration:  7.2117 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-5  'k_means() anchor'  'Shuffled'   max mAP:  0.3792
+    # 2023-04-16    epoch: 100   duration:  8.0922 hours                                             'MiniBatchKMeans'                max mAP:  0.1736
+    # 2023-04-15    epoch: 100   duration:  6.6698 hours                                             'KMeans() anchor'                max mAP:  0.1628
+    # 2023-04-07    epoch: 1000  duration: 80.3616 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 1e-4  'YOLOv3 anchor'     'Serialized' max mAP:  0.1819
 
     toc = time.perf_counter()
     duration = (toc - tic) / 3600
