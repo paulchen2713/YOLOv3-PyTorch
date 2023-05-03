@@ -60,13 +60,16 @@ logs = [
     '2023-05-02-2',
     '2023-05-02-3',
     '2023-05-02-4',
+    '2023-05-03-1',
+    '2023-05-03-2',
 ]
-log_index = 22
+log_index = 23
 
 weight_decay_indices = [7, 6, 5, 3]
 learning_rate_01_04 = [9, 8, 3, 10]
 learning_rate_05_08 = [11, 12, 13, 14]
 learning_rate_09_12 = [15, 16, 17, 18]
+learning_rate_13_16 = [19, 20, 21, 22]
 
 # make sure we are using valid list subscripts
 assert log_index <= len(logs)
