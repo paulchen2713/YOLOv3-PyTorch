@@ -62,8 +62,10 @@ logs = [
     '2023-05-02-4',
     '2023-05-03-1',
     '2023-05-03-2',
+    '2023-05-04-1',
+    '2023-05-04-2',
 ]
-log_index = 24
+log_index = 25
 
 weight_decay_indices = [7, 6, 5, 3]
 learning_rate_01_04 = [9, 8, 3, 10]
@@ -109,7 +111,27 @@ D:.
 ├─2023-04-27-2
 ├─2023-04-28-1
 ├─2023-04-28-2
-└─2023-04-28-3
+├─2023-04-28-3
+├─2023-04-29-1
+├─2023-04-29-2
+├─2023-04-30-1
+├─2023-04-30-2
+├─2023-05-01-1
+├─2023-05-01-2
+├─2023-05-01-3
+├─2023-05-02-1
+├─2023-05-02-2
+├─2023-05-02-3
+├─2023-05-02-4
+├─2023-05-03-1
+├─2023-05-03-2
+├─2023-05-04-1
+├─different-learning-rate-results-1
+├─different-learning-rate-results-2
+├─different-learning-rate-results-3
+├─different-learning-rate-results-4
+├─different-weight-decay-results
+└─training-time-comparison
 """
 
 
@@ -121,8 +143,14 @@ def get_file_content(file_name):
 def load_data(file_path):
     with open(file_path, "r", encoding="utf-8") as text_file:
         # print(f"current file: {file_path}")
+        lines = text_file.readlines()
         data = []
-        for line in text_file:
+        for line in lines:
+            # adding a bunch of line.strip() to solve "ValueError: could not convert string to float"
+            line = line.strip()
+            line = line.strip("\n")
+            line = line.strip("\t")
+            line = line.strip("\"")
             data.append(float(line))
     return data
 
@@ -155,6 +183,10 @@ test_obj_acc = load_data(LOG_PATH + f"test/object_accuracy/{curr_txt_file}.txt")
 
 def my_plot(x, y, title, x_label, y_label, line_color, line_marker):
     plt.plot(x, y, color=line_color, marker=line_marker)
+
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.title(title)
     
     # Initialize the store_path for all the figures, the folder_name should be the same as the log text file
     folder_name = curr_txt_file          # <class 'str'>
@@ -164,15 +196,14 @@ def my_plot(x, y, title, x_label, y_label, line_color, line_marker):
     if os.path.isdir(store_path) is False:
         print(f"creating {folder_name} folder to store the figures")
         os.makedirs(store_path)
-
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.title(title)
-    # plt.show()
-
-    # 
+    
     fig_name = f"{folder_name}-{title}.png" 
-    plt.savefig(store_path + "/" + fig_name, bbox_inches='tight') 
+    file_name = store_path + "/" + fig_name
+    if os.path.isfile(f"{file_name}") is False:
+        plt.savefig(file_name, bbox_inches='tight') 
+    else:
+        print(f"Note. '{fig_name}' already exist")
+        plt.show()
     plt.clf()             # clears the entire current figure 
     plt.close(plt.gcf())  # to avoid RuntimeWarning: More than 20 figures have been opened.
 
@@ -253,8 +284,12 @@ def plot_test_results():
     )
 
 
-def print_stats(show=True):
-    if show:
+def print_stats():
+    file_path = FIG_PATH + curr_txt_file + "/"
+    file_name = file_path + f"stats-{curr_txt_file}.txt"
+    if os.path.isfile(file_name) is True:
+        print(f"Note. 'stats-{curr_txt_file}.txt' already exist")
+
         print(f"-"*50)
         print(f"The stats of {curr_txt_file} training: ")
         print(f"-"*50)
@@ -275,10 +310,8 @@ def print_stats(show=True):
         print(f"max testing accuracy: {max(test_obj_acc)}")
 
         print(f"-"*50)
-    
     else:
-        file_path = FIG_PATH + curr_txt_file + "/"
-        with open(file_path + f"stats-{curr_txt_file}.txt", "w") as txt_file:
+        with open(file_name, "w") as txt_file:
             print(f"-"*50, file=txt_file)
             print(f"The stats of {curr_txt_file} training: ", file=txt_file)
             print(f"-"*50, file=txt_file)
@@ -325,8 +358,8 @@ def load_multiple_train_results(indices):
     return mAP_list, losses_list, train_acc_list, test_acc_list
 
 
-def plot_diff_setting(x, data, title, x_label, y_label, folder_name, mode, show=False):
-    fig_name = f"{title}-with-different-{mode}.png"
+def plot_diff_setting(x, data, title, x_label, y_label, folder_name, mode):
+    fig_name = f"{title}-with-different-{mode}"
     if mode == 'weight-decay':
         for i, curr in enumerate(data):
             # print(len(x), len(curr))
@@ -336,22 +369,30 @@ def plot_diff_setting(x, data, title, x_label, y_label, folder_name, mode, show=
         for j, curr in enumerate(data):
             # print(len(x), len(curr))
             assert len(x) == len(curr)
-            plt.plot(x, curr, label=f"LEARNING_RATE = {j+1+4+4}e-5")
+            plt.plot(x, curr, label=f"LEARNING_RATE = {j+1+4+4+4}e-5")
     
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.title(fig_name)
     plt.legend()
+    
+    store_path = FIG_PATH + folder_name
+    # If the folder doesn't exist, then we create that folder 
+    if os.path.isdir(store_path) is False:
+        print(f"creating {folder_name} folder to store the figures")
+        os.makedirs(store_path)
 
-    if show:
-        plt.show()
+    file_name = store_path + "/" + fig_name
+    if os.path.isfile(f"{file_name}.png") is False:
+        plt.savefig(f"{file_name}.png", bbox_inches='tight') 
     else:
-        store_path = FIG_PATH + folder_name
-        plt.savefig(store_path + "/" + fig_name, bbox_inches='tight') 
-        plt.clf()             # clears the entire current figure 
-        plt.close(plt.gcf())  # to avoid RuntimeWarning: More than 20 figures have been opened.
+        print(f"Note. '{fig_name}.png' already exist")
+        plt.show()
+    plt.clf()             # clears the entire current figure 
+    plt.close(plt.gcf())  # to avoid RuntimeWarning: More than 20 figures have been opened.
 
-folder_index = 3
+
+folder_index = 5
 def plot_multi_results(mode):
     plot_diff_setting(
         x=[j*test_point for j in range(1, len(mAP_list[0]) + 1)],
@@ -391,15 +432,17 @@ def plot_multi_results(mode):
     )
 
 
-def plot_training_duration():
+def plot_training_duration(overwrite=False):
     time_with_diff_lr = [7.5511, 7.2838, 7.2117, 7.1383, 7.1785, 
                          7.0542, 7.1015, 6.7780, 5.5800, 5.7350, 
-                         7.0366, 7.1689, 6.8200, 5.8219, 5.5819,]
+                         7.0366, 7.1689, 6.8200, 5.8219, 5.5819,
+                         8.4758, 7.1341, 7.1676, 7.4228, ]
     time_with_diff_wd = [7.1676, 7.7900, 6.2753, 7.2117, ]
 
-    # lr = [f"{i}" for i in range(1, len(time_with_diff_lr) + 1)]
+    lr = [f"{i}" for i in range(1, len(time_with_diff_lr) + 1)]
     # lr = [1e-5, 2e-5, 3e-5, 4e-5, 5e-5, 6e-5, 7e-5, 8e-5, 9e-5, 10e-5, 11e-5, 12e-5, 13e-5, 14e-5, ]
-    lr = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', ]
+    # lr = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', ]
+    # lr = [i for i in range(1, len(time_with_diff_lr) + 1)]
     wd = [f'1e-{i+1}' for i in range(len(time_with_diff_wd))]
 
     store_path = f'D:/Datasets/RADA/RD_JPG/stats_figures/training-time-comparison/'
@@ -411,8 +454,17 @@ def plot_training_duration():
     plt.ylabel('training duration (hour)')
     title1 = f'learning-rate-vs-training-duration'
     plt.title(title1)
-    # plt.show()
-    plt.savefig(store_path + f"{title1}.png", bbox_inches='tight')
+    
+    file_name = store_path + f"{title1}.png"
+    if os.path.isfile(f"{file_name}") is False:
+        plt.savefig(file_name, bbox_inches='tight')
+    elif overwrite == True:
+        print(f"Note. overwriting '{title1}.png' ")
+        plt.savefig(file_name, bbox_inches='tight')
+        plt.show()
+    else:
+        print(f"Note. '{title1}.png' already exist")
+        plt.show()
     plt.clf()             # clears the entire current figure 
     plt.close(plt.gcf())
 
@@ -422,8 +474,17 @@ def plot_training_duration():
     plt.ylabel('training duration (hour)')
     title2 = f'weight-decay-vs-training-duration'
     plt.title(title2)
-    # plt.show()
-    plt.savefig(store_path + f"{title2}.png", bbox_inches='tight')
+
+    file_name = store_path + f"{title2}.png"
+    if os.path.isfile(f"{file_name}") is False:
+        plt.savefig(file_name, bbox_inches='tight')
+    elif overwrite == True:
+        print(f"Note. overwriting '{title2}.png' ")
+        plt.savefig(file_name, bbox_inches='tight')
+        plt.show()
+    else:
+        print(f"Note. '{title2}.png' already exist")
+        plt.show()
     plt.clf()             # clears the entire current figure 
     plt.close(plt.gcf())
 
@@ -433,18 +494,16 @@ if __name__ == "__main__":
 
     print("plot training state!")
 
-    plot_mAP()
-    plot_train_results()
-    plot_test_results()
-    print_stats(show=False)
+    # plot_mAP()
+    # plot_train_results()
+    # plot_test_results()
+    # print_stats()
 
     # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=weight_decay_indices)
     # plot_multi_results(mode='weight-decay')
     
-    # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_09_12)
+    # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_13_16)
     # plot_multi_results(mode='learning-rate')
     
-    # plot_training_duration()
+    # plot_training_duration(overwrite=False)
     
-
-
