@@ -64,8 +64,9 @@ logs = [
     '2023-05-03-2',
     '2023-05-04-1',
     '2023-05-04-2',
+    '2023-05-05-1',
 ]
-log_index = 25
+log_index = 27
 
 weight_decay_indices = [7, 6, 5, 3]
 learning_rate_01_04 = [9, 8, 3, 10]
@@ -436,7 +437,7 @@ def plot_training_duration(overwrite=False):
     time_with_diff_lr = [7.5511, 7.2838, 7.2117, 7.1383, 7.1785, 
                          7.0542, 7.1015, 6.7780, 5.5800, 5.7350, 
                          7.0366, 7.1689, 6.8200, 5.8219, 5.5819,
-                         8.4758, 7.1341, 7.1676, 7.4228, ]
+                         8.4758, 7.1341, 7.1676, 7.4228, 8.4733,]
     time_with_diff_wd = [7.1676, 7.7900, 6.2753, 7.2117, ]
 
     lr = [f"{i}" for i in range(1, len(time_with_diff_lr) + 1)]
@@ -497,7 +498,7 @@ if __name__ == "__main__":
     # plot_mAP()
     # plot_train_results()
     # plot_test_results()
-    # print_stats()
+    print_stats()
 
     # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=weight_decay_indices)
     # plot_multi_results(mode='weight-decay')
