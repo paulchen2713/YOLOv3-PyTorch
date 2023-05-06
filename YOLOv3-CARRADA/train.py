@@ -69,7 +69,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-05-04-2' # date_function.today()
+log_file_name = '2023-05-06-1' # date_function.today()
 
 # TODO write a simple check, make sure that we don't accidentlt overwrite previous results, due to naming error
 
@@ -131,7 +131,7 @@ def main():
 
     if config.LOAD_MODEL:
         load_checkpoint(
-            config.CHECKPOINT_FILE, # 
+            config.DATASET + f"checks/checkpoint-2023-05-02-2.pth.tar",  # config.CHECKPOINT_FILE, 
             model, 
             optimizer, 
             config.LEARNING_RATE 
@@ -218,9 +218,10 @@ if __name__ == "__main__":
 
     main()
 
-    # 2023-05-05-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-3  LEARNING_RATE = 5e-5  
+    # 2023-05-06-1  epoch: 300   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  
+    # 2023-05-05-1  epoch: 400   duration: 26.4082 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4396
     
-    # 2023-05-04-2  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 20e-5  
+    # 2023-05-04-2  epoch: 100   duration:  8.4733 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 20e-5  max mAP:  0.4227
     # 2023-05-04-1  epoch: 100   duration:  7.4228 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 19e-5  max mAP:  0.4431
     # 2023-05-03-2  epoch: 100   duration:  7.1676 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 18e-5  max mAP:  0.4468
     # 2023-05-03-1  epoch: 100   duration:  7.1341 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 17e-5  max mAP:  0.4469
