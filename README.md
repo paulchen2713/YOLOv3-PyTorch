@@ -70,6 +70,70 @@
 
 
 ## Notes
+- 2023.05.01
+  - The training duration is ```5.7350 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 10e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-01-1 training:
+    --------------------------------------------------
+    max mAP:  0.43861937522888184
+    mean mAP: 0.3436750084161758
+
+    max training loss: 140.25660705566406
+    min training loss: 0.8655197024345398
+
+    max training loss on average: 18.507166700363157
+    min training loss on average: 1.1550286275148391
+
+    min training accuracy: 4.963176250457764
+    max training accuracy: 94.96363067626953
+
+    min testing accuracy: 36.68720245361328
+    max testing accuracy: 68.37782287597656
+    --------------------------------------------------
+    ```
+  - The training duration is ```7.0366 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 11e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-01-2 training:
+    --------------------------------------------------
+    max mAP:  0.449009507894516
+    mean mAP: 0.38735678046941757
+
+    max training loss: 102.38961791992188
+    min training loss: 0.9561270475387573
+
+    max training loss on average: 17.273788038889567
+    min training loss on average: 1.2045013213157654
+
+    min training accuracy: 3.2843875885009766
+    max training accuracy: 96.39083099365234
+
+    min testing accuracy: 35.68332290649414
+    max testing accuracy: 73.03217315673828
+    --------------------------------------------------
+    ```
+  - The training duration is ```7.1689 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 12e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-01-3 training:
+    --------------------------------------------------
+    max mAP:  0.4372125566005707
+    mean mAP: 0.38275537043809893
+
+    max training loss: 125.8486099243164
+    min training loss: 0.9757415056228638
+
+    max training loss on average: 17.398162371317547
+    min training loss on average: 1.2320519105593364
+
+    min training accuracy: 1.1024198532104492
+    max training accuracy: 94.62055206298828
+
+    min testing accuracy: 34.86196517944336
+    max testing accuracy: 73.3515853881836
+    --------------------------------------------------
+    ```
 - 2023.04.30
   - The training duration is ```7.0542 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 6e-5```
     ```
@@ -157,7 +221,7 @@
     ```
 - How to get model summary in PyTorch?
   - Using ```torchsummary``` to get the result
-    ```python!
+    ```python
     from torchsummary import summary
     # simple test settings
     num_classes = 3   # 
@@ -175,7 +239,7 @@
     summary(model.cuda(), (3, 416, 416), bs=16)
     ```
     - model parameter summary
-        ```
+        ```cpp
         ================================================================
         Total params: 61,534,504
         Trainable params: 61,534,504
