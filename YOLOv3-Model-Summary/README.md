@@ -54,7 +54,7 @@
     out = model(x)
 
     # print out the model summary using torchinfo.summary()
-    summary(model.cuda(), input_size=(batch_size, 3, IMAGE_SIZE, IMAGE_SIZE))
+    summary(model.cuda(), input_size=(batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
     ```
   - model parameter summary
     ```clike
