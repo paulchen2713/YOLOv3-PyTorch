@@ -21,6 +21,7 @@ Created on Fri Feb 17 11:09:16 2023
     tqdm==4.64.1
     albumentations==1.3.0
     matplotlib==3.6.2
+    torchinfo==1.7.2
 
 @references:
     Redmon, Joseph and Farhadi, Ali, YOLOv3: An Incremental Improvement, April 8, 2018. (https://doi.org/10.48550/arXiv.1804.02767)
@@ -33,8 +34,8 @@ Implementation of YOLOv3 architecture
 
 import torch
 import torch.nn as nn
-from torchsummary import summary
-
+from torchinfo import summary
+import torchsummary
 
 """ 
 Information about architecture config:
@@ -266,6 +267,7 @@ class YOLOv3(nn.Module):
 if __name__ == "__main__":
     # actual parameters
     num_classes = 3 # 20
+    
     # YOLOv1: 448, YOLOv2/YOLOv3: 416 (with multi-scale training)
     IMAGE_SIZE = 416 # multiples of 32 are workable with stride [32, 16, 8]
     # stride = [8, 4, 2] 
@@ -273,18 +275,21 @@ if __name__ == "__main__":
     stride = [32, 16, 8] # 32
 
     # simple test settings
-    num_examples = 20 # batch size
+    batch_size = 20  # num_samples
     num_channels = 3 # num_anchors
     
     model = YOLOv3(num_classes=num_classes) # initialize a YOLOv3 model as model
     
-    # simple test with random inputs of 16 examples, 3 channels, and IMAGE_SIZE-by-IMAGE_SIZE input
-    x = torch.randn((num_examples, num_channels, IMAGE_SIZE, IMAGE_SIZE))
+    # simple test with random inputs of 20 examples, 3 channels, and IMAGE_SIZE-by-IMAGE_SIZE input
+    x = torch.randn((batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
     
     out = model(x) 
 
     # print out the model summary using third-party library called 'torchsummary'
-    summary(model.cuda(), (3, 416, 416), 16)
+    # torchsummary.summary(model.cuda(), (num_channels, IMAGE_SIZE, IMAGE_SIZE), bs=batch_size)
+
+    # print out the model summary using torchinfo.summary()
+    summary(model.cuda(), input_size=(batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
 
     # print(model)
 
@@ -293,9 +298,10 @@ if __name__ == "__main__":
     for i in range(num_channels):
         print(out[i].shape)
     
-    assert out[0].shape == (num_examples, 3, IMAGE_SIZE//stride[0], IMAGE_SIZE//stride[0], num_classes + 5) # [20, 3, 13, 13, num_classes + 5]
-    assert out[1].shape == (num_examples, 3, IMAGE_SIZE//stride[1], IMAGE_SIZE//stride[1], num_classes + 5) # [20, 3, 26, 26, num_classes + 5]
-    assert out[2].shape == (num_examples, 3, IMAGE_SIZE//stride[2], IMAGE_SIZE//stride[2], num_classes + 5) # [20, 3, 52, 52, num_classes + 5]
+    assert out[0].shape == (batch_size, num_channels, IMAGE_SIZE//stride[0], IMAGE_SIZE//stride[0], num_classes + 5)  # [20, 3, 13, 13, num_classes + 5]
+    assert out[1].shape == (batch_size, num_channels, IMAGE_SIZE//stride[1], IMAGE_SIZE//stride[1], num_classes + 5)  # [20, 3, 26, 26, num_classes + 5]
+    assert out[2].shape == (batch_size, num_channels, IMAGE_SIZE//stride[2], IMAGE_SIZE//stride[2], num_classes + 5)  # [20, 3, 52, 52, num_classes + 5]
+    
     print("Success!")
 
 
@@ -329,14 +335,124 @@ if __name__ == "__main__":
 # layer 27:  torch.Size([20, 256, 52, 52])
 # layer 28:  torch.Size([20, 128, 52, 52])
 
-
-
 # Output Shape: 
 # [num_examples, num_channels, feature_map, feature_map, num_classes + 5]
 # torch.Size([20, 3, 13, 13, 8])
 # torch.Size([20, 3, 26, 26, 8])
 # torch.Size([20, 3, 52, 52, 8])
 # Success!
+
+
+
+# The result of torchinfo.summary()
+# ====================================================================================================
+# Layer (type:depth-idx)                             Output Shape              Param #
+# ====================================================================================================
+# YOLOv3                                             [20, 3, 13, 13, 8]        --
+# ├─ModuleList: 1-1                                  --                        --
+# │    └─CNNBlock: 2-1                               [20, 32, 416, 416]        --
+# │    │    └─Conv2d: 3-1                            [20, 32, 416, 416]        864
+# │    │    └─BatchNorm2d: 3-2                       [20, 32, 416, 416]        64
+# │    │    └─LeakyReLU: 3-3                         [20, 32, 416, 416]        --
+# │    └─CNNBlock: 2-2                               [20, 64, 208, 208]        --
+# │    │    └─Conv2d: 3-4                            [20, 64, 208, 208]        18,432
+# │    │    └─BatchNorm2d: 3-5                       [20, 64, 208, 208]        128
+# │    │    └─LeakyReLU: 3-6                         [20, 64, 208, 208]        --
+# │    └─ResidualBlock: 2-3                          [20, 64, 208, 208]        --
+# │    │    └─ModuleList: 3-7                        --                        20,672
+# │    └─CNNBlock: 2-4                               [20, 128, 104, 104]       --
+# │    │    └─Conv2d: 3-8                            [20, 128, 104, 104]       73,728
+# │    │    └─BatchNorm2d: 3-9                       [20, 128, 104, 104]       256
+# │    │    └─LeakyReLU: 3-10                        [20, 128, 104, 104]       --
+# │    └─ResidualBlock: 2-5                          [20, 128, 104, 104]       --
+# │    │    └─ModuleList: 3-11                       --                        164,608
+# │    └─CNNBlock: 2-6                               [20, 256, 52, 52]         --
+# │    │    └─Conv2d: 3-12                           [20, 256, 52, 52]         294,912
+# │    │    └─BatchNorm2d: 3-13                      [20, 256, 52, 52]         512
+# │    │    └─LeakyReLU: 3-14                        [20, 256, 52, 52]         --
+# │    └─ResidualBlock: 2-7                          [20, 256, 52, 52]         --
+# │    │    └─ModuleList: 3-15                       --                        2,627,584
+# │    └─CNNBlock: 2-8                               [20, 512, 26, 26]         --
+# │    │    └─Conv2d: 3-16                           [20, 512, 26, 26]         1,179,648
+# │    │    └─BatchNorm2d: 3-17                      [20, 512, 26, 26]         1,024
+# │    │    └─LeakyReLU: 3-18                        [20, 512, 26, 26]         --
+# │    └─ResidualBlock: 2-9                          [20, 512, 26, 26]         --
+# │    │    └─ModuleList: 3-19                       --                        10,498,048
+# │    └─CNNBlock: 2-10                              [20, 1024, 13, 13]        --
+# │    │    └─Conv2d: 3-20                           [20, 1024, 13, 13]        4,718,592
+# │    │    └─BatchNorm2d: 3-21                      [20, 1024, 13, 13]        2,048
+# │    │    └─LeakyReLU: 3-22                        [20, 1024, 13, 13]        --
+# │    └─ResidualBlock: 2-11                         [20, 1024, 13, 13]        --
+# │    │    └─ModuleList: 3-23                       --                        20,983,808
+# │    └─CNNBlock: 2-12                              [20, 512, 13, 13]         --
+# │    │    └─Conv2d: 3-24                           [20, 512, 13, 13]         524,288
+# │    │    └─BatchNorm2d: 3-25                      [20, 512, 13, 13]         1,024
+# │    │    └─LeakyReLU: 3-26                        [20, 512, 13, 13]         --
+# │    └─CNNBlock: 2-13                              [20, 1024, 13, 13]        --
+# │    │    └─Conv2d: 3-27                           [20, 1024, 13, 13]        4,718,592
+# │    │    └─BatchNorm2d: 3-28                      [20, 1024, 13, 13]        2,048
+# │    │    └─LeakyReLU: 3-29                        [20, 1024, 13, 13]        --
+# │    └─ResidualBlock: 2-14                         [20, 1024, 13, 13]        --
+# │    │    └─ModuleList: 3-30                       --                        5,245,952
+# │    └─CNNBlock: 2-15                              [20, 512, 13, 13]         --
+# │    │    └─Conv2d: 3-31                           [20, 512, 13, 13]         524,288
+# │    │    └─BatchNorm2d: 3-32                      [20, 512, 13, 13]         1,024
+# │    │    └─LeakyReLU: 3-33                        [20, 512, 13, 13]         --
+# │    └─ScalePrediction: 2-16                       [20, 3, 13, 13, 8]        --
+# │    │    └─Sequential: 3-34                       [20, 24, 13, 13]          4,745,288
+# │    └─CNNBlock: 2-17                              [20, 256, 13, 13]         --
+# │    │    └─Conv2d: 3-35                           [20, 256, 13, 13]         131,072
+# │    │    └─BatchNorm2d: 3-36                      [20, 256, 13, 13]         512
+# │    │    └─LeakyReLU: 3-37                        [20, 256, 13, 13]         --
+# │    └─Upsample: 2-18                              [20, 256, 26, 26]         --
+# │    └─CNNBlock: 2-19                              [20, 256, 26, 26]         --
+# │    │    └─Conv2d: 3-38                           [20, 256, 26, 26]         196,608
+# │    │    └─BatchNorm2d: 3-39                      [20, 256, 26, 26]         512
+# │    │    └─LeakyReLU: 3-40                        [20, 256, 26, 26]         --
+# │    └─CNNBlock: 2-20                              [20, 512, 26, 26]         --
+# │    │    └─Conv2d: 3-41                           [20, 512, 26, 26]         1,179,648
+# │    │    └─BatchNorm2d: 3-42                      [20, 512, 26, 26]         1,024
+# │    │    └─LeakyReLU: 3-43                        [20, 512, 26, 26]         --
+# │    └─ResidualBlock: 2-21                         [20, 512, 26, 26]         --
+# │    │    └─ModuleList: 3-44                       --                        1,312,256
+# │    └─CNNBlock: 2-22                              [20, 256, 26, 26]         --
+# │    │    └─Conv2d: 3-45                           [20, 256, 26, 26]         131,072
+# │    │    └─BatchNorm2d: 3-46                      [20, 256, 26, 26]         512
+# │    │    └─LeakyReLU: 3-47                        [20, 256, 26, 26]         --
+# │    └─ScalePrediction: 2-23                       [20, 3, 26, 26, 8]        --
+# │    │    └─Sequential: 3-48                       [20, 24, 26, 26]          1,193,032
+# │    └─CNNBlock: 2-24                              [20, 128, 26, 26]         --
+# │    │    └─Conv2d: 3-49                           [20, 128, 26, 26]         32,768
+# │    │    └─BatchNorm2d: 3-50                      [20, 128, 26, 26]         256
+# │    │    └─LeakyReLU: 3-51                        [20, 128, 26, 26]         --
+# │    └─Upsample: 2-25                              [20, 128, 52, 52]         --
+# │    └─CNNBlock: 2-26                              [20, 128, 52, 52]         --
+# │    │    └─Conv2d: 3-52                           [20, 128, 52, 52]         49,152
+# │    │    └─BatchNorm2d: 3-53                      [20, 128, 52, 52]         256
+# │    │    └─LeakyReLU: 3-54                        [20, 128, 52, 52]         --
+# │    └─CNNBlock: 2-27                              [20, 256, 52, 52]         --
+# │    │    └─Conv2d: 3-55                           [20, 256, 52, 52]         294,912
+# │    │    └─BatchNorm2d: 3-56                      [20, 256, 52, 52]         512
+# │    │    └─LeakyReLU: 3-57                        [20, 256, 52, 52]         --
+# │    └─ResidualBlock: 2-28                         [20, 256, 52, 52]         --
+# │    │    └─ModuleList: 3-58                       --                        328,448
+# │    └─CNNBlock: 2-29                              [20, 128, 52, 52]         --
+# │    │    └─Conv2d: 3-59                           [20, 128, 52, 52]         32,768
+# │    │    └─BatchNorm2d: 3-60                      [20, 128, 52, 52]         256
+# │    │    └─LeakyReLU: 3-61                        [20, 128, 52, 52]         --
+# │    └─ScalePrediction: 2-30                       [20, 3, 52, 52, 8]        --
+# │    │    └─Sequential: 3-62                       [20, 24, 52, 52]          301,640
+# ====================================================================================================
+# Total params: 61,534,648
+# Trainable params: 61,534,648
+# Non-trainable params: 0
+# Total mult-adds (G): 653.05
+# ====================================================================================================
+# Input size (MB): 41.53
+# Forward/backward pass size (MB): 12265.99
+# Params size (MB): 246.14
+# Estimated Total Size (MB): 12553.66
+# ====================================================================================================
 
 
 
@@ -352,7 +468,7 @@ if __name__ == "__main__":
 # ----------------------------------------------------------------
 
 
-
+# The result of torchsummary.summary()
 # ----------------------------------------------------------------
 #         Layer (type)               Output Shape         Param #
 # ================================================================
@@ -678,6 +794,7 @@ if __name__ == "__main__":
 
 
 
+# The result of directly print(model)
 # YOLOv3(
 #   (layers): ModuleList(
 #     (0): CNNBlock(
