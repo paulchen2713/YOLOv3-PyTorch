@@ -2,8 +2,9 @@
 - Using ```torchsummary.summary()``` to get the result
   - sample code
     ```python
-    # from torchsummary import summary
-    import torchsummary
+    # from torchsummary import summary  # changing the way of import due to naming conflicts
+    import torchsummary  
+    
     # simple test settings
     IMAGE_SIZE = 416  # multiples of 32 are workable with stride [32, 16, 8]
     num_classes = 3   # 
