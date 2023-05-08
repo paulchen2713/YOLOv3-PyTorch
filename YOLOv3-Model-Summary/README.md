@@ -1,22 +1,24 @@
 # YOLOv3-PyTorch-model-summary
-- Using ```torchsummary``` to get the result
+- Using ```torchsummary.summary()``` to get the result
   - sample code
     ```python
-    from torchsummary import summary
+    # from torchsummary import summary
+    import torchsummary
     # simple test settings
+    IMAGE_SIZE = 416  # multiples of 32 are workable with stride [32, 16, 8]
     num_classes = 3   # 
-    num_examples = 20 # batch size
+    batch_size = 20   # num_examples
     num_channels = 3  # num_anchors
 
     model = YOLOv3(num_classes=num_classes) # initialize a YOLOv3 model as model
 
     # simple test with random inputs of 20 examples, 3 channels, and IMAGE_SIZE-by-IMAGE_SIZE input
-    x = torch.randn((num_examples, num_channels, IMAGE_SIZE, IMAGE_SIZE))
+    x = torch.randn((batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
 
     out = model(x) 
 
     # print out the model summary using third-party library called 'torchsummary'
-    summary(model.cuda(), (3, 416, 416), bs=16)
+    torchsummary.summary(model.cuda(), (num_channels, IMAGE_SIZE, IMAGE_SIZE), bs=batch_size)
     ```
     - model parameter summary
         ```
