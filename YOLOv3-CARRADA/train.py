@@ -69,9 +69,11 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-05-08-1' # date_function.today()
+log_file_name = '2023-05-07-1' # date_function.today()
 
-# TODO write a simple check, make sure that we don't accidentlt overwrite previous results, due to naming error
+# we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
+file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
+assert os.path.isfile(f"{file2check}") is False, f"the 'training_logs/train/losses/{log_file_name}.txt' file already exists!"
 
 
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
@@ -216,7 +218,7 @@ if __name__ == "__main__":
 
     tic = time.perf_counter()
 
-    main()
+    # main()
 
     # 2023-05-08-1  epoch: 200   duration:   hours  WEIGHT_DECAY = 1e-3  LEARNING_RATE = 15e-5  
     # 2023-05-07-1  epoch: 100   duration:  8.3639 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4435
