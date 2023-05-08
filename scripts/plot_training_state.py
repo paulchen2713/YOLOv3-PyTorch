@@ -407,8 +407,12 @@ def plot_diff_setting(x: list, data: list, title, x_label, y_label, folder_name,
 
 
 def plot_multi_results(mode: str, overwrite=False):
-    folder_name = f'different-{mode}-results-{folder_index}'
-
+    folder_name = f""
+    if mode == 'learning-rate':
+        folder_name = f'different-{mode}-results-{folder_index}'
+    else:  # mode == 'weight-decay'
+        folder_name = f'different-{mode}-results'
+    
     plot_diff_setting(
         x=[j*test_point for j in range(1, len(mAP_list[0]) + 1)],
         data=mAP_list,
@@ -516,7 +520,7 @@ if __name__ == "__main__":
     # print_stats()
 
     # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=weight_decay_indices)
-    # plot_multi_results(mode='weight-decay')
+    # plot_multi_results(mode='weight-decay', overwrite=False)
     
     # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=learning_rate_17_20)
     # plot_multi_results(mode='learning-rate', overwrite=False)
