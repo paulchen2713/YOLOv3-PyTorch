@@ -70,6 +70,126 @@
 
 
 ## Notes
+- 2023.04.30
+  - The training duration is ```7.0542 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 6e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-04-29-1 training:
+    --------------------------------------------------
+    max mAP:  0.4267594814300537
+    mean mAP: 0.3732090950012207
+
+    max training loss: 70.09312438964844
+    min training loss: 0.9483757019042969
+
+    max training loss on average: 20.225014870961505
+    min training loss on average: 1.1955717974901199
+
+    min training accuracy: 0.8279584646224976
+    max training accuracy: 95.35245513916016
+
+    min testing accuracy: 32.3294563293457
+    max testing accuracy: 73.48847961425781
+    --------------------------------------------------
+    ```
+  - The training duration is ```7.1015 hours``` and ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 7e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-04-29-2 training:
+    --------------------------------------------------
+    max mAP:  0.4309697151184082
+    mean mAP: 0.37477160841226576
+
+    max training loss: 105.76203155517578
+    min training loss: 0.8929504752159119
+
+    max training loss on average: 20.704750878016153
+    min training loss on average: 1.1069866104920705
+
+    min training accuracy: 4.180961608886719
+    max training accuracy: 96.9443359375
+
+    min testing accuracy: 37.37166213989258
+    max testing accuracy: 77.36710357666016
+    --------------------------------------------------
+    ```
+  - The training duration is ```6.7780 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 8e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-04-30-1 training:
+    --------------------------------------------------
+    max mAP:  0.4340965747833252
+    mean mAP: 0.36167612075805666
+
+    max training loss: 104.89147186279297
+    min training loss: 0.9307739734649658
+
+    max training loss on average: 19.40190040588379
+    min training loss on average: 1.1852473825216294
+
+    min training accuracy: 1.6238964796066284
+    max training accuracy: 95.42564392089844
+
+    min testing accuracy: 30.458589553833008
+    max testing accuracy: 71.52635192871094
+    --------------------------------------------------
+    ```
+  - The training duration is ```5.5800 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 9e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-04-30-2 training:
+    --------------------------------------------------
+    max mAP:  0.43561217188835144
+    mean mAP: 0.3712215393781662
+
+    max training loss: 125.58506774902344
+    min training loss: 0.9454944729804993
+
+    max training loss on average: 18.3668585618337
+    min training loss on average: 1.1890920907258988
+
+    min training accuracy: 2.2048397064208984
+    max training accuracy: 96.52349090576172
+
+    min testing accuracy: 30.778005599975586
+    max testing accuracy: 72.59867858886719
+    --------------------------------------------------
+    ```
+- How to get model summary in PyTorch?
+  - Using ```torchsummary``` to get the result
+    ```python!
+    from torchsummary import summary
+    # simple test settings
+    num_classes = 3   # 
+    num_examples = 20 # batch size
+    num_channels = 3  # num_anchors
+
+    model = YOLOv3(num_classes=num_classes) # initialize a YOLOv3 model as model
+
+    # simple test with random inputs of 20 examples, 3 channels, and IMAGE_SIZE-by-IMAGE_SIZE input
+    x = torch.randn((num_examples, num_channels, IMAGE_SIZE, IMAGE_SIZE))
+
+    out = model(x) 
+
+    # print out the model summary using third-party library called 'torchsummary'
+    summary(model.cuda(), (3, 416, 416), bs=16)
+    ```
+    - model parameter summary
+        ```
+        ================================================================
+        Total params: 61,534,504
+        Trainable params: 61,534,504
+        Non-trainable params: 0
+        ----------------------------------------------------------------
+        Input size (MB): 31.69
+        Forward/backward pass size (MB): 13175.06
+        Params size (MB): 234.74
+        Estimated Total Size (MB): 13441.48
+        ----------------------------------------------------------------
+        ```
+  - Reference
+    - stackoverflow [How do I print the model summary in ```PyTorch```?](https://stackoverflow.com/questions/42480111/how-do-i-print-the-model-summary-in-pytorch)
+    - PyTorch Doc [Is there similar pytorch function as ```model.summary()``` as ```keras```?](https://discuss.pytorch.org/t/is-there-similar-pytorch-function-as-model-summary-as-keras/2678)
 - 2023.04.29
   - The comparison between different ```WEIGHT_DECAY``` under the same ```LEARNING_RATE = 3e-5```
     - The ```loss``` value for every updates
