@@ -70,6 +70,322 @@
 
 
 ## Notes
+- 2023.05.08
+  - The training duration is ```14.2820 hours``` with higher ```WEIGHT_DECAY = 1e-3``` and ```LEARNING_RATE = 15e-5```
+    - Under ```200``` epochs and higher weight decay setting
+    - Try to see how the previous best learning rate goes with higher weight decay
+    ![](https://hackmd.io/_uploads/S1AfaBD43.png)
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-08-1 training: 
+    --------------------------------------------------
+    max mAP:  0.42102280259132385
+    mean mAP: 0.37317809015512465
+
+    max training loss: 174.62034606933594
+    min training loss: 1.0440865755081177
+
+    max training loss on average: 17.338274812698366
+    min training loss on average: 1.3041423439979554
+
+    min training accuracy: 0.4254150986671448
+    max training accuracy: 92.8823013305664
+
+    min testing accuracy: 34.81633758544922
+    max testing accuracy: 69.26762390136719
+    --------------------------------------------------
+    ```
+- Using ```torchinfo.summary()``` to get the  result
+  - The second way to get model summary in PyTorch besides ```torchsummary.summary()```
+  - sample code
+    ```python
+    import torchsummary            # torchsummary.summary()
+    from torchinfo import summary  # torchinfo.summary()
+
+    # simple test settings
+    IMAGE_SIZE = 416  # multiples of 32 are workable with stride [32, 16, 8]
+    num_classes = 3   # 
+    batch_size = 20   # num_examples
+    num_channels = 3  # num_anchors
+
+    model = YOLOv3(num_classes=num_classes) # initialize a YOLOv3 model as model
+
+    # simple test with random inputs of 20 examples, 3 channels, and IMAGE_SIZE-by-IMAGE_SIZE input
+    x = torch.randn((batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
+
+    out = model(x)
+
+    # print out the model summary using torchinfo.summary()
+    summary(model.cuda(), input_size=(batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
+    ```
+  - model parameter summary
+    ```clike
+    ====================================================================================================
+    Total params: 61,534,648
+    Trainable params: 61,534,648
+    Non-trainable params: 0
+    Total mult-adds (G): 653.05
+    ====================================================================================================
+    Input size (MB): 41.53
+    Forward/backward pass size (MB): 12265.99
+    Params size (MB): 246.14
+    Estimated Total Size (MB): 12553.66
+    ====================================================================================================
+    ```
+- 2023.05.07
+  - The training duration is ```8.3639 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 14e-5```
+    - Still ```100``` epochs
+    - Continued the training with the weights of ```checkpoint-2023-05-02-2.pth.tar``` with same weight decay and learning rate
+    ![](https://hackmd.io/_uploads/H1GT2zI4n.png)
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-07-1 training:
+    --------------------------------------------------
+    max mAP:  0.44356226921081543
+    mean mAP: 0.42320117354393005
+
+    max training loss: 4.268791675567627
+    min training loss: 0.8072612285614014
+
+    max training loss on average: 2.3641905311743416
+    min training loss on average: 1.0348780262470245
+
+    min training accuracy: 68.03897857666016
+    max training accuracy: 96.88028717041016
+
+    min testing accuracy: 59.59388732910156
+    max testing accuracy: 67.21424102783203
+    --------------------------------------------------
+    ```
+- 2023.05.06
+  - The training duration is ```8.7493 hours``` with higher weight decay of ```WEIGHT_DECAY = 1e-3``` and ```LEARNING_RATE = 14e-5``` 
+    - Switching back to ```100``` epochs
+    - Continued the training with the weights of ```checkpoint-2023-05-02-2.pth.tar``` (with ```WEIGHT_DECAY = 1e-4```)
+    ![](https://hackmd.io/_uploads/By_I1zUN3.png)
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-06-1 training:
+    --------------------------------------------------
+    max mAP:  0.4469827115535736
+    mean mAP: 0.41541612446308135
+
+    max training loss: 7.434675216674805
+    min training loss: 0.8201318383216858
+
+    max training loss on average: 5.396891689300537
+    min training loss on average: 1.0210446101427078
+
+    min training accuracy: 65.16170501708984
+    max training accuracy: 96.99007415771484
+
+    min testing accuracy: 49.76043701171875
+    max testing accuracy: 65.93656921386719
+    --------------------------------------------------
+    ```
+- 2023.05.05
+  - The training duration is ```26.4082 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 15e-5``` 
+    - Switching up to ```400``` epochs
+    ![](https://hackmd.io/_uploads/rJAy0W8E2.png)
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-05-1 training: 
+    --------------------------------------------------
+    max mAP:  0.4396911561489105
+    mean mAP: 0.4000327423214912
+
+    max training loss: 171.85177612304688
+    min training loss: 0.6924741864204407
+
+    max training loss on average: 15.746856501897176
+    min training loss on average: 0.9486591788132985
+
+    min training accuracy: 3.29353666305542
+    max training accuracy: 97.90494537353516
+
+    min testing accuracy: 34.040611267089844
+    max testing accuracy: 74.72051239013672
+    --------------------------------------------------
+    ```
+- 2023.05.04
+  - The training duration is ```7.4228 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 19e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-04-1 training: 
+    --------------------------------------------------
+    max mAP:  0.44310665130615234
+    mean mAP: 0.38241996318101884
+
+    max training loss: 124.89086151123047
+    min training loss: 1.0636780261993408
+
+    max training loss on average: 16.811252358754476
+    min training loss on average: 1.2993631919225057
+
+    min training accuracy: 2.063034772872925
+    max training accuracy: 92.96463775634766
+
+    min testing accuracy: 31.75906753540039
+    max testing accuracy: 70.13461303710938
+    --------------------------------------------------
+    ```
+  - The training duration is ```8.4733 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 20e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-04-2 training: 
+    --------------------------------------------------
+    max mAP:  0.4227812588214874
+    mean mAP: 0.34420192539691924
+
+    max training loss: 138.41775512695312
+    min training loss: 1.0614862442016602
+
+    max training loss on average: 15.212103751500448
+    min training loss on average: 1.326857070128123
+
+    min training accuracy: 5.338273525238037
+    max training accuracy: 93.10186767578125
+
+    min testing accuracy: 31.074607849121094
+    max testing accuracy: 69.54141235351562
+    --------------------------------------------------
+    ```
+- 2023.05.03
+  - The training duration is ```7.1341 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 17e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-03-1 training: 
+    --------------------------------------------------
+    max mAP:  0.4469388425350189
+    mean mAP: 0.3841908037662506
+
+    max training loss: 113.7841567993164
+    min training loss: 0.963789165019989
+
+    max training loss on average: 15.0015398200353
+    min training loss on average: 1.2312769017616907
+
+    min training accuracy: 7.767257213592529
+    max training accuracy: 94.10365295410156
+
+    min testing accuracy: 33.51585388183594
+    max testing accuracy: 69.63267517089844
+    --------------------------------------------------
+    ```
+  - The training duration is ```7.1676 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 18e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-03-2 training: 
+    --------------------------------------------------
+    max mAP:  0.44689252972602844
+    mean mAP: 0.3790498897433281
+
+    max training loss: 175.32229614257812
+    min training loss: 1.0493061542510986
+
+    max training loss on average: 17.080741675694785
+    min training loss on average: 1.291623563369115
+
+    min training accuracy: 7.433328628540039
+    max training accuracy: 93.3305892944336
+
+    min testing accuracy: 34.49692153930664
+    max testing accuracy: 70.79625701904297
+    --------------------------------------------------
+    ```
+- 2023.05.02
+  - The training duration is ```6.8200 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 13e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-02-1 training:
+    --------------------------------------------------
+    max mAP:  0.4374929666519165
+    mean mAP: 0.3631990686058998
+
+    max training loss: 134.36065673828125
+    min training loss: 0.9601410627365112
+
+    max training loss on average: 18.045101165771484
+    min training loss on average: 1.2157120569547017
+
+    min training accuracy: 2.877269983291626
+    max training accuracy: 94.9224624633789
+
+    min testing accuracy: 42.20853042602539
+    max testing accuracy: 70.84188842773438
+    --------------------------------------------------
+    ```
+  - The training duration is ```5.8219 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 14e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-02-2 training: 
+    --------------------------------------------------
+    max mAP:  0.452169269323349
+    mean mAP: 0.3887074992060661
+
+    max training loss: 135.23342895507812
+    min training loss: 0.9823306798934937
+
+    max training loss on average: 16.633436683019003
+    min training loss on average: 1.268118454615275
+
+    min training accuracy: 3.00077748298645
+    max training accuracy: 94.62512969970703
+
+    min testing accuracy: 30.800823211669922
+    max testing accuracy: 73.10061645507812
+    --------------------------------------------------
+    ```
+  - The training duration is ```5.5819 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 15e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-02-3 training: 
+    --------------------------------------------------
+    max mAP:  0.45209288597106934
+    mean mAP: 0.3701558232307434
+
+    max training loss: 217.28318786621094
+    min training loss: 1.000074863433838
+
+    max training loss on average: 16.713819392522176
+    min training loss on average: 1.2200019482771556
+
+    min training accuracy: 5.814006328582764
+    max training accuracy: 94.16769409179688
+
+    min testing accuracy: 41.84348678588867
+    max testing accuracy: 69.8380126953125
+    --------------------------------------------------
+    ```
+  - The training duration is ```8.4758 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 16e-5```
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-02-4 training: 
+    --------------------------------------------------
+    max mAP:  0.43429771065711975
+    mean mAP: 0.3629924669861794
+
+    max training loss: 178.13705444335938
+    min training loss: 0.9736015796661377
+
+    max training loss on average: 16.70783141930898
+    min training loss on average: 1.2728607519467672
+
+    min training accuracy: 6.477288246154785
+    max training accuracy: 93.60047912597656
+
+    min testing accuracy: 21.12708282470703
+    max testing accuracy: 72.98653411865234
+    --------------------------------------------------
+    ```
+- The comparison between different ```LEARNING_RATE``` under the same ```WEIGHT_DECAY = 1e-4```
+  - The ```loss``` value for every updates
+    ![](https://i.imgur.com/cOoZd7K.png)
+  - The ```train-object-accuracy``` for every epochs
+    ![](https://i.imgur.com/H7ymC2V.png)
+  - The ```test-object-accuracy``` for every ```10``` epochs
+    ![](https://i.imgur.com/vwLXQYD.png)
+  - The ```mAP``` for every ```10``` epochs 
+    ![](https://i.imgur.com/WxKZwJM.png)
 - 2023.05.01
   - The training duration is ```5.7350 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 10e-5```
     ```
