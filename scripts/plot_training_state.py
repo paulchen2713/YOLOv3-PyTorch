@@ -67,9 +67,10 @@ logs = [
     '2023-05-05-1',
     '2023-05-06-1',
     '2023-05-07-1',
+    '2023-05-08-1',
 ]
 
-log_index = 29
+log_index = 30
 
 weight_decay_indices = [7, 6, 5, 3]
 learning_rate_01_04 = [9, 8, 3, 10]
@@ -514,10 +515,10 @@ if __name__ == "__main__":
 
     print("plot training state!")
 
-    # plot_mAP()
-    # plot_train_results()
-    # plot_test_results()
-    # print_stats()
+    plot_mAP()
+    plot_train_results()
+    plot_test_results()
+    print_stats()
 
     # mAP_list, losses_list, train_acc_list, test_acc_list = load_multiple_train_results(indices=weight_decay_indices)
     # plot_multi_results(mode='weight-decay', overwrite=False)
