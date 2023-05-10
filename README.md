@@ -70,6 +70,30 @@
 
 
 ## Notes
+- 2023.05.09
+  - The training duration is ```22.8276 hours``` with ```WEIGHT_DECAY = 1e-4``` and ```LEARNING_RATE = 14e-5```
+    - Under ```300``` epochs
+    - Try to observe the difference between training directly for ```200``` epochs versus the combination of separate training for ```100``` epochs each 
+    ```
+    --------------------------------------------------
+    The stats of 2023-05-09-1 training:
+    --------------------------------------------------
+    max mAP:  0.4652663767337799
+    mean mAP: 0.41992816428343455
+
+    max training loss: 120.43387603759766
+    min training loss: 0.7253801822662354
+
+    max training loss on average: 15.41774600982666
+    min training loss on average: 0.9773107906182606
+
+    min training accuracy: 2.3786652088165283
+    max training accuracy: 97.95069122314453
+
+    min testing accuracy: 35.47798538208008
+    max testing accuracy: 72.39334106445312
+    --------------------------------------------------
+    ```
 - 2023.05.08
   - The training duration is ```14.2820 hours``` with higher ```WEIGHT_DECAY = 1e-3``` and ```LEARNING_RATE = 15e-5```
     - Under ```200``` epochs and higher weight decay setting
