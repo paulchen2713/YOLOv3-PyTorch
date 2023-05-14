@@ -69,7 +69,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-05-12-1' # date_function.today()
+log_file_name = '2023-05-14-1' # date_function.today()
 
 # we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
@@ -220,9 +220,13 @@ if __name__ == "__main__":
 
     main()
 
-    # 2023-05-12-1  epoch: 200   duration:  hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 16e-5  
+    # 2023-05-14-1  epoch:  80   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 21e-5  
+    
+    # 2023-05-13-1  epoch:  80   duration:  5.6767 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 17e-5  max mAP:  0.4392
+    # 2023-05-12-1  epoch:  80   duration:  7.0051 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 16e-5  max mAP:  0.4451
     # 2023-05-11-1  epoch: 200   duration: 13.2833 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4755
     # 2023-05-09-1  epoch: 300   duration: 22.8276 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4652
+
     # 2023-05-08-1  epoch: 200   duration: 14.2820 hours  WEIGHT_DECAY = 1e-3  LEARNING_RATE = 15e-5  max mAP:  0.4210
     # 2023-05-07-1  epoch: 100   duration:  8.3639 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4435
     # 2023-05-06-1  epoch: 100   duration:  8.7493 hours  WEIGHT_DECAY = 1e-3  LEARNING_RATE = 14e-5  max mAP:  0.4469

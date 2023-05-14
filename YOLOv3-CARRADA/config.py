@@ -53,10 +53,10 @@ NUM_WORKERS = 1  # num of threads
 BATCH_SIZE = 20  # 32
 IMAGE_SIZE = 416 # has to be multiple of 32
 NUM_CLASSES = 3  # 20, 80
-LEARNING_RATE = 16e-5  # 3e-5 1e-4
+LEARNING_RATE = 21e-5  # 3e-5 1e-4
 
 WEIGHT_DECAY = 1e-4 # 1e-4
-NUM_EPOCHS = 200    # 300
+NUM_EPOCHS = 80    # 300
 CONF_THRESHOLD = 0.6  # 0.6
 MAP_IOU_THRESH = 0.5  # 0.5
 NMS_IOU_THRESH = 0.45 # 0.45
