@@ -53,7 +53,7 @@ NUM_WORKERS = 1  # num of threads
 BATCH_SIZE = 20  # 32
 IMAGE_SIZE = 416 # has to be multiple of 32
 NUM_CLASSES = 3  # 20, 80
-LEARNING_RATE = 21e-5  # 3e-5 1e-4
+LEARNING_RATE = 22e-5  # 3e-5 1e-4
 
 WEIGHT_DECAY = 1e-4 # 1e-4
 NUM_EPOCHS = 80    # 300
@@ -62,15 +62,14 @@ MAP_IOU_THRESH = 0.5  # 0.5
 NMS_IOU_THRESH = 0.45 # 0.45
 
 TEST_POINT = 10 # compute the test accuracies and mAP for every TEST_POINT number of epochs
-CHECK_TEST = 10 # means we check the test accuracies for every CHECK_TEST number of epochs
-CHECK_MAP = 10  # means we check the mAP for every CHECK_MAP number of epochs
+
 
 stride = [32, 16, 8] 
 S = [IMAGE_SIZE // stride[0], IMAGE_SIZE // stride[1], IMAGE_SIZE // stride[2]] # [13, 26, 52]
 
 PIN_MEMORY = False # True
-LOAD_MODEL = False # True
-SAVE_MODEL = True # True
+LOAD_MODEL = True # True
+SAVE_MODEL = False # True
 
 # "checkpoint.pth.tar" "YOLOv3-pretrained-weights/pytorch_format/yolov3_pascal_78.1map.pth.tar"
 CHECKPOINT_FILE = PATH + "yolov3_pascal_voc.pth.tar" 
