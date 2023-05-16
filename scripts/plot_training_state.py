@@ -76,9 +76,10 @@ logs = [
     '2023-05-14-1',
     '2023-05-15-1',
     '2023-05-16-1',
+    '2023-05-16-2',
 ]
 
-log_index = 38
+log_index = len(logs) - 1
 
 weight_decay_indices = [7, 6, 5, 3]
 learning_rate_01_04 = [9, 8, 3, 10]
