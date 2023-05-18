@@ -47,13 +47,13 @@ def seed_everything(seed=33):
     # torch.backends.cudnn.deterministic = True
     # torch.backends.cudnn.benchmark = False
 
-# seed_everything()  # If you want deterministic behavior
+seed_everything()  # If you want deterministic behavior
 
 NUM_WORKERS = 1  # num of threads
 BATCH_SIZE = 20  # 32
 IMAGE_SIZE = 416 # has to be multiple of 32
 NUM_CLASSES = 3  # 20, 80
-LEARNING_RATE = 28e-5  # 3e-5 1e-4
+LEARNING_RATE = 14e-5  # 3e-5 1e-4
 
 WEIGHT_DECAY = 1e-4 # 1e-4
 NUM_EPOCHS = 80    # 300

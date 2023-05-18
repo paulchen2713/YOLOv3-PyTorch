@@ -63,13 +63,13 @@ def seed_everything(seed=33):
     # torch.backends.cudnn.deterministic = True
     # torch.backends.cudnn.benchmark = False
 
-# seed_everything()  # If you want deterministic behavior
+seed_everything()  # If you want deterministic behavior
 
 
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-05-17-2' # date_function.today()
+log_file_name = '2023-05-18-3' # date_function.today()
 
 # we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
@@ -221,7 +221,11 @@ if __name__ == "__main__":
 
     main()
 
-    # 2023-05-17-2  epoch:  80   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 28e-5  
+    # 2023-05-18-3  epoch:  80   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  
+    # 2023-05-18-2  epoch:  80   duration:  5.1906 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4450
+    # 2023-05-18-1  epoch:  80   duration:  5.5654 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4342
+
+    # 2023-05-17-2  epoch:  80   duration:  5.7284 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 28e-5  max mAP:  0.4342
     # 2023-05-17-1  epoch:  80   duration:  5.5801 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 27e-5  max mAP:  0.4362
     # 2023-05-16-4  epoch:  80   duration:  5.3737 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 26e-5  max mAP:  0.4380
     # 2023-05-16-3  epoch:  80   duration:  4.3383 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 25e-5  max mAP:  0.4227
