@@ -69,7 +69,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-05-20-1' # date_function.today()
+log_file_name = '2023-05-21-1' # date_function.today()
 
 # we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
@@ -221,7 +221,9 @@ if __name__ == "__main__":
 
     main()
 
-    # 2023-05-20-1  epoch:  80   duration:  hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-4   
+    # 2023-05-21-1  epoch: 400   duration:  hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-4   
+    # 2023-05-20-2  epoch: 200   duration: 12.1146 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-4   max mAP:  0.4593
+    # 2023-05-20-1  epoch:  80   duration:  3.8367 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-4   max mAP:  0.4447
     # 2023-05-19-2  epoch: 150   duration: 12.5194 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-4   max mAP:  0.4420
 
     # 2023-05-19-1  epoch: 150   duration: 12.9126 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4437
