@@ -28,10 +28,11 @@ Main file for training YOLOv3 model on RD maps, Pascal VOC and COCO dataset
 import config
 import torch
 import torch.optim as optim
+from torch.utils.data import DataLoader
 
 from model import YOLOv3
+from dataset import YOLODataset
 # from model_with_weights2 import YOLOv3
-from tqdm import tqdm
 from utils import (
     mean_average_precision,
     cells_to_bboxes,
@@ -43,6 +44,8 @@ from utils import (
     plot_couple_examples
 )
 from loss import YoloLoss
+
+from tqdm import tqdm
 from datetime import date as date_function
 import time
 
@@ -69,7 +72,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-05-23-1' # date_function.today()
+log_file_name = '2023-05-29-2' # date_function.today()
 
 # we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
@@ -115,8 +118,6 @@ def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
     for i_loss in losses:
         with open(loss_path + f"losses/{log_file_name}.txt", "a") as loss_file:
             print(f"{i_loss}", file=loss_file)
-
-
 
 
 def main():
@@ -215,11 +216,132 @@ def main():
 
 
 
+def test():
+    model = YOLOv3(num_classes=config.NUM_CLASSES).to(config.DEVICE)
+    optimizer = optim.Adam(model.parameters(), lr=config.LEARNING_RATE, weight_decay=config.WEIGHT_DECAY)
+    loss_fn = YoloLoss()
+
+    test_csv_path = config.DATASET + "test.csv"
+    test_dataset = YOLODataset(
+        csv_file=test_csv_path,
+        transform=config.test_transforms,
+        S=config.S, 
+        image_dir=config.IMAGE_DIR,
+        label_dir=config.LABEL_DIR,
+        anchors=config.ANCHORS,
+    )
+    test_loader = DataLoader(
+        dataset=test_dataset,
+        batch_size=config.BATCH_SIZE,
+        num_workers=config.NUM_WORKERS,
+        pin_memory=config.PIN_MEMORY,
+        shuffle=False,
+        drop_last=False,
+    )
+
+    checkpoint_value = [47.55, 46.52, 45.93, 45.21, 45.20]  
+    index = 0
+    checkpoint_file = f"yolov3_carrada_{checkpoint_value[index]}_map.pth.tar"  
+    load_checkpoint(
+        config.DATASET + "checks/" + checkpoint_file,  # checkpoint-2023-05-22-2.pth.tar,  
+        model, 
+        optimizer, 
+        config.LEARNING_RATE 
+    )
+
+    scaled_anchors = (torch.tensor(config.ANCHORS)* torch.tensor(config.S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)).to(config.DEVICE)
+
+    check_file_name = f"{checkpoint_value[index]}-1"  # NOTE 
+
+    # file path for the testing statistics
+    valid_path = config.DATASET + f'training_logs/valid/'
+    # If the folder doesn't exist, then we create that folder 
+    if os.path.isdir(valid_path) is False:
+        print(f"creating 'valid' folder to store the stats")
+        os.makedirs(valid_path)
+
+    losses = []
+    # 1st tqdm progress bar
+    for _, (x, y) in enumerate(tqdm(test_loader)):
+        x = x.to(config.DEVICE)
+        y0, y1, y2 = y[0].to(config.DEVICE), y[1].to(config.DEVICE), y[2].to(config.DEVICE)
+
+        out = model(x)
+        loss = (
+            loss_fn(out[0], y0, scaled_anchors[0])
+            + loss_fn(out[1], y1, scaled_anchors[1])
+            + loss_fn(out[2], y2, scaled_anchors[2])
+        )
+
+        losses.append(loss.item())
+        optimizer.zero_grad()
+
+        tot_class_preds, correct_class = 0, 0
+        tot_noobj, correct_noobj = 0, 0
+        tot_obj, correct_obj = 0, 0
+
+        x = x.to(config.DEVICE)
+        # with torch.no_grad():
+        #     out = model(x)
+
+        for i in range(3):
+            y[i] = y[i].to(config.DEVICE)
+            obj   = y[i][..., 0] == 1  # in paper this is Iobj_i
+            noobj = y[i][..., 0] == 0  # in paper this is Iobj_i
+
+            correct_class += torch.sum(torch.argmax(out[i][..., 5:][obj], dim=-1) == y[i][..., 5][obj])
+            tot_class_preds += torch.sum(obj)
+
+            obj_preds = torch.sigmoid(out[i][..., 0]) > config.CONF_THRESHOLD
+            correct_obj += torch.sum(obj_preds[obj] == y[i][..., 0][obj])
+            tot_obj += torch.sum(obj)
+            correct_noobj += torch.sum(obj_preds[noobj] == y[i][..., 0][noobj])
+            tot_noobj += torch.sum(noobj)
+
+        class_acc  = (correct_class / (tot_class_preds + 1e-16))*100
+        no_obj_acc = (correct_noobj / (tot_noobj + 1e-16))*100
+        obj_acc    = (correct_obj   / (tot_obj + 1e-16))*100
+
+        file_name = valid_path + f"all_stats-{check_file_name}.txt"
+        with open(file_name, "a") as txt_file:
+            print(f"loss value: {loss.item():0.4f},",             end="  ", file=txt_file)
+            print(f"class_accuracy: {class_acc:0.4f},",      end="  ", file=txt_file)
+            print(f"no_object_accuracy: {no_obj_acc:0.4f},", end="  ", file=txt_file)
+            print(f"object_accuracy: {obj_acc:0.4f}",        end="\n", file=txt_file)
+        with open(valid_path + f"raw_data-{check_file_name}.txt", "a") as txt_file:
+            print(f"{loss.item():0.15f}, {class_acc:0.15f}, {no_obj_acc:0.15f}, {obj_acc:0.15f}", file=txt_file)
+
+
+    # 2nd tqdm progress bar
+    pred_boxes, true_boxes = get_evaluation_bboxes(
+        test_loader,
+        model,
+        iou_threshold=config.NMS_IOU_THRESH,
+        anchors=config.ANCHORS,
+        threshold=config.CONF_THRESHOLD,
+    )
+    mapval = mean_average_precision(
+        pred_boxes,
+        true_boxes,
+        iou_threshold=config.MAP_IOU_THRESH,
+        box_format="midpoint",
+        num_classes=config.NUM_CLASSES,
+    )
+    print(f"mAP: {mapval.item()}")
+
+    # file_name = valid_path + f"mAP-{check_file_name}.txt"
+    # with open(file_name, "a") as txt_file:
+    #     print(f"original: {mapval.item()}, truncated: {mapval.item():0.4f}", file=txt_file)
+
+
+
 if __name__ == "__main__":
 
     tic = time.perf_counter()
 
-    main()
+    # main()
+
+    test()
 
     # 2023-05-22-2  epoch: 100   duration:  4.0113 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.3781
     # 2023-05-22-1  epoch: 100   duration:  4.7716 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4138
