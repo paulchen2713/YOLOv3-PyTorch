@@ -265,8 +265,8 @@ def test():
     for _, (x, y) in enumerate(tqdm(test_loader)):
         x = x.to(config.DEVICE)
         y0, y1, y2 = y[0].to(config.DEVICE), y[1].to(config.DEVICE), y[2].to(config.DEVICE)
-
-        out = model(x)
+        with torch.no_grad():
+            out = model(x)
         loss = (
             loss_fn(out[0], y0, scaled_anchors[0])
             + loss_fn(out[1], y1, scaled_anchors[1])
@@ -276,13 +276,11 @@ def test():
         losses.append(loss.item())
         optimizer.zero_grad()
 
-        tot_class_preds, correct_class = 0, 0
-        tot_noobj, correct_noobj = 0, 0
-        tot_obj, correct_obj = 0, 0
+        curr_class_preds, correct_class = 0, 0
+        curr_noobj, correct_noobj = 0, 0
+        curr_obj, correct_obj = 0, 0
 
         x = x.to(config.DEVICE)
-        # with torch.no_grad():
-        #     out = model(x)
 
         for i in range(3):
             y[i] = y[i].to(config.DEVICE)
@@ -290,27 +288,27 @@ def test():
             noobj = y[i][..., 0] == 0  # in paper this is Iobj_i
 
             correct_class += torch.sum(torch.argmax(out[i][..., 5:][obj], dim=-1) == y[i][..., 5][obj])
-            tot_class_preds += torch.sum(obj)
+            curr_class_preds += torch.sum(obj)
 
             obj_preds = torch.sigmoid(out[i][..., 0]) > config.CONF_THRESHOLD
             correct_obj += torch.sum(obj_preds[obj] == y[i][..., 0][obj])
-            tot_obj += torch.sum(obj)
-            correct_noobj += torch.sum(obj_preds[noobj] == y[i][..., 0][noobj])
-            tot_noobj += torch.sum(noobj)
+            curr_obj += torch.sum(obj)
 
-        class_acc  = (correct_class / (tot_class_preds + 1e-16))*100
-        no_obj_acc = (correct_noobj / (tot_noobj + 1e-16))*100
-        obj_acc    = (correct_obj   / (tot_obj + 1e-16))*100
+            correct_noobj += torch.sum(obj_preds[noobj] == y[i][..., 0][noobj])
+            curr_noobj += torch.sum(noobj)
+
+        class_acc  = (correct_class / (curr_class_preds + 1e-16))*100
+        no_obj_acc = (correct_noobj / (curr_noobj + 1e-16))*100
+        obj_acc    = (correct_obj   / (curr_obj + 1e-16))*100
 
         file_name = valid_path + f"all_stats-{check_file_name}.txt"
         with open(file_name, "a") as txt_file:
-            print(f"loss value: {loss.item():0.4f},",             end="  ", file=txt_file)
+            print(f"loss value: {loss.item():0.4f},",        end="  ", file=txt_file)
             print(f"class_accuracy: {class_acc:0.4f},",      end="  ", file=txt_file)
             print(f"no_object_accuracy: {no_obj_acc:0.4f},", end="  ", file=txt_file)
             print(f"object_accuracy: {obj_acc:0.4f}",        end="\n", file=txt_file)
         with open(valid_path + f"raw_data-{check_file_name}.txt", "a") as txt_file:
             print(f"{loss.item():0.15f}, {class_acc:0.15f}, {no_obj_acc:0.15f}, {obj_acc:0.15f}", file=txt_file)
-
 
     # 2nd tqdm progress bar
     pred_boxes, true_boxes = get_evaluation_bboxes(
