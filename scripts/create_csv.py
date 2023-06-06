@@ -61,18 +61,27 @@ def random_csv(num_train, num_test):
             print(f"{i}.jpg,{i}.txt", file=test_file)
 
 
-def equal_splits_csv():
-    print(f"")
+def equal_splits_csv(split, overwrite=False):
+    print(f"taking the {split + 1} split as the test samples")
 
-    total_split = 6
-    split = 0
+    TOTAL_SPLIT = 6 # has to be 6
+    # split = 0       # 0, 1, 3, 4, 5
 
-    train_file_name = DATASET + "csv_files/equal_split_csv/" + f"train.csv"
-    test_file_name  = DATASET + "csv_files/equal_split_csv/" + f"test.csv"
+    train_file_name = DATASET + f"csv_files/equal_split_csv/{split}/" + f"train.csv"
+    test_file_name  = DATASET + f"csv_files/equal_split_csv/{split}/" + f"test.csv"
     
-    for i in range(1, 7200 + 1):
-        if i % total_split == split:
-            print(f"{i}.jpg,{i}.txt")
+    if os.path.isfile(f"{test_file_name}") is True:
+        print(f"the '{test_file_name}' is already exits!")
+        return
+
+    for i in range(1, 7193 + 1):
+        print(i)
+        if i % TOTAL_SPLIT == split:
+            with open(test_file_name, "a") as test_file:
+                print(f"{i}.jpg,{i}.txt", file=test_file)
+        else:
+            with open(train_file_name, "a") as train_file:
+                print(f"{i}.jpg,{i}.txt", file=train_file)
 
 
 
@@ -83,7 +92,11 @@ if __name__ == "__main__":
     # create_csv(num_train=num_train, total=total)
     # random_csv(num_train=num_train, num_test=(total-num_train))
 
-    equal_splits_csv()
+    index = 5  # 0, 1, 3, 4, 5
+    assert index >= 0 and index <= 5
+
+    equal_splits_csv(split=index, overwrite=False)
+
 
     toc = time.perf_counter()
     duration = toc - tic
