@@ -347,7 +347,7 @@ if __name__ == "__main__":
     # 2023-06-07-1  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 3 
     # 2023-06-06-2  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 2 
     # 2023-06-06-1  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 1 
-    # 2023-06-05-1  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 0 
+    # 2023-06-05-1  epoch: 100   duration:  5.4366 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4688  ##split 0 
     
 
     # 2023-05-22-2  epoch: 100   duration:  4.0113 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.3781
