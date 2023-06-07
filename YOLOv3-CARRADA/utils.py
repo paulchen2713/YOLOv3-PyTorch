@@ -388,7 +388,7 @@ def check_class_accuracy(model, loader, threshold):
     tot_noobj, correct_noobj = 0, 0
     tot_obj, correct_obj = 0, 0
 
-    for idx, (x, y) in enumerate(tqdm(loader)):
+    for _, (x, y) in enumerate(tqdm(loader)):
         # if idx == 100: break
         x = x.to(config.DEVICE)
         with torch.no_grad():
@@ -410,18 +410,16 @@ def check_class_accuracy(model, loader, threshold):
             correct_noobj += torch.sum(obj_preds[noobj] == y[i][..., 0][noobj])
             tot_noobj += torch.sum(noobj)
 
-    print(f"Class accuracy is: {(correct_class/(tot_class_preds+1e-16))*100:2f}%")
+    class_acc  = (correct_class / (tot_class_preds + 1e-16))*100
+    no_obj_acc = (correct_noobj / (tot_noobj + 1e-16))*100
+    obj_acc    = (correct_obj   / (tot_obj + 1e-16))*100
 
-    print(f"No obj accuracy is: {(correct_noobj/(tot_noobj+1e-16))*100:2f}%")
-
-    print(f"Obj accuracy is: {(correct_obj/(tot_obj+1e-16))*100:2f}%")
-
-    class_acc = (correct_class/(tot_class_preds+1e-16))*100
-    on_obj_acc = (correct_noobj/(tot_noobj+1e-16))*100
-    obj_acc = (correct_obj/(tot_obj+1e-16))*100
+    print(f"Class accuracy is:  {class_acc:0.4f}%")
+    print(f"No obj accuracy is: {no_obj_acc:0.4f}%")
+    print(f"Obj accuracy is:    {obj_acc:0.4f}%")
     
     model.train()
-    return class_acc, on_obj_acc, obj_acc
+    return class_acc, no_obj_acc, obj_acc
 
 
 def get_mean_std(loader):
