@@ -50,10 +50,10 @@ def seed_everything(seed=33):
 # seed_everything()  # If you want deterministic behavior
 
 NUM_WORKERS = 1  # num of threads
-BATCH_SIZE = 20  # 32
+BATCH_SIZE = 16  # 32
 IMAGE_SIZE = 416 # has to be multiple of 32
 NUM_CLASSES = 3  # 20, 80
-LEARNING_RATE = 14e-5  # 1e-4, 3e-4, 3e-5, 14e-5, 15e-5
+LEARNING_RATE = 15e-5  # 1e-4, 3e-4, 3e-5, 14e-5, 15e-5
 
 WEIGHT_DECAY = 1e-4 # 1e-4
 NUM_EPOCHS = 100    # 300

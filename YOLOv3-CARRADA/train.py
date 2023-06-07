@@ -78,7 +78,7 @@ log_file_name = '2023-06-06-1' # date_function.today()
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
 # assert os.path.isfile(f"{file2check}") is False, f"the 'training_logs/train/losses/{log_file_name}.txt' file already exists!"
 
-
+isTesting = True
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
     loop = tqdm(train_loader, leave=True)
     losses = []
@@ -112,12 +112,13 @@ def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
     
     loss_path = config.DATASET + f'training_logs/train/'
     # store the mean_loss value of every epoch to a text file named as today's date
-    with open(loss_path + f"mean_loss/{log_file_name}.txt", "a") as loss_file:
-        print(f"{mean_loss}", file=loss_file)
-    
-    for i_loss in losses:
-        with open(loss_path + f"losses/{log_file_name}.txt", "a") as loss_file:
-            print(f"{i_loss}", file=loss_file)
+    if isTesting is False:
+        with open(loss_path + f"mean_loss/{log_file_name}.txt", "a") as loss_file:
+            print(f"{mean_loss}", file=loss_file)
+    if isTesting is False:
+        for i_loss in losses:
+            with open(loss_path + f"losses/{log_file_name}.txt", "a") as loss_file:
+                print(f"{i_loss}", file=loss_file)
 
 
 def main():
@@ -141,9 +142,12 @@ def main():
         )
 
     scaled_anchors = (
-        torch.tensor(config.ANCHORS)
-        * torch.tensor(config.S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
+        torch.tensor(config.ANCHORS) * torch.tensor(config.S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)
     ).to(config.DEVICE)
+
+    # for updating mAP and determine whether should I save the model
+    curr_mAP, maxi_mAP = 0, 0
+    isBetter = False 
 
     for epoch in range(1, config.NUM_EPOCHS + 1):
         # plot_couple_examples(model, test_loader, 0.6, 0.5, scaled_anchors) # just plotting some images without bboxes
@@ -158,24 +162,7 @@ def main():
         file_path = config.DATASET + f'training_logs/train/'
 
         # store the class_acc, no_obj_acc, obj_acc values of every epoch to text files named as today's date
-        with open(file_path + f"class_accuracy/{log_file_name}.txt", "a") as txt_file:
-            print(f"{class_acc}", file=txt_file)
-
-        with open(file_path + f"no_object_accuracy/{log_file_name}.txt", "a") as txt_file:
-            print(f"{no_obj_acc}", file=txt_file)
-
-        with open(file_path + f"object_accuracy/{log_file_name}.txt", "a") as txt_file:
-            print(f"{obj_acc}", file=txt_file)
-
-        test_point = 10
-        if epoch % config.TEST_POINT == 0 and epoch > 0:
-            print("On Test loader:")
-            class_acc, no_obj_acc, obj_acc = check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
-
-            # file path for the testing statistics
-            file_path = config.DATASET + f'training_logs/test/'
-
-            # store the class_acc, no_obj_acc, obj_acc values of every epoch to text files named as today's date
+        if isTesting is False:
             with open(file_path + f"class_accuracy/{log_file_name}.txt", "a") as txt_file:
                 print(f"{class_acc}", file=txt_file)
 
@@ -185,14 +172,27 @@ def main():
             with open(file_path + f"object_accuracy/{log_file_name}.txt", "a") as txt_file:
                 print(f"{obj_acc}", file=txt_file)
 
-            # 
-            if config.SAVE_MODEL:
-                file_name = config.DATASET + f"checks/checkpoint-{log_file_name}.pth.tar"
-                save_checkpoint(model, optimizer, filename=file_name)
+        # config.TEST_POINT
+        if epoch % 5 == 0 and epoch > 0:
+            print("On Test loader:")
+            class_acc, no_obj_acc, obj_acc = check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
 
+            # file path for the testing statistics
+            file_path = config.DATASET + f'training_logs/test/'
 
-        check_map = 10
-        if epoch % config.TEST_POINT == 0 and epoch > 0:
+            # store the class_acc, no_obj_acc, obj_acc values of every epoch to text files named as today's date
+            if isTesting is False:
+                with open(file_path + f"class_accuracy/{log_file_name}.txt", "a") as txt_file:
+                    print(f"{class_acc}", file=txt_file)
+
+                with open(file_path + f"no_object_accuracy/{log_file_name}.txt", "a") as txt_file:
+                    print(f"{no_obj_acc}", file=txt_file)
+
+                with open(file_path + f"object_accuracy/{log_file_name}.txt", "a") as txt_file:
+                    print(f"{obj_acc}", file=txt_file)
+
+        # config.TEST_POINT
+        if epoch % 5 == 0 and epoch > 0:
             # 
             pred_boxes, true_boxes = get_evaluation_bboxes(
                 test_loader,
@@ -208,12 +208,27 @@ def main():
                 box_format="midpoint",
                 num_classes=config.NUM_CLASSES,
             )
-            print(f"mAP: {mapval.item()}")
+            curr_mAP = mapval.item()
+            print(f"current mAP: {curr_mAP}")
 
             file_path = config.DATASET + f'training_logs/mAP/'
-            with open(file_path + f"{log_file_name}.txt", "a") as txt_file:
-                print(f"{mapval.item()}", file=txt_file)
+            if isTesting is False:
+                with open(file_path + f"{log_file_name}.txt", "a") as txt_file:
+                    print(f"{curr_mAP}", file=txt_file)
 
+            if curr_mAP > maxi_mAP:
+                maxi_mAP = curr_mAP
+                isBetter = True
+                print(f"maximum mAP: {maxi_mAP}")
+            elif curr_mAP <= maxi_mAP:
+                isBetter = False
+                print(f"maximum mAP: {maxi_mAP}")
+        # 
+        if config.SAVE_MODEL and isBetter: 
+            file_name = config.DATASET + f"checks/checkpoint-{log_file_name}.pth.tar"
+            print(f"---> Saving checkpoint with max mAP: {maxi_mAP}")
+            save_checkpoint(model, optimizer, filename=file_name)
+            isBetter = False
 
 
 def test():
@@ -342,14 +357,14 @@ if __name__ == "__main__":
     # test()
 
 
-    # 2023-06-08-1  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 5 
-    # 2023-06-07-2  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 4 
-    # 2023-06-07-1  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 3 
-    # 2023-06-06-2  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 2 
-    # 2023-06-06-1  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 1 
-    # 2023-06-05-1  epoch: 100   duration:  5.4366 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4688  ##split 0 
+    # 2023-06-10-1  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 5 
+    # 2023-06-09-2  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 4 
+    # 2023-06-09-1  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 3 
+    # 2023-06-08-2  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 2 
+    # 2023-06-08-1  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  ##split 1 
+    # 2023-06-07-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5   ##split 0 
     
-
+    # 2023-06-05-1  epoch: 100   duration:  5.4366 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4688  ##split 0 
     # 2023-05-22-2  epoch: 100   duration:  4.0113 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.3781
     # 2023-05-22-1  epoch: 100   duration:  4.7716 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4138
 
