@@ -91,6 +91,8 @@ logs = [
     '2023-05-22-1',
     '2023-05-22-2',
     '2023-06-05-1',
+    '2023-06-07-1',  # NOTE the testpoint is 5
+    '2023-06-08-1',
 ]
 
 log_index = len(logs) - 1
@@ -241,7 +243,7 @@ def my_plot(x: list, y: list, title, x_label, y_label, line_color, line_marker, 
 
 
 # it should follow the settings of the config.TEST_POINT, config.CHECK_TEST, or config.CHECK_MAP
-test_point = 10  
+test_point = 5  # 5
 def plot_mAP():
     # print(f"len(mAP): {len(mAP)}")
     # print(mAP)
