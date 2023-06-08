@@ -310,9 +310,16 @@ if __name__ == "__main__":
     
     result = k_means(data, num_clusters, tol)
     distance = avg_iou(data, result)
-    file_name3 = DATASET + f"Anchors-custom-k_means.txt"
-    write_anchors_to_file(result, distance, file_name3)
-    
+    file_name3 = DATASET + f"new-anchors-0608.txt"  # "Anchors-custom-k_means.txt"
+    # write_anchors_to_file(result, distance, file_name3)
+
+    # sorting
+    centroids = [(0.423, 0.096), (0.223, 0.095), (0.041, 0.049), (0.096, 0.021), (0.274, 0.045), (0.044, 0.019), (0.031, 0.008), (0.158, 0.030), (0.128, 0.071)]
+    cmp_key = cmp_to_key(cmp_by_area)
+    centroids.sort(key=cmp_key)
+    print(centroids)
+
+
     toc = time.perf_counter()
     duration = toc - tic
     print(f"duration: {duration:0.4f} seconds")
