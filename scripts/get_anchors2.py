@@ -282,7 +282,7 @@ def bench_KMeans(estimator, data, anchor_file, show=False):
 if __name__ == "__main__":
     tic = time.perf_counter()
 
-    file_name = f"D:/Datasets/RADA/RD_JPG/width_heights.txt"
+    # file_name = f"D:/Datasets/RADA/RD_JPG/width_heights.txt"
     DATASET = f"D:/Datasets/RADA/RD_JPG/"
 
     annotations = pd.read_csv(DATASET + f"train.csv").iloc[:, 1]  # fetch all the *.txt label names
@@ -310,11 +310,11 @@ if __name__ == "__main__":
     
     result = k_means(data, num_clusters, tol)
     distance = avg_iou(data, result)
-    file_name3 = DATASET + f"new-anchors-0608.txt"  # "Anchors-custom-k_means.txt"
-    # write_anchors_to_file(result, distance, file_name3)
+    file_name3 = DATASET + f"new-anchors-0609.txt"  # "Anchors-custom-k_means.txt"
+    write_anchors_to_file(result, distance, file_name3)
 
-    # sorting
-    centroids = [(0.423, 0.096), (0.223, 0.095), (0.041, 0.049), (0.096, 0.021), (0.274, 0.045), (0.044, 0.019), (0.031, 0.008), (0.158, 0.030), (0.128, 0.071)]
+    # sorting 
+    centroids = [(0.072, 0.017), (0.138, 0.072), (0.228, 0.097), (0.130, 0.027), (0.023, 0.028), (0.054, 0.046), (0.423, 0.095), (0.245, 0.041), (0.033, 0.009)] # result
     cmp_key = cmp_to_key(cmp_by_area)
     centroids.sort(key=cmp_key)
     print(centroids)
