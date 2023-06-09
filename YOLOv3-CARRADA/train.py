@@ -72,7 +72,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-06-08-3' # date_function.today()
+log_file_name = '2023-06-09-1' # date_function.today()
 
 # we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
@@ -209,7 +209,7 @@ def main():
                 num_classes=config.NUM_CLASSES,
             )
             curr_mAP = mapval.item()
-            print(f"cur mAP: {curr_mAP}")
+            print(f"cur mAP:  {curr_mAP}")
 
             file_path = config.DATASET + f'training_logs/mAP/'
             if isTesting is False:
@@ -219,14 +219,14 @@ def main():
             if curr_mAP > maxi_mAP:
                 maxi_mAP = curr_mAP
                 isBetter = True
-                print(f"max mAP: {maxi_mAP}")
+                print(f"max mAP:  {maxi_mAP}")
             elif curr_mAP <= maxi_mAP:
                 isBetter = False
-                print(f"max mAP: {maxi_mAP}")
+                print(f"max mAP:  {maxi_mAP}")
         # 
         if config.SAVE_MODEL and isBetter: 
             file_name = config.DATASET + f"checks/checkpoint-{log_file_name}.pth.tar"
-            print(f"---> Saving checkpoint with max mAP: {maxi_mAP}")
+            print(f"---> Saving checkpoint with max mAP:  {maxi_mAP}")
             save_checkpoint(model, optimizer, filename=file_name)
             isBetter = False
 
@@ -358,8 +358,8 @@ if __name__ == "__main__":
 
 
     # 2023-06-10-1  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  ##split 5 
-    # 2023-06-09-2  epoch: 100   duration: hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  ##split 4 
-    # 2023-06-08-3  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  ##split 3 
+    # 2023-06-09-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  ##split 4 
+    # 2023-06-08-3  epoch: 100   duration:  4.7448 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4601  ##split 3 
     # 2023-06-08-2  epoch: 100   duration:  4.9901 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4786  ##split 2 
     # 2023-06-08-1  epoch: 100   duration:  4.6382 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4777  ##split 1 
     # 2023-06-07-1  epoch: 100   duration:  4.5955 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.5136  ##split 0 
