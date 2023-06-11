@@ -64,19 +64,42 @@ def avg_iou(x, centroids):
     return sums / n
 
 
+def cmp_by_area(a, b):
+    area_a = a[0] * a[1]
+    area_b = b[0] * b[1]
+    if area_a == area_b:
+        return 0
+    elif area_a < area_b:
+        return -1 
+    else: 
+        return 1
+
+
 def write_anchors_to_file(centroids, distance, anchor_file):
     print(f"")
     print(f"Number of clusters: {len(centroids)}")
     print(f"Average IoU: {distance}")
     # print(f"Inertia: {inertia}")
-    print(f"Anchors: ")
+
+    centroids = centroids.tolist()
+    cmp_key = cmp_to_key(cmp_by_area)
+    centroids.sort(key=cmp_key)
+
+    print(f"Centroids (sorted by Area): ")
     for i, centroid in enumerate(centroids):
         w, h = centroid[0], centroid[1]
         # print(f"{i + 1}: ({w}, {h})")
-        print(f"{{{w:0.3f}, {h:0.3f}}}", end=', ')
-        # print(f"({w}, {h})", end=', ')
-    print(f"\n")
-    
+        # print(f"{{{w:0.3f}, {h:0.3f}}}", end=', ')
+        print(f"{i}: ({w:0.6f}, {h:0.6f}) {w*h:0.6f}")
+
+    print(f"Anchors: ")
+    for _, centroid in enumerate(centroids):
+        w, h = centroid[0], centroid[1]
+        # print(f"{i + 1}: ({w}, {h})")
+        # print(f"{{{w:0.3f}, {h:0.3f}}}", end=', ')
+        print(f"({w:0.3f}, {h:0.3f})", end=', ')
+    print(f"")
+
     with open(anchor_file, 'w') as f:
         print(f"Number of clusters: {len(centroids)}", file=f)
         print(f"Average IoU: {distance}", file=f)
@@ -103,8 +126,7 @@ def write_anchors_to_file(centroids, distance, anchor_file):
             print(f"({w:0.3f}, {h:0.3f})", end=', ', file=f)
         print(f"", file=f)
         
-    print(f"Writing anchors to {anchor_file}.txt")
-
+    print(f"Writing anchors to {anchor_file}.txt\n")
 
 
 def k_means(x, n_clusters, eps):
@@ -126,7 +148,7 @@ def k_means(x, n_clusters, eps):
 
         if diff < eps or iterations > 1000:
             print(f"Number of iterations took = {iterations}") # 
-            print("Centroids = ", centroids)
+            print("Centroids = \n", centroids)
             return centroids
 
         # assign samples to centroids
@@ -180,17 +202,6 @@ def sample(args):
         distance = avg_iou(data, result)
 
     write_anchors_to_file(result, distance, args.output)
-
-
-def cmp_by_area(a, b):
-    area_a = a[0] * a[1]
-    area_b = b[0] * b[1]
-    if area_a == area_b:
-        return 0
-    elif area_a < area_b:
-        return -1 
-    else: 
-        return 1
 
 
 def bench_KMeans(estimator, data, anchor_file, show=False):
@@ -310,15 +321,8 @@ if __name__ == "__main__":
     
     result = k_means(data, num_clusters, tol)
     distance = avg_iou(data, result)
-    file_name3 = DATASET + f"new-anchors-0610.txt"  # "Anchors-custom-k_means.txt"
+    file_name3 = DATASET + f"new-anchors-0611.txt"  # "Anchors-custom-k_means.txt"
     write_anchors_to_file(result, distance, file_name3)
-
-    # sorting 
-    centroids = [(0.159, 0.029), (0.031, 0.008), (0.211, 0.094), (0.269, 0.045), (0.034, 0.053), (0.097, 0.021), (0.418, 0.097), (0.115, 0.065), (0.044, 0.019)] # result
-    cmp_key = cmp_to_key(cmp_by_area)
-    centroids.sort(key=cmp_key)
-    print(centroids)
-
 
     toc = time.perf_counter()
     duration = toc - tic
