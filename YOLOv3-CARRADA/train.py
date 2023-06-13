@@ -72,7 +72,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-06-10-1' # date_function.today()
+log_file_name = '2023-06-13-2' # date_function.today()
 
 # we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
@@ -356,15 +356,18 @@ if __name__ == "__main__":
 
     # test()
     
-    # 2023-06-13-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 0 
+    # 2023-06-13-2  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 1 
+    # 2023-06-13-1  epoch: 100   duration:  5.0132 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4752  ##split 0 
+
 
     # 2023-06-10-1  epoch: 100   duration:  4.5791 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4670  ##split 5 
     # 2023-06-09-1  epoch: 100   duration:  5.5375 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4551  ##split 4 
     # 2023-06-08-3  epoch: 100   duration:  4.7448 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4601  ##split 3 
     # 2023-06-08-2  epoch: 100   duration:  4.9901 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4786  ##split 2 
     # 2023-06-08-1  epoch: 100   duration:  4.6382 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4777  ##split 1 
-    # 2023-06-07-1  epoch: 100   duration:  4.5955 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.5136  ##split 0 
+    # 2023-06-07-1  epoch: 100   duration:  4.5955 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.5136  ##split 0 NOTE #1
     
+
     # 2023-06-05-1  epoch: 100   duration:  5.4366 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4688  ##split 0 
     # 2023-05-22-2  epoch: 100   duration:  4.0113 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.3781
     # 2023-05-22-1  epoch: 100   duration:  4.7716 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4138
