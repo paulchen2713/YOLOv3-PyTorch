@@ -355,7 +355,8 @@ if __name__ == "__main__":
     main()
 
     # test()
-
+    
+    # 2023-06-13-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 0 
 
     # 2023-06-10-1  epoch: 100   duration:  4.5791 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4670  ##split 5 
     # 2023-06-09-1  epoch: 100   duration:  5.5375 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4551  ##split 4 
@@ -390,8 +391,8 @@ if __name__ == "__main__":
     
     # 2023-05-13-1  epoch:  80   duration:  5.6767 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 17e-5  max mAP:  0.4392
     # 2023-05-12-1  epoch:  80   duration:  7.0051 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 16e-5  max mAP:  0.4451
-    # 2023-05-11-1  epoch: 200   duration: 13.2833 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4755 NOTE #2
-    # 2023-05-09-1  epoch: 300   duration: 22.8276 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4652 NOTE #1
+    # 2023-05-11-1  epoch: 200   duration: 13.2833 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4755 NOTE #1
+    # 2023-05-09-1  epoch: 300   duration: 22.8276 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4652 NOTE #2
 
     # 2023-05-08-1  epoch: 200   duration: 14.2820 hours  WEIGHT_DECAY = 1e-3  LEARNING_RATE = 15e-5  max mAP:  0.4210
     # 2023-05-07-1  epoch: 100   duration:  8.3639 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4435
