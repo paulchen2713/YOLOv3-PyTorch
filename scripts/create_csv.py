@@ -18,6 +18,7 @@ Generate .csv or .txt files for training and testing use
 
 import os
 import csv
+import pandas as pd
 import random
 import time
 from datetime import date
@@ -137,29 +138,43 @@ def get_dirty_and_clean_list():
     return dirty_list, clean_list
 
 
+TOTAL_SPLIT = 10  # NOTE 
 def clean_csv(input_list, split):
-    print(f"Creating csv files without dirty data, taking the {split} split as the test samples")
+    # print(f"Creating csv files without dirty data, taking the {split} split as the test samples")
 
-    TOTAL_SPLIT = 6 # has to be 6
-    # split = 0       # 0, 1, 3, 4, 5
+    store_path = DATASET + f"csv_files/clean_csv/{TOTAL_SPLIT}-fold/{split}/"
 
-    train_file_name = DATASET + f"csv_files/clean_csv/{split}/" + f"train.csv"
-    test_file_name  = DATASET + f"csv_files/clean_csv/{split}/" + f"test.csv"
+    if os.path.isdir(store_path) is False:
+        print(f"creating /{TOTAL_SPLIT}-fold/{split} folder to store the csv files")
+        os.makedirs(store_path)
+
+    test_file_name  = store_path + f"test.csv"
+    train_file_name = store_path + f"train.csv"
     
     if os.path.isfile(f"{test_file_name}") is True:
         print(f"the '{test_file_name}' is already exits!")
-        return
+
+        temp_test  = pd.read_csv(test_file_name)
+        temp_train = pd.read_csv(train_file_name)
+
+        print(f"the number of test and train samples for {split} split: {len(temp_test) + 1}, {len(temp_train) + 1} \n")
+        return len(temp_test) + 1, len(temp_train) + 1
 
     # print(f"total number of data: {len(input_list)}")  # total number of data: 6369
+    num_of_test, num_of_train = 0, 0
     for i in input_list:
         # print(i)
         if i % TOTAL_SPLIT == split:
+            num_of_test += 1
             with open(test_file_name, "a") as test_file:
                 print(f"{i}.jpg,{i}.txt", file=test_file)
         else:
+            num_of_train += 1
             with open(train_file_name, "a") as train_file:
                 print(f"{i}.jpg,{i}.txt", file=train_file)
-
+    
+    print(f"the number of test and train samples for {split} split: {num_of_test}, {num_of_train} \n")
+    return num_of_test, num_of_train
 
 
 if __name__ == "__main__":
@@ -173,12 +188,18 @@ if __name__ == "__main__":
     # print(dirty_indices == skip_list2)  # True
     # print(len(clean_indices))           # 6369
 
-    TOTAL_SPLIT = 6
-    # for index in range(0, TOTAL_SPLIT):
-    #     equal_splits_csv(split=index)
-    #     clean_csv(input_list=clean_indices, split=index)
-
-
+    for index in range(0, TOTAL_SPLIT):
+        # equal_splits_csv(split=index)
+        num_of_test, num_of_train = clean_csv(input_list=clean_indices, split=index)
+        
+        store_path = DATASET + f"csv_files/clean_csv/{TOTAL_SPLIT}-fold/{index}/"
+        if os.path.isdir(store_path + "tested/") is False:
+            os.makedirs(store_path + "tested/")
+        if os.path.isfile(store_path + f"README.txt") is False:
+            with open(store_path + f"README.txt", "w") as txt_file:
+                print(f"##split {index}", file=txt_file)
+                print(f"number of test samples:  {num_of_test}", file=txt_file)
+                print(f"number of train samples: {num_of_train}", file=txt_file)
 
 
     toc = time.perf_counter()
