@@ -90,7 +90,7 @@ def write_anchors_to_file(centroids, distance, anchor_file):
         w, h = centroid[0], centroid[1]
         # print(f"{i + 1}: ({w}, {h})")
         # print(f"{{{w:0.3f}, {h:0.3f}}}", end=', ')
-        print(f"{i}: ({w:0.6f}, {h:0.6f}) {w*h:0.6f}")
+        print(f"{i + 1}: ({w:0.6f}, {h:0.6f}) {w*h:0.6f}")
 
     print(f"Anchors: ")
     for _, centroid in enumerate(centroids):
@@ -114,6 +114,14 @@ def write_anchors_to_file(centroids, distance, anchor_file):
                 print(f"", file=f)
         print(f"", file=f)
 
+        print(f"Centroids (sorted by Area): ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            # print(f"{i + 1}: ({w}, {h})")
+            # print(f"{{{w:0.3f}, {h:0.3f}}}", end=', ')
+            print(f"{i + 1}: ({w:0.6f}, {h:0.6f}) {w*h:0.6f}", file=f)
+        print(f"\n", file=f)
+
         print(f"Anchors rounded to 2 decimal places: ", file=f)
         for i, centroid in enumerate(centroids):
             w, h = centroid[0], centroid[1]
@@ -124,9 +132,31 @@ def write_anchors_to_file(centroids, distance, anchor_file):
         for i, centroid in enumerate(centroids):
             w, h = centroid[0], centroid[1]
             print(f"({w:0.3f}, {h:0.3f})", end=', ', file=f)
-        print(f"", file=f)
+        print(f"\n", file=f)
+
+        print(f"Anchors rounded to 4 decimal places: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            print(f"({w:0.4f}, {h:0.4f})", end=', ', file=f)
+        print(f"\n", file=f)
         
-    print(f"Writing anchors to {anchor_file}.txt\n")
+        print(f"Anchors rounded to 5 decimal places: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            print(f"({w:0.5f}, {h:0.5f})", end=', ', file=f)
+            if (i + 1) % 3 == 0:
+                print(f"", file=f)
+        print(f"", file=f)
+
+        print(f"Anchors rounded to 6 decimal places: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            print(f"({w:0.6f}, {h:0.6f})", end=', ', file=f)
+            if (i + 1) % 3 == 0:
+                print(f"", file=f)
+        print(f"", file=f)
+
+    print(f"Writing anchors to {anchor_file} \n")
 
 
 def k_means(x, n_clusters, eps):
@@ -155,7 +185,10 @@ def k_means(x, n_clusters, eps):
         belonging_centroids = np.argmin(dist, axis=1)
 
         # calculate the new centroids
-        centroid_sums = np.zeros((c, dim), np.float)
+        # NOTE DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, 
+        #   use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the 
+        #   numpy scalar type, use `np.float64` here.
+        centroid_sums = np.zeros((c, dim), np.float64)
         for i in range(belonging_centroids.shape[0]):
             centroid_sums[belonging_centroids[i]] += x[i]
 
@@ -270,22 +303,48 @@ def bench_KMeans(estimator, data, anchor_file, show=False):
                 print(f"", file=f)
         print(f"", file=f)
 
+        print(f"Centroids (sorted by Area): ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            # print(f"{i + 1}: ({w}, {h})")
+            # print(f"{{{w:0.3f}, {h:0.3f}}}", end=', ')
+            print(f"{i + 1}: ({w:0.6f}, {h:0.6f}) {w*h:0.6f}", file=f)
+        print(f"\n", file=f)
+
         print(f"Anchors rounded to 2 decimal places: ", file=f)
         for i, centroid in enumerate(centroids):
-            w, h = centroid
+            w, h = centroid[0], centroid[1]
             print(f"({w:0.2f}, {h:0.2f})", end=', ', file=f)
-            if (i + 1) % 3 == 0:
-                print(f"", file=f)
-        print(f"", file=f)
+        print(f"\n", file=f)
     
         print(f"Anchors rounded to 3 decimal places: ", file=f)
         for i, centroid in enumerate(centroids):
-            w, h = centroid
+            w, h = centroid[0], centroid[1]
             print(f"({w:0.3f}, {h:0.3f})", end=', ', file=f)
+        print(f"\n", file=f)
+
+        print(f"Anchors rounded to 4 decimal places: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            print(f"({w:0.4f}, {h:0.4f})", end=', ', file=f)
+        print(f"\n", file=f)
+        
+        print(f"Anchors rounded to 5 decimal places: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            print(f"({w:0.5f}, {h:0.5f})", end=', ', file=f)
             if (i + 1) % 3 == 0:
                 print(f"", file=f)
         print(f"", file=f)
-        
+
+        print(f"Anchors rounded to 6 decimal places: ", file=f)
+        for i, centroid in enumerate(centroids):
+            w, h = centroid[0], centroid[1]
+            print(f"({w:0.6f}, {h:0.6f})", end=', ', file=f)
+            if (i + 1) % 3 == 0:
+                print(f"", file=f)
+        print(f"", file=f)
+
     print(f"Writing anchors to {anchor_file}.txt")
     if show == True: print(100 * '-')
 
@@ -321,8 +380,9 @@ if __name__ == "__main__":
     
     result = k_means(data, num_clusters, tol)
     distance = avg_iou(data, result)
-    file_name3 = DATASET + f"new-anchors-0611.txt"  # "Anchors-custom-k_means.txt"
+    file_name3 = DATASET + f"new-anchors-0613-split0.txt"  # "Anchors-custom-k_means.txt"
     write_anchors_to_file(result, distance, file_name3)
+
 
     toc = time.perf_counter()
     duration = toc - tic
