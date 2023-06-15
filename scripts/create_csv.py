@@ -138,7 +138,7 @@ def get_dirty_and_clean_list():
     return dirty_list, clean_list
 
 
-TOTAL_SPLIT = 10  # NOTE 
+TOTAL_SPLIT = 8  # NOTE 
 def clean_csv(input_list, split):
     # print(f"Creating csv files without dirty data, taking the {split} split as the test samples")
 
