@@ -157,13 +157,12 @@ def clean_csv(input_list, split):
         temp_test  = pd.read_csv(test_file_name)
         temp_train = pd.read_csv(train_file_name)
 
-        print(f"the number of test and train samples for {split} split: {len(temp_test) + 1}, {len(temp_train) + 1} \n")
+        print(f"the number of test and train samples for {split} split: {len(temp_test) + 1}, {len(temp_train) + 1}")
         return len(temp_test) + 1, len(temp_train) + 1
 
     # print(f"total number of data: {len(input_list)}")  # total number of data: 6369
     num_of_test, num_of_train = 0, 0
     for i in input_list:
-        # print(i)
         if i % TOTAL_SPLIT == split:
             num_of_test += 1
             with open(test_file_name, "a") as test_file:
@@ -177,17 +176,25 @@ def clean_csv(input_list, split):
     return num_of_test, num_of_train
 
 
-if __name__ == "__main__":
-    tic = time.perf_counter()
+def dirty_and_clean_csv(dirty_indices, clean_indices):
+    root_path = DATASET + f"csv_files/" 
+    
+    if os.path.isfile(root_path + f"clean.csv") is False:
+        with open(root_path + f"clean.csv", "a") as csv_file:
+            for i in clean_indices:
+                print(f"{i}.jpg,{i}.txt", file=csv_file)
+    else:
+        print(f"the '{root_path}clean.csv' is already exists!")
+    
+    if os.path.isfile(root_path + f"dirty.csv") is False:
+        with open(root_path + f"dirty.csv", "a") as csv_file:
+            for i in dirty_indices:
+                print(f"{i}.jpg,{i}.txt", file=csv_file)
+    else:
+        print(f"the '{root_path}dirty.csv' is already exists!")
 
-    num_train, total = 6000, 7193
-    # create_csv(num_train=num_train, total=total)
-    # random_csv(num_train=num_train, num_test=(total-num_train))
 
-    dirty_indices, clean_indices = get_dirty_and_clean_list()
-    # print(dirty_indices == skip_list2)  # True
-    # print(len(clean_indices))           # 6369
-
+def make_folders(clean_indices):
     for index in range(0, TOTAL_SPLIT):
         # equal_splits_csv(split=index)
         num_of_test, num_of_train = clean_csv(input_list=clean_indices, split=index)
@@ -200,7 +207,28 @@ if __name__ == "__main__":
                 print(f"##split {index}", file=txt_file)
                 print(f"number of test samples:  {num_of_test}", file=txt_file)
                 print(f"number of train samples: {num_of_train}", file=txt_file)
+        else: 
+            continue
+    print(f"the '{TOTAL_SPLIT}-fold' is already exists!")
 
+
+if __name__ == "__main__":
+    tic = time.perf_counter()
+
+    num_train, total = 6000, 7193
+    # create_csv(num_train=num_train, total=total)
+    # random_csv(num_train=num_train, num_test=(total-num_train))
+
+    dirty_indices, clean_indices = get_dirty_and_clean_list()
+    # print(dirty_indices == skip_list2)  # True
+    # print(len(clean_indices))           # 6369
+
+    make_folders(clean_indices=clean_indices)
+
+    dirty_and_clean_csv(dirty_indices=dirty_indices, clean_indices=clean_indices)
+
+    
+    
 
     toc = time.perf_counter()
     duration = toc - tic
