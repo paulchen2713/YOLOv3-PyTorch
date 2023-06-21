@@ -78,7 +78,7 @@ log_file_name = '2023-06-19-2' # TODO date_function.today()
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
 # assert os.path.isfile(f"{file2check}") is False, f"the 'training_logs/train/losses/{log_file_name}.txt' file already exists!"
 
-isTesting = False  # NOTE 
+isTesting = True  # NOTE 
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
     loop = tqdm(train_loader, leave=True)
     losses = []
@@ -247,16 +247,16 @@ def test():
     )
     test_loader = DataLoader(
         dataset=test_dataset,
-        batch_size=config.BATCH_SIZE,
+        batch_size=1,  # NOTE has to be 1, originally was set as 'config.BATCH_SIZE'
         num_workers=config.NUM_WORKERS,
         pin_memory=config.PIN_MEMORY,
         shuffle=False,
         drop_last=False,
     )
 
-    checkpoint_value = [47.55, 46.52, 45.93, 45.21, 45.20]  
+    checkpoint_value = ['checkpoint-2023-06-18-1']  
     index = 0
-    checkpoint_file = f"yolov3_carrada_{checkpoint_value[index]}_map.pth.tar"  
+    checkpoint_file = f"{checkpoint_value[index]}.pth.tar"  
     load_checkpoint(
         config.DATASET + "checks/" + checkpoint_file,  # checkpoint-2023-05-22-2.pth.tar,  
         model, 
@@ -280,8 +280,11 @@ def test():
     for _, (x, y) in enumerate(tqdm(test_loader)):
         x = x.to(config.DEVICE)
         y0, y1, y2 = y[0].to(config.DEVICE), y[1].to(config.DEVICE), y[2].to(config.DEVICE)
-        with torch.no_grad():
-            out = model(x)
+
+        out = model(x)
+        # with torch.no_grad():
+        #     out = model(x)
+
         loss = (
             loss_fn(out[0], y0, scaled_anchors[0])
             + loss_fn(out[1], y1, scaled_anchors[1])
@@ -352,11 +355,11 @@ if __name__ == "__main__":
 
     tic = time.perf_counter()
 
-    main()
+    # main()
 
-    # test()
+    test()
     
-    # NOTE 4-fold
+    # NOTE 5-fold
     # 2023-06-19-2  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 0
 
 
