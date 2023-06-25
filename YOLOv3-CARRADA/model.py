@@ -45,6 +45,7 @@ List is structured by "B" indicating a residual block followed by the number of 
 "S" is for scale prediction block and computing the yolo loss
 "U" is for upsampling the feature map and concatenating with a previous layer
 """
+
 config = [
     (32, 3, 1),   # (32, 3, 1) is the CBL, CBL = Conv + BN + LeakyReLU
     (64, 3, 2),
@@ -75,34 +76,30 @@ config = [
     # 252 = 1 + 3 + (4+7) + (4+7*2) + (4+7*8) + (4+7*8) + (4+7*4) + 19 + 5 + 19 + 5 + 19 ?
 ]
 
-# config = [
-#     (32 // 2, 3, 1),
-#     (64 // 2, 3, 2),
-#     ["B", 1],     # (64, 3, 2) + ["B", 1] is the Res1
-#     (128, 3, 2),
-#     ["B", 2],     # (128, 3, 2) + ["B", 2] is th Res2
-#     # (256, 3, 2),
-#     # ["B", 8],     # (256, 3, 2) + ["B", 8] is th Res8
-#     (512, 3, 2),
-#     ["B", 4],     # (512, 3, 2) + ["B", 8] is th Res8
-#     (1024 // 2, 3, 2),
-#     ["B", 1],     # ["B", 4], to this point is Darknet-53, which has 53 layers?
-#     # 52 = 1 + (1 + 1*2) + (1 + 2*2) + (1 + 8*2) + (1 + 8*2) + (1 + 4*2) ?
-#     (512 // 2, 1, 1),
-#     (1024, 3, 1),
-#     "S",
-#     (256, 1, 1),
-#     "U",
-#     (256 // 2, 1, 1),
-#     (512 // 2, 3, 1),
-#     "S",
-#     (128 // 2, 1, 1), # 
-#     "U",
-#     (128 // 2, 1, 1),
-#     (256 // 2, 3, 1),
-#     "S",
-#     # 252 = 1 + 3 + (4+7) + (4+7*2) + (4+7*8) + (4+7*8) + (4+7*4) + 19 + 5 + 19 + 5 + 19 ?
-# ]
+config = [
+    # (8, 3, 1),   
+    (16, 3, 2),
+    (32, 3, 2),
+    (64, 3, 2),
+    ["B", 2],     
+    (128, 3, 2),
+    ["B", 2],     
+    (256, 3, 2),
+    ["B", 1],     
+    (128, 1, 1),  
+    (256, 3, 1), 
+    "S",
+    (64, 1, 1),
+    "U",
+    (64, 1, 1),
+    (128, 3, 1),
+    "S",
+    (32, 1, 1),
+    "U",
+    (32, 1, 1),
+    (64, 3, 1),
+    "S",
+]
 
 
 class CNNBlock(nn.Module):
@@ -205,12 +202,12 @@ class YOLOv3(nn.Module):
 
             # skip layers are connected to ["B", 8] based on the paper, original config file 
             # if isinstance(layer, ResidualBlock) and layer.num_repeats != 1: # 
-            if isinstance(layer, ResidualBlock) and layer.num_repeats == 8:
+            if isinstance(layer, ResidualBlock) and layer.num_repeats == 2:  # NOTE 8
                 route_connections.append(x)
 
             elif isinstance(layer, nn.Upsample): # if we use the Upsample
                 # we want to concatenates with the last route connection, with the last one we added
-                x = torch.cat([x, route_connections[-1]], dim=1) # why concatenate along dimension 1 for the channels
+                x = torch.cat([x, route_connections[-1]], dim=1)  # why concatenate along dimension 1 for the channels
                 route_connections.pop() # after concatenation, we remove the last one
 
         # print(f"outputs: {outputs}")
@@ -275,21 +272,21 @@ if __name__ == "__main__":
     stride = [32, 16, 8] # 32
 
     # simple test settings
-    batch_size = 20  # num_samples
+    batch_size = 16  # num_samples
     num_channels = 3 # num_anchors
     
     model = YOLOv3(num_classes=num_classes) # initialize a YOLOv3 model as model
     
-    # simple test with random inputs of 20 examples, 3 channels, and IMAGE_SIZE-by-IMAGE_SIZE input
+    # simple test with random inputs of 16 examples, 3 channels, and IMAGE_SIZE-by-IMAGE_SIZE input
     x = torch.randn((batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
     
     out = model(x) 
 
     # print out the model summary using third-party library called 'torchsummary'
-    # torchsummary.summary(model.cuda(), (num_channels, IMAGE_SIZE, IMAGE_SIZE), bs=batch_size)
+    # torchsummary.summary(model.cuda(), (num_channels, IMAGE_SIZE, IMAGE_SIZE), batch_size)
 
     # print out the model summary using torchinfo.summary()
-    summary(model.cuda(), input_size=(batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
+    # summary(model.cuda(), input_size=(batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
 
     # print(model)
 
