@@ -1,32 +1,44 @@
-import config
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Jun 25 16:55:40 2023
+
+@patch: 2023.06.25
+
+@author: Paul
+@file: evaluate.py
+@dependencies:
+    env pt3.8
+    python==3.8.16
+    numpy==1.23.5
+    pytorch==1.13.1
+    pytorch-cuda==11.7
+    torchaudio==0.13.1
+    torchvision==0.14.1
+    pandas==1.5.2
+    pillow==9.3.0
+    tqdm==4.64.1
+    albumentations==1.3.0
+    matplotlib==3.6.2
+"""
+
+import numpy as np
 import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-from model import YOLOv3
-from dataset import YOLODataset
-# from model_with_weights2 import YOLOv3
-from utils import (
-    mean_average_precision,
-    cells_to_bboxes,
-    get_evaluation_bboxes,
-    save_checkpoint,
-    load_checkpoint,
-    check_class_accuracy,
-    get_loaders,
-    plot_couple_examples
-)
-from loss import YoloLoss
-
 from tqdm import tqdm
-from datetime import date as date_function
-import time
-
-torch.backends.cudnn.benchmark = True
-
-import numpy as np
 import os
 import random
+from datetime import date
+import time
+
+import config
+from model import YOLOv3
+from dataset import YOLODataset
+from utils import mean_average_precision, get_evaluation_bboxes, load_checkpoint
+from loss import YoloLoss
+
+torch.backends.cudnn.benchmark = True
 
 
 
@@ -67,7 +79,10 @@ def test():
 
     check_file_name = f"{checkpoint_value[index]}-1"  # NOTE 
     print(f"Weights: {checkpoint_file}")
-    print(f"Anchors: {scaled_anchors.detach().cpu().numpy()}")
+    print(f"Anchors: ")
+    for _, anchor in enumerate(scaled_anchors):
+        print(f"  {anchor}")
+    print(f"")
 
     # file path for the testing statistics
     valid_path = config.DATASET + f'training_logs/valid/'
@@ -82,10 +97,10 @@ def test():
     all_stats_file = valid_path + f"{check_file_name}-all_stats.txt"
     raw_data_file  = valid_path + f"{check_file_name}-raw_data.txt"
     if os.path.isfile(f"{all_stats_file}") is True:
-        print(f"the '{all_stats_file}' is already exits!")
+        print(f"the '{check_file_name}-all_stats.txt' is already exits!")
         write_all_stats = False
-    if os.path.isfile(raw_data_file) is True:
-        print(f"the '{raw_data_file}' is already exits!")
+    if os.path.isfile(f"{raw_data_file}") is True:
+        print(f"the '{check_file_name}-raw_data.txt' is already exits!")
         write_raw_data = False
     
     losses = []
@@ -142,10 +157,13 @@ def test():
             if write_raw_data is True:
                 with open(raw_data_file, "a") as txt_file:
                     print(f"{loss.item():0.15f}, {class_acc:0.15f}, {no_obj_acc:0.15f}, {obj_acc:0.15f}", file=txt_file)
-
-
+    
+    # 
     pred_bbox_path = valid_path + f"{check_file_name}-pred_bbox.txt"
     true_bbox_path = valid_path + f"{check_file_name}-true_bbox.txt"
+    if os.path.isfile(f"{pred_bbox_path}") and os.path.isfile(f"{true_bbox_path}"): 
+        print(f"the '{check_file_name}-pred_bbox.txt' and '{check_file_name}-true_bbox.txt' are already exit!\n")
+        return
 
     # 2nd tqdm progress bar
     pred_boxes, true_boxes = get_evaluation_bboxes(
@@ -155,7 +173,7 @@ def test():
         anchors=config.ANCHORS,
         threshold=config.CONF_THRESHOLD,
     )
-    
+
     with open(pred_bbox_path, "w") as txt_file:
         for bbox in pred_boxes:
             print(bbox, file=txt_file)
@@ -181,6 +199,6 @@ if __name__ == "__main__":
     test()
 
     toc = time.perf_counter()
-    duration = (toc - tic) / 3600
-    print(f"duration:  {duration:0.4f} hours")
+    duration = (toc - tic)
+    print(f"duration:  {duration:0.4f} sec")
 
