@@ -72,13 +72,13 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-06-19-2' # TODO date_function.today() 
+log_file_name = '2023-06-26-1' # TODO date_function.today() 
 
 # we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
 # assert os.path.isfile(f"{file2check}") is False, f"the 'training_logs/train/losses/{log_file_name}.txt' file already exists!"
 
-isTesting = True  # NOTE 
+isTesting = False  # NOTE 
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
     loop = tqdm(train_loader, leave=True)
     losses = []
@@ -355,22 +355,24 @@ if __name__ == "__main__":
 
     tic = time.perf_counter()
 
-    # main()
+    main()
 
     # test()
     
-    # NOTE 5-fold
-    # 2023-06-19-2  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 0
+    # NOTE 5-fold 
+    # 2023-06-26-2  epoch: 100   duration:  hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 2 + smaller model-7
+    # 2023-06-26-1  epoch: 100   duration:  hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 1 + smaller model-6
+    # 2023-06-19-2  epoch: 100   duration: 10.8377 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.3631  ##split 0 + smaller model-5
 
 
-    # NOTE 4-fold
+    # NOTE 4-fold 
     # 2023-06-19-1  epoch: 100   duration:  4.4134 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4701  ##split 3 
     # 2023-06-18-3  epoch: 100   duration:  4.2812 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4549  ##split 2 
     # 2023-06-18-2  epoch: 100   duration:  4.1333 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4518  ##split 1 
     # 2023-06-18-1  epoch: 100   duration:  4.1300 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4747  ##split 0 
 
 
-    # NOTE 10-fold
+    # NOTE 10-fold 
     # 2023-06-17-3  epoch: 100   duration:  4.6962 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4986  ##split 9 
     # 2023-06-17-2  epoch: 100   duration:  4.7984 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4960  ##split 8 
     # 2023-06-17-1  epoch: 100   duration:  4.7631 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4798  ##split 7 
@@ -383,7 +385,7 @@ if __name__ == "__main__":
     # 2023-06-13-1  epoch: 100   duration:  5.0132 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4752  ##split 0 
 
 
-    # NOTE 6-fold
+    # NOTE 6-fold 
     # 2023-06-10-1  epoch: 100   duration:  4.5791 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4670  ##split 5 
     # 2023-06-09-1  epoch: 100   duration:  5.5375 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4551  ##split 4 
     # 2023-06-08-3  epoch: 100   duration:  4.7448 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4601  ##split 3 
