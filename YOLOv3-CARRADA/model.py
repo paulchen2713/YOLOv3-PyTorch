@@ -104,7 +104,8 @@ config = [
 ]
 
 config = [
-    (16, 3, 1),   
+    (16, 3, 1),  
+    ["B", 1],
     (32, 3, 2),
     ["B", 1],
     (64, 3, 2),
@@ -315,7 +316,7 @@ if __name__ == "__main__":
     torchsummary.summary(model.cuda(), (num_channels, IMAGE_SIZE, IMAGE_SIZE), batch_size)
 
     # print out the model summary using torchinfo.summary()
-    # summary(model.cuda(), input_size=(batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
+    summary(model.cuda(), input_size=(batch_size, num_channels, IMAGE_SIZE, IMAGE_SIZE))
 
     # print(model)
 
