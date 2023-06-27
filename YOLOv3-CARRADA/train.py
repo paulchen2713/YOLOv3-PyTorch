@@ -360,7 +360,7 @@ if __name__ == "__main__":
     # test()
     
     # NOTE 5-fold 
-    # 2023-06-27-2  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 4 + smaller model-9
+    # 2023-06-27-2  epoch: 100   duration:  6.1737 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4250  ##split 4 + smaller model-9
     # 2023-06-27-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 3 + smaller model-8
     # 2023-06-26-2  epoch: 100   duration:  4.0543 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.3944  ##split 2 + smaller model-7
     # 2023-06-26-1  epoch: 100   duration: 13.1282 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.3873  ##split 1 + smaller model-6
