@@ -91,7 +91,7 @@ def test():
         print(f"creating 'valid' folder to store the stats")
         os.makedirs(valid_path)
 
-    # write flag for 
+    # write flags 
     write_all_stats, write_raw_data = True, True
 
     all_stats_file = valid_path + f"{check_file_name}-all_stats.txt"
@@ -111,9 +111,7 @@ def test():
             y0, y1, y2 = y[0].to(config.DEVICE), y[1].to(config.DEVICE), y[2].to(config.DEVICE)
 
             out = model(x)
-            # with torch.no_grad():
-            #     out = model(x)
-
+            
             loss = (
                 loss_fn(out[0], y0, scaled_anchors[0])
                 + loss_fn(out[1], y1, scaled_anchors[1])

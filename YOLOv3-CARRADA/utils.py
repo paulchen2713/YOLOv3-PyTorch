@@ -285,15 +285,7 @@ def plot_image(image, boxes):
     plt.show()
 
 
-def get_evaluation_bboxes(
-    loader,
-    model,
-    iou_threshold,
-    anchors,
-    threshold,
-    box_format="midpoint",
-    device=config.DEVICE,
-):
+def get_evaluation_bboxes(loader, model, iou_threshold, anchors, threshold, box_format="midpoint", device=config.DEVICE):
     # make sure model is in eval before get bboxes
     model.eval()
     train_idx = 0
