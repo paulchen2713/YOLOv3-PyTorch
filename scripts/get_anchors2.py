@@ -380,12 +380,14 @@ if __name__ == "__main__":
     
     result = k_means(data, num_clusters, tol)
     distance = avg_iou(data, result)
-    file_name3 = DATASET + f"new-anchors-0626-split2.txt"  # "Anchors-custom-k_means.txt"
+    file_name3 = DATASET + f"new-anchors-0627-split3.txt"  # "Anchors-custom-k_means.txt"
     write_anchors_to_file(result, distance, file_name3)
 
 
     toc = time.perf_counter()
     duration = toc - tic
     print(f"duration: {duration:0.4f} seconds")
+
+
 
 
