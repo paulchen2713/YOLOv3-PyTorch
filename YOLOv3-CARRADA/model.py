@@ -111,11 +111,12 @@ config = [
     (64, 3, 2),
     ["B", 1],
     (128, 3, 2),  ## 1 
-    ["B", 2],     
+    ["B", 4],     
     (256, 3, 2),  ## 2 
-    ["B", 2],     
+    ["B", 4],     
     (512, 3, 2),  ## 3 
-    ["B", 1],     
+    ["B", 1],  
+    # to this point is the feature extractor (Darknet-53)   
     (256, 1, 1),  
     (512, 3, 1),  ## 3 
     "S",
@@ -232,7 +233,7 @@ class YOLOv3(nn.Module):
 
             # skip layers are connected to ["B", 8] based on the paper, original config file 
             # if isinstance(layer, ResidualBlock) and layer.num_repeats != 1: # 
-            if isinstance(layer, ResidualBlock) and layer.num_repeats == 2:  # NOTE 8
+            if isinstance(layer, ResidualBlock) and layer.num_repeats == 4:  # NOTE 8
                 route_connections.append(x)
 
             elif isinstance(layer, nn.Upsample): # if we use the Upsample
