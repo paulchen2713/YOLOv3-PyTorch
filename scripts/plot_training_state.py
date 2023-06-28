@@ -112,6 +112,12 @@ logs = [
     '2023-06-19-2',  # NOTE 5-fold: 0 + small model-5
     '2023-06-26-1',  # 1 + small model-6
     '2023-06-26-2',  # 2 + small model-7
+    '2023-06-27-1',  # 3 + small model-8
+    '2023-06-27-2',  # 4 + small model-9
+    '2023-06-27-3',  # NOTE 7-fold: 0 + small model-9
+    '2023-06-27-4',  # 1 + small model-8
+    '2023-06-28-1',  # 2 + small model-9
+    '2023-06-28-2',  # 3 + small model-8
 ]
 
 log_index = len(logs) - 1
