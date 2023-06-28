@@ -1,8 +1,32 @@
+# -*- coding: utf-8 -*-
 """
+Created on Fri Feb 17 15:48:19 2023
+
+@patch: 
+    2023.02.17
+    2023.03.22
+
+@author: Paul
+@file: config.py
+@dependencies:
+    env pt3.8
+    python==3.8.16
+    numpy==1.23.5
+    pytorch==1.13.1
+    pytorch-cuda==11.7
+    torchaudio==0.13.1
+    torchvision==0.14.1
+    pandas==1.5.2
+    pillow==9.3.0
+    tqdm==4.64.1
+    albumentations==1.3.0
+    matplotlib==3.6.2
+
 Implementation of Yolo Loss Function similar to the one in Yolov3 paper,
 the difference from what I can tell is I use CrossEntropy for the classes
 instead of BinaryCrossEntropy.
 """
+
 import random
 import torch
 import torch.nn as nn

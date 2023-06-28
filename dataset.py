@@ -1,23 +1,26 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Feb 06 19:27:14 2023
+Created on Thu Feb 16 19:27:14 2023
 
-@patch: 2022.02.16
+@patch: 
+    2023.02.16
+    2023.03.22
+
 @author: Paul
 @file: dataset.py
 @dependencies:
     env pt3.8
     python==3.8.16
     numpy==1.23.5
-    matplotlib==3.6.2
     pytorch==1.13.1
     pytorch-cuda==11.7
     torchaudio==0.13.1
     torchvision==0.14.1
-    tqdm==4.64.1
-    albumentations==1.3.0
     pandas==1.5.2
     pillow==9.3.0
+    tqdm==4.64.1
+    albumentations==1.3.0
+    matplotlib==3.6.2
 
 @references:
     Redmon, Joseph and Farhadi, Ali, YOLOv3: An Incremental Improvement, April 8, 2018. (https://doi.org/10.48550/arXiv.1804.02767)
@@ -80,13 +83,13 @@ class YOLODataset(Dataset):
         return len(self.annotations)
 
     def __getitem__(self, index):
-        
+        # print(f"index: {index}")
         # get the index-th data, in the csv files, data are structured as index.jpg,index.txt, 
         # so (indxe, 0) get us the image and (index, 1) get us the label
 
         # get the label directory path (self.label_dir), then get the csv file name (self.annotations), then get the .txt file 
         label_path = os.path.join(self.label_dir, self.annotations.iloc[index, 1]) # on the second column (which is 1)
-        # print(label_path) # e.g. D:/Datasets/PASCAL_VOC/labels\003077.txt
+        # print(label_path) # e.g. D:/Datasets/PASCAL_VOC/labels/003077.txt
 
         # after getting the .txt file path, we then load the .txt file which is delimited by space, and we set the returned array 
         # will have at least ndmin=2 dimensions, the original label is [class, x, y, w, h]
@@ -246,15 +249,15 @@ def test():
 
         for i in range(y[0].shape[1]):
             anchor = scaled_anchors[i]
-            print(f"anchor.shape: {anchor.shape}") # torch.Size([3, 2])
-            print(f"y[{i}].shape: {y[i].shape}")
+            # print(f"anchor.shape: {anchor.shape}") # torch.Size([3, 2])
+            # print(f"y[{i}].shape: {y[i].shape}")
             # y[0].shape: torch.Size([1, 3, 13, 13, 6])
             # y[1].shape: torch.Size([1, 3, 26, 26, 6])
             # y[2].shape: torch.Size([1, 3, 52, 52, 6])
             boxes += cells_to_bboxes(y[i], is_preds=False, S=y[i].shape[2], anchors=anchor)[0]
 
         boxes = nms(boxes, iou_threshold=1, threshold=0.7, box_format="midpoint")
-        print(f"boxes: {boxes}")
+        # print(f"boxes: {boxes}")
         # plot_image(x[0].permute(1, 2, 0).to("cpu"), boxes) # torch.Size([416, 416, 3])
 
         # 
@@ -262,7 +265,7 @@ def test():
 
         # x[0].permute(0, 1, 2).shape is the original shape with torch.Size([3, 416, 416]) and it's an Invalid shape for image data
         # so x[0].permute(1, 2, 0).shape is the valid shape with torch.Size([416, 416, 3]) 
-        print("original shape: ", x[0].permute(0, 1, 2).shape) # torch.Size([3, 416, 416])
+        # print("original shape: ", x[0].permute(0, 1, 2).shape) # torch.Size([3, 416, 416])
         plot_image(x[0].permute(1, 2, 0).to("cpu"), boxes) # 
         print("-----------------------------------------")
 
@@ -273,6 +276,9 @@ def test():
         # File "C:\Users\paulc\.conda\envs\pt3.7\lib\site-packages\albumentations\augmentations\bbox_utils.py", line 330, in check_bbox
         #     "to be in the range [0.0, 1.0], got {value}.".format(bbox=bbox, name=name, value=value)
         # ValueError: Expected x_max for bbox (0.9375, 0.875, 1.0625, 1.0, 0.0) to be in the range [0.0, 1.0], got 1.0625.
+
+        # NOTE this ValueError: Expected x_min for bbox (-0.01171875, 0.4296875, 0.09765625, 0.4609375, 2.0) to be in the range [0.0, 1.0], got -0.01171875.
+        # is still unsolvable! I don't know why this error occur
 
 
 if __name__ == "__main__":

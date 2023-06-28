@@ -72,7 +72,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-06-19-2' # TODO date_function.today() 
+log_file_name = '2023-06-28-3' # TODO date_function.today() 
 
 # we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
@@ -247,16 +247,16 @@ def test():
     )
     test_loader = DataLoader(
         dataset=test_dataset,
-        batch_size=config.BATCH_SIZE,
+        batch_size=1,  # NOTE has to be 1, originally was set as 'config.BATCH_SIZE'
         num_workers=config.NUM_WORKERS,
         pin_memory=config.PIN_MEMORY,
         shuffle=False,
         drop_last=False,
     )
 
-    checkpoint_value = [47.55, 46.52, 45.93, 45.21, 45.20]  
+    checkpoint_value = ['checkpoint-2023-06-18-1']  
     index = 0
-    checkpoint_file = f"yolov3_carrada_{checkpoint_value[index]}_map.pth.tar"  
+    checkpoint_file = f"{checkpoint_value[index]}.pth.tar"  
     load_checkpoint(
         config.DATASET + "checks/" + checkpoint_file,  # checkpoint-2023-05-22-2.pth.tar,  
         model, 
@@ -280,8 +280,11 @@ def test():
     for _, (x, y) in enumerate(tqdm(test_loader)):
         x = x.to(config.DEVICE)
         y0, y1, y2 = y[0].to(config.DEVICE), y[1].to(config.DEVICE), y[2].to(config.DEVICE)
-        with torch.no_grad():
-            out = model(x)
+
+        out = model(x)
+        # with torch.no_grad():
+        #     out = model(x)
+
         loss = (
             loss_fn(out[0], y0, scaled_anchors[0])
             + loss_fn(out[1], y1, scaled_anchors[1])
@@ -355,19 +358,32 @@ if __name__ == "__main__":
     main()
 
     # test()
+
+
+    # NOTE 7-fold
+    # 2023-06-28-3  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 4 + smaller model-9
+    # 2023-06-28-2  epoch: 100   duration:  4.2279 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4448  ##split 3 + smaller model-8
+    # 2023-06-28-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 2 + smaller model-9
+    # 2023-06-27-4  epoch: 100   duration:  6.3816 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4205  ##split 1 + smaller model-8
+    # 2023-06-27-3  epoch: 100   duration:  4.2196 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4912  ##split 0 + smaller model-9
+
     
-    # NOTE 4-fold
-    # 2023-06-19-2  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 0
+    # NOTE 5-fold 
+    # 2023-06-27-2  epoch: 100   duration:  6.1737 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4250  ##split 4 + smaller model-9
+    # 2023-06-27-1  epoch: 100   duration:  4.0348 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4437  ##split 3 + smaller model-8
+    # 2023-06-26-2  epoch: 100   duration:  4.0543 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.3944  ##split 2 + smaller model-7
+    # 2023-06-26-1  epoch: 100   duration:  6.1282 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.3873  ##split 1 + smaller model-6
+    # 2023-06-19-2  epoch: 100   duration: 10.8377 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.3631  ##split 0 + smaller model-5
 
 
-    # NOTE 4-fold
+    # NOTE 4-fold 
     # 2023-06-19-1  epoch: 100   duration:  4.4134 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4701  ##split 3 
     # 2023-06-18-3  epoch: 100   duration:  4.2812 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4549  ##split 2 
     # 2023-06-18-2  epoch: 100   duration:  4.1333 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4518  ##split 1 
     # 2023-06-18-1  epoch: 100   duration:  4.1300 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4747  ##split 0 
 
 
-    # NOTE 10-fold
+    # NOTE 10-fold 
     # 2023-06-17-3  epoch: 100   duration:  4.6962 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4986  ##split 9 
     # 2023-06-17-2  epoch: 100   duration:  4.7984 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4960  ##split 8 
     # 2023-06-17-1  epoch: 100   duration:  4.7631 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4798  ##split 7 
@@ -380,7 +396,7 @@ if __name__ == "__main__":
     # 2023-06-13-1  epoch: 100   duration:  5.0132 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4752  ##split 0 
 
 
-    # NOTE 6-fold
+    # NOTE 6-fold 
     # 2023-06-10-1  epoch: 100   duration:  4.5791 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4670  ##split 5 
     # 2023-06-09-1  epoch: 100   duration:  5.5375 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4551  ##split 4 
     # 2023-06-08-3  epoch: 100   duration:  4.7448 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4601  ##split 3 
@@ -390,8 +406,8 @@ if __name__ == "__main__":
     
 
     # 2023-06-05-1  epoch: 100   duration:  5.4366 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.4688  ##split 0 
-    # 2023-05-22-2  epoch: 100   duration:  4.0113 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.3781
-    # 2023-05-22-1  epoch: 100   duration:  4.7716 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4138
+    # 2023-05-22-2  epoch: 100   duration:  4.0113 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 14e-5  max mAP:  0.3781 
+    # 2023-05-22-1  epoch: 100   duration:  4.7716 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4138 
 
     # 2023-05-21-1  epoch: 400   duration: 19.1984 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-4   max mAP:  0.4292
     # 2023-05-20-2  epoch: 200   duration: 12.1146 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 3e-4   max mAP:  0.4593 NOTE #3

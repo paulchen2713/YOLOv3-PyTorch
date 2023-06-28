@@ -1,3 +1,30 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Feb 06 11:10:12 2023
+
+@patch: 
+    2023.02.06
+    2023.03.22
+
+@author: Paul
+@file: utils.py
+@dependencies:
+    env pt3.8
+    python==3.8.16
+    numpy==1.23.5
+    pytorch==1.13.1
+    pytorch-cuda==11.7
+    torchaudio==0.13.1
+    torchvision==0.14.1
+    pandas==1.5.2
+    pillow==9.3.0
+    tqdm==4.64.1
+    albumentations==1.3.0
+    matplotlib==3.6.2
+
+Some useful utility function copied from the internet
+"""
+
 import config
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -19,12 +46,8 @@ def iou_width_height(boxes1, boxes2):
     Returns:
         tensor: Intersection over union of the corresponding boxes
     """
-    intersection = torch.min(boxes1[..., 0], boxes2[..., 0]) * torch.min(
-        boxes1[..., 1], boxes2[..., 1]
-    )
-    union = (
-        boxes1[..., 0] * boxes1[..., 1] + boxes2[..., 0] * boxes2[..., 1] - intersection
-    )
+    intersection = torch.min(boxes1[..., 0], boxes2[..., 0]) * torch.min(boxes1[..., 1], boxes2[..., 1])
+    union = (boxes1[..., 0] * boxes1[..., 1] + boxes2[..., 0] * boxes2[..., 1] - intersection)
     return intersection / union
 
 
@@ -115,7 +138,7 @@ def non_max_suppression(bboxes, iou_threshold, threshold, box_format="corners"):
     return bboxes_after_nms
 
 
-def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format="midpoint", num_classes=20):
+def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format="midpoint", num_classes=3):
     """
     This function calculates mean average precision (mAP)
 
@@ -130,6 +153,7 @@ def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format
     Returns:
         float: mAP value across all classes given a specific IoU threshold
     """
+    # pred_boxes (list): [[train_index, class_pred, prob_score, x, y, w, h], ...]
 
     # list storing all AP for respective classes
     average_precisions = []
@@ -141,9 +165,7 @@ def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format
         detections = []
         ground_truths = []
 
-        # Go through all predictions and targets,
-        # and only add the ones that belong to the
-        # current class c
+        # Go through all predictions and targets, and only add the ones that belong to the current class c 
         for detection in pred_boxes:
             if detection[1] == c:
                 detections.append(detection)
@@ -153,14 +175,12 @@ def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format
                 ground_truths.append(true_box)
 
         # find the amount of bboxes for each training example
-        # Counter here finds how many ground truth bboxes we get
-        # for each training example, so let's say img 0 has 3,
-        # img 1 has 5 then we will obtain a dictionary with:
+        # Counter here finds how many ground truth bboxes we get for each training example, 
+        # so let's say img 0 has 3 bboxes, img 1 has 5 bboxes, then we will obtain a dictionary with:
         # amount_bboxes = {0:3, 1:5}
         amount_bboxes = Counter([gt[0] for gt in ground_truths])
 
-        # We then go through each key, val in this dictionary
-        # and convert to the following (w.r.t same example):
+        # We then go through each {key, val} in Counter and convert to the following (w.r.t same example):
         # ammount_bboxes = {0:torch.tensor[0,0,0], 1:torch.tensor[0,0,0,0,0]}
         for key, val in amount_bboxes.items():
             amount_bboxes[key] = torch.zeros(val)
@@ -176,20 +196,17 @@ def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format
             continue
 
         for detection_idx, detection in enumerate(detections):
-            # Only take out the ground_truths that have the same
-            # training idx as detection
-            ground_truth_img = [
-                bbox for bbox in ground_truths if bbox[0] == detection[0]
-            ]
+            # Only take out the ground_truths that have the same training idx as detection
+            ground_truth_img = [bbox for bbox in ground_truths if bbox[0] == detection[0]]
 
             num_gts = len(ground_truth_img)
             best_iou = 0
 
             for idx, gt in enumerate(ground_truth_img):
                 iou = intersection_over_union(
-                    torch.tensor(detection[3:]),
-                    torch.tensor(gt[3:]),
-                    box_format=box_format,
+                    torch.tensor(detection[3:]),  # bboxes predictions
+                    torch.tensor(gt[3:]),         # correct bboxes labels
+                    box_format=box_format,        # 
                 )
 
                 if iou > best_iou:
@@ -215,7 +232,8 @@ def mean_average_precision(pred_boxes, true_boxes, iou_threshold=0.5, box_format
         precisions = TP_cumsum / (TP_cumsum + FP_cumsum + epsilon)
         precisions = torch.cat((torch.tensor([1]), precisions))
         recalls = torch.cat((torch.tensor([0]), recalls))
-        # torch.trapz for numerical integration
+
+        # torch.trapz() for numerical integration
         average_precisions.append(torch.trapz(precisions, recalls))
 
     return sum(average_precisions) / len(average_precisions)
@@ -267,15 +285,7 @@ def plot_image(image, boxes):
     plt.show()
 
 
-def get_evaluation_bboxes(
-    loader,
-    model,
-    iou_threshold,
-    anchors,
-    threshold,
-    box_format="midpoint",
-    device=config.DEVICE,
-):
+def get_evaluation_bboxes(loader, model, iou_threshold, anchors, threshold, box_format="midpoint", device=config.DEVICE):
     # make sure model is in eval before get bboxes
     model.eval()
     train_idx = 0
@@ -370,7 +380,7 @@ def check_class_accuracy(model, loader, threshold):
     tot_noobj, correct_noobj = 0, 0
     tot_obj, correct_obj = 0, 0
 
-    for idx, (x, y) in enumerate(tqdm(loader)):
+    for _, (x, y) in enumerate(tqdm(loader)):
         # if idx == 100: break
         x = x.to(config.DEVICE)
         with torch.no_grad():
@@ -392,10 +402,16 @@ def check_class_accuracy(model, loader, threshold):
             correct_noobj += torch.sum(obj_preds[noobj] == y[i][..., 0][noobj])
             tot_noobj += torch.sum(noobj)
 
-    print(f"Class accuracy is: {(correct_class/(tot_class_preds+1e-16))*100:2f}%")
-    print(f"No obj accuracy is: {(correct_noobj/(tot_noobj+1e-16))*100:2f}%")
-    print(f"Obj accuracy is: {(correct_obj/(tot_obj+1e-16))*100:2f}%")
+    class_acc  = (correct_class / (tot_class_preds + 1e-16))*100
+    no_obj_acc = (correct_noobj / (tot_noobj + 1e-16))*100
+    obj_acc    = (correct_obj   / (tot_obj + 1e-16))*100
+
+    print(f"Class accuracy is:  {class_acc:0.4f}%")
+    print(f"No obj accuracy is: {no_obj_acc:0.4f}%")
+    print(f"Obj accuracy is:    {obj_acc:0.4f}%")
+    
     model.train()
+    return class_acc, no_obj_acc, obj_acc
 
 
 def get_mean_std(loader):
@@ -414,7 +430,6 @@ def get_mean_std(loader):
 
 
 def save_checkpoint(model, optimizer, filename="my_checkpoint.pth.tar"):
-    print("=> Saving checkpoint")
     checkpoint = {
         "state_dict": model.state_dict(),
         "optimizer": optimizer.state_dict(),
