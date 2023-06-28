@@ -118,6 +118,7 @@ logs = [
     '2023-06-27-4',  # 1 + small model-8
     '2023-06-28-1',  # 2 + small model-9
     '2023-06-28-2',  # 3 + small model-8
+    '2023-06-28-3',  # 4 + small model-9
 ]
 
 log_index = len(logs) - 1
