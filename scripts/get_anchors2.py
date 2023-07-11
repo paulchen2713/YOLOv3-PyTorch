@@ -380,7 +380,7 @@ if __name__ == "__main__":
     
     result = k_means(data, num_clusters, tol)
     distance = avg_iou(data, result)
-    file_name3 = DATASET + f"new-anchors-0628-split6.txt"  # "Anchors-custom-k_means.txt"
+    file_name3 = DATASET + f"new-anchors-0711-split7.txt"  # "Anchors-custom-k_means.txt"
     write_anchors_to_file(result, distance, file_name3)
 
 
