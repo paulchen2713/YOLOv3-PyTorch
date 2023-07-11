@@ -65,8 +65,20 @@ def test():
         drop_last=False,
     )
 
-    checkpoint_value = ['checkpoint-2023-06-18-1']  
-    index = 0
+    # 'checkpoint-',
+    checkpoint_value = [
+        'checkpoint-2023-06-07-1',
+        'checkpoint-2023-06-14-1',
+        'checkpoint-2023-06-18-1',
+        'checkpoint-2023-06-19-2',
+        'checkpoint-2023-06-26-1',
+        'checkpoint-2023-06-27-3',
+        'checkpoint-2023-06-28-2',
+        'checkpoint-2023-06-28-3',
+        'checkpoint-2023-06-28-4',
+        'checkpoint-2023-06-28-5',
+    ]
+    index = len(checkpoint_value) - 1
     checkpoint_file = f"{checkpoint_value[index]}.pth.tar"  
     load_checkpoint(
         config.DATASET + "checks/" + checkpoint_file,  # checkpoint-2023-05-22-2.pth.tar,  
@@ -77,7 +89,7 @@ def test():
 
     scaled_anchors = (torch.tensor(config.ANCHORS)* torch.tensor(config.S).unsqueeze(1).unsqueeze(1).repeat(1, 3, 2)).to(config.DEVICE)
 
-    check_file_name = f"{checkpoint_value[index]}-1"  # NOTE 
+    check_file_name = f"{checkpoint_value[index]}"  # NOTE 
     print(f"Weights: {checkpoint_file}")
     print(f"Anchors: ")
     for _, anchor in enumerate(scaled_anchors):

@@ -357,8 +357,6 @@ if __name__ == "__main__":
 
     main()
 
-    # test()
-
 
     # NOTE 8-fold
     # 2023-07-11-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 0 + smaller model-9
