@@ -77,6 +77,7 @@ def test():
         'checkpoint-2023-06-28-3',
         'checkpoint-2023-06-28-4',
         'checkpoint-2023-06-28-5',
+        'checkpoint-2023-07-11-1',
     ]
     index = len(checkpoint_value) - 1
     checkpoint_file = f"{checkpoint_value[index]}.pth.tar"  
@@ -210,5 +211,5 @@ if __name__ == "__main__":
 
     toc = time.perf_counter()
     duration = (toc - tic)
-    print(f"duration:  {duration:0.4f} sec")
+    print(f"duration:  {duration:0.4f} sec\n")
 

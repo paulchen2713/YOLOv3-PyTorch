@@ -61,7 +61,7 @@ CONF_THRESHOLD = 0.6  # 0.6
 MAP_IOU_THRESH = 0.5  # 0.5
 NMS_IOU_THRESH = 0.45 # 0.45
 
-TEST_POINT = 10 # compute the test accuracies and mAP for every TEST_POINT number of epochs
+TEST_POINT = 5 # compute the test accuracies and mAP for every TEST_POINT number of epochs
 
 stride = [32, 16, 8] 
 S = [IMAGE_SIZE // stride[0], IMAGE_SIZE // stride[1], IMAGE_SIZE // stride[2]] # [13, 26, 52]
@@ -375,11 +375,11 @@ LABEL_DIR = DATASET + "labels/"
 # ]
 
 # # new-anchors-0711-split1.txt
-# ANCHORS = [
-#     [(0.2711, 0.0456), (0.2120, 0.0946), (0.4161, 0.0967)],
-#     [(0.0981, 0.0223), (0.1595, 0.0294), (0.1137, 0.0660)],
-#     [(0.0286, 0.0097), (0.0596, 0.0145), (0.0365, 0.0355)],
-# ]
+ANCHORS = [
+    [(0.2711, 0.0456), (0.2120, 0.0946), (0.4161, 0.0967)],
+    [(0.0981, 0.0223), (0.1595, 0.0294), (0.1137, 0.0660)],
+    [(0.0286, 0.0097), (0.0596, 0.0145), (0.0365, 0.0355)],
+]
 
 # # new-anchors-0711-split2.txt
 # ANCHORS = [

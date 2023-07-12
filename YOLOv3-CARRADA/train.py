@@ -72,13 +72,13 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-07-11-1' # TODO date_function.today() 
+log_file_name = '2023-07-12-1' # TODO date_function.today() 
 
 # we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
 # assert os.path.isfile(f"{file2check}") is False, f"the 'training_logs/train/losses/{log_file_name}.txt' file already exists!"
 
-isTesting = False  # NOTE 
+# isTesting = False  ## 
 def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
     loop = tqdm(train_loader, leave=True)
     losses = []
@@ -112,13 +112,13 @@ def train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors):
     
     loss_path = config.DATASET + f'training_logs/train/'
     # store the mean_loss value of every epoch to a text file named as today's date
-    if isTesting is False:
-        with open(loss_path + f"mean_loss/{log_file_name}.txt", "a") as loss_file:
-            print(f"{mean_loss}", file=loss_file)
-    if isTesting is False:
-        for i_loss in losses:
-            with open(loss_path + f"losses/{log_file_name}.txt", "a") as loss_file:
-                print(f"{i_loss}", file=loss_file)
+    # if isTesting is False:
+    with open(loss_path + f"mean_loss/{log_file_name}.txt", "a") as loss_file:
+        print(f"{mean_loss}", file=loss_file)
+    # if isTesting is False:
+    for i_loss in losses:
+        with open(loss_path + f"losses/{log_file_name}.txt", "a") as loss_file:
+            print(f"{i_loss}", file=loss_file)
 
 
 def main():
@@ -153,8 +153,8 @@ def main():
         # plot_couple_examples(model, test_loader, 0.6, 0.5, scaled_anchors) # just plotting some images without bboxes
         train_fn(train_loader, model, optimizer, loss_fn, scaler, scaled_anchors)
 
-        print(f"Currently epoch {epoch}")
-        print("On Train loader:")
+        print(f"Currently on epoch {epoch}")
+        print(f"On Train loader:")
         class_acc, no_obj_acc, obj_acc = check_class_accuracy(model, train_loader, threshold=config.CONF_THRESHOLD)
 
         
@@ -162,7 +162,26 @@ def main():
         file_path = config.DATASET + f'training_logs/train/'
 
         # store the class_acc, no_obj_acc, obj_acc values of every epoch to text files named as today's date
-        if isTesting is False:
+        # if isTesting is False:
+        with open(file_path + f"class_accuracy/{log_file_name}.txt", "a") as txt_file:
+            print(f"{class_acc}", file=txt_file)
+
+        with open(file_path + f"no_object_accuracy/{log_file_name}.txt", "a") as txt_file:
+            print(f"{no_obj_acc}", file=txt_file)
+
+        with open(file_path + f"object_accuracy/{log_file_name}.txt", "a") as txt_file:
+            print(f"{obj_acc}", file=txt_file)
+
+        # config.TEST_POINT
+        if epoch % 5 == 0 and epoch > 0:
+            print(f"On Test loader (epoch {epoch}):")
+            class_acc, no_obj_acc, obj_acc = check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
+
+            # file path for the testing statistics
+            file_path = config.DATASET + f'training_logs/test/'
+
+            # store the class_acc, no_obj_acc, obj_acc values of every epoch to text files named as today's date
+            # if isTesting is False:
             with open(file_path + f"class_accuracy/{log_file_name}.txt", "a") as txt_file:
                 print(f"{class_acc}", file=txt_file)
 
@@ -171,25 +190,6 @@ def main():
 
             with open(file_path + f"object_accuracy/{log_file_name}.txt", "a") as txt_file:
                 print(f"{obj_acc}", file=txt_file)
-
-        # config.TEST_POINT
-        if epoch % 5 == 0 and epoch > 0:
-            print("On Test loader:")
-            class_acc, no_obj_acc, obj_acc = check_class_accuracy(model, test_loader, threshold=config.CONF_THRESHOLD)
-
-            # file path for the testing statistics
-            file_path = config.DATASET + f'training_logs/test/'
-
-            # store the class_acc, no_obj_acc, obj_acc values of every epoch to text files named as today's date
-            if isTesting is False:
-                with open(file_path + f"class_accuracy/{log_file_name}.txt", "a") as txt_file:
-                    print(f"{class_acc}", file=txt_file)
-
-                with open(file_path + f"no_object_accuracy/{log_file_name}.txt", "a") as txt_file:
-                    print(f"{no_obj_acc}", file=txt_file)
-
-                with open(file_path + f"object_accuracy/{log_file_name}.txt", "a") as txt_file:
-                    print(f"{obj_acc}", file=txt_file)
 
         # config.TEST_POINT
         if epoch % 5 == 0 and epoch > 0:
@@ -212,9 +212,9 @@ def main():
             print(f"cur mAP:  {curr_mAP}")
 
             file_path = config.DATASET + f'training_logs/mAP/'
-            if isTesting is False:
-                with open(file_path + f"{log_file_name}.txt", "a") as txt_file:
-                    print(f"{curr_mAP}", file=txt_file)
+            # if isTesting is False:
+            with open(file_path + f"{log_file_name}.txt", "a") as txt_file:
+                print(f"{curr_mAP}", file=txt_file)
 
             if curr_mAP > maxi_mAP:
                 maxi_mAP = curr_mAP
@@ -229,6 +229,7 @@ def main():
             print(f"---> Saving checkpoint with max mAP:  {maxi_mAP}")
             save_checkpoint(model, optimizer, filename=file_name)
             isBetter = False
+        print(f"\n")
 
 
 def test():
@@ -359,7 +360,8 @@ if __name__ == "__main__":
 
 
     # NOTE 8-fold
-    # 2023-07-11-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 0 + smaller model-9
+    # 2023-07-12-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 1 + smaller model-11
+    # 2023-07-11-1  epoch: 100   duration:  4.3234 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4488  ##split 0 + smaller model-11
 
 
     # NOTE 7-fold
