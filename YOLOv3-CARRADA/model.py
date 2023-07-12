@@ -48,33 +48,58 @@ List is structured by "B" indicating a residual block followed by the number of 
 
 # 0: original
 config0 = [
-    (32, 3, 1),   # (32, 3, 1) is the CBL, CBL = Conv + BN + LeakyReLU
+    (32, 3, 1),    # (32, 3, 1) is the CBL, CBL = Conv + BN + LeakyReLU
     (64, 3, 2),
-    ["B", 1],     # (64, 3, 2) + ["B", 1] is the Res1, Res1 = ZeroPadding + CBL + (CBL + CBL + Add)*1
+    ["B", 1],      # (64, 3, 2) + ["B", 1] is the Res1, Res1 = ZeroPadding + CBL + (CBL + CBL + Add)*1
     (128, 3, 2),
-    ["B", 2],     # (128, 3, 2) + ["B", 2] is th Res2, Res2 = ZeroPadding + CBL + (CBL + CBL + Add)*2
-    (256, 3, 2),
-    ["B", 8],     # (256, 3, 2) + ["B", 8] is th Res8, Res8 = ZeroPadding + CBL + (CBL + CBL + Add)*8
-    (512, 3, 2),
-    ["B", 8],     # (512, 3, 2) + ["B", 8] is th Res8, Res8 = ZeroPadding + CBL + (CBL + CBL + Add)*8
-    (1024, 3, 2),
-    ["B", 4],     # (1024, 3, 2) + ["B", 4] is th Res4, Res4 = ZeroPadding + CBL + (CBL + CBL + Add)*4
-    # to this point is Darknet-53 which has 52 layers
+    ["B", 2],      # (128, 3, 2) + ["B", 2] is th Res2, Res2 = ZeroPadding + CBL + (CBL + CBL + Add)*2
+    (256, 3, 2),   ## 1 
+    ["B", 8],      # (256, 3, 2) + ["B", 8] is th Res8, Res8 = ZeroPadding + CBL + (CBL + CBL + Add)*8
+    (512, 3, 2),   ## 2 
+    ["B", 8],      # (512, 3, 2) + ["B", 8] is th Res8, Res8 = ZeroPadding + CBL + (CBL + CBL + Add)*8
+    (1024, 3, 2),  ## 3 
+    ["B", 4],      # (1024, 3, 2) + ["B", 4] is th Res4, Res4 = ZeroPadding + CBL + (CBL + CBL + Add)*4
+    # to this point is the feature extractor (Darknet-53), which has 52 layers?
     # 52 = 1 + (1 + 1*2) + (1 + 2*2) + (1 + 8*2) + (1 + 8*2) + (1 + 4*2) ?
-    (512, 1, 1),  # 
-    (1024, 3, 1), #
+    (512, 1, 1),   
+    (1024, 3, 1),  ## 3 
     "S",
     (256, 1, 1),
     "U",
     (256, 1, 1),
-    (512, 3, 1),
+    (512, 3, 1),   ## 2 
     "S",
     (128, 1, 1),
     "U",
     (128, 1, 1),
-    (256, 3, 1),
+    (256, 3, 1),   ## 1 
     "S",
     # 252 = 1 + 3 + (4+7) + (4+7*2) + (4+7*8) + (4+7*8) + (4+7*4) + 19 + 5 + 19 + 5 + 19 ?
+]
+
+# 5: smaller-model-5
+config5 = [
+    (16, 3, 2),
+    (32, 3, 2),
+    (64, 3, 2),   ## 1 
+    ["B", 2],     
+    (128, 3, 2),  ## 2 
+    ["B", 2],     
+    (256, 3, 2),  ## 3 
+    ["B", 1],     
+    (128, 1, 1),  
+    (256, 3, 1),  ## 3 
+    "S",
+    (64, 1, 1),
+    "U",
+    (64, 1, 1),
+    (128, 3, 1),  ## 2 
+    "S",
+    (32, 1, 1),
+    "U",
+    (32, 1, 1),
+    (64, 3, 1),   ## 1 
+    "S",
 ]
 
 # 6: smaller-model-6
@@ -82,24 +107,24 @@ config6 = [
     (8, 3, 1),   
     (16, 3, 2),
     (32, 3, 2),
-    (64, 3, 2),
+    (64, 3, 2),   ## 1 
     ["B", 2],     
-    (128, 3, 2),
+    (128, 3, 2),  ## 2 
     ["B", 2],     
-    (256, 3, 2),
+    (256, 3, 2),  ## 3 
     ["B", 1],     
     (128, 1, 1),  
-    (256, 3, 1), 
+    (256, 3, 1),  ## 3 
     "S",
     (64, 1, 1),
     "U",
     (64, 1, 1),
-    (128, 3, 1),
+    (128, 3, 1),  ## 2 
     "S",
     (32, 1, 1),
     "U",
     (32, 1, 1),
-    (64, 3, 1),
+    (64, 3, 1),   ## 1 
     "S",
 ]
 

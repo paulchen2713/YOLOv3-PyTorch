@@ -72,7 +72,7 @@ def seed_everything(seed=33):
 # Using a unified 'log_file_name' for all file objects is necessary because if the training process runs across several days, 
 # the log messages for the same training will be split into several files with different dates as their file names. However, 
 # they actually belong in the same file. All log files will be named as the start date of the training.
-log_file_name = '2023-07-12-1' # TODO date_function.today() 
+log_file_name = '2023-07-12-2' # TODO date_function.today() 
 
 # we are checking whether '<log_file_name>.txt' file exists in the 'losses' folder
 file2check = config.DATASET + f'training_logs/train/losses/{log_file_name}.txt'  
@@ -229,7 +229,7 @@ def main():
             print(f"---> Saving checkpoint with max mAP:  {maxi_mAP}")
             save_checkpoint(model, optimizer, filename=file_name)
             isBetter = False
-        print(f"\n")
+        print(f"")
 
 
 def test():
@@ -360,7 +360,9 @@ if __name__ == "__main__":
 
 
     # NOTE 8-fold
-    # 2023-07-12-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 1 + smaller model-11
+    # 2023-07-13-1  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 3 + smaller model-
+    # 2023-07-12-2  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 2 + smaller model-
+    # 2023-07-12-1  epoch: 100   duration:  4.2602 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4926  ##split 1 + smaller model-11
     # 2023-07-11-1  epoch: 100   duration:  4.3234 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4488  ##split 0 + smaller model-11
 
 
@@ -483,7 +485,7 @@ if __name__ == "__main__":
 
     toc = time.perf_counter()
     duration = (toc - tic) / 3600
-    print(f"{log_file_name}  epoch: {config.NUM_EPOCHS}   duration:  {duration:0.4f} hours")
+    print(f"{log_file_name}  epoch: {config.NUM_EPOCHS}   duration:  {duration:0.4f} hours\n")
     # print(f"WEIGHT_DECAY = {config.WEIGHT_DECAY}  LEARNING_RATE = {config.LEARNING_RATE}  max mAP:  ")
 
 

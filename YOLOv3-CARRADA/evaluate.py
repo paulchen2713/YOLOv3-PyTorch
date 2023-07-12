@@ -78,6 +78,7 @@ def test():
         'checkpoint-2023-06-28-4',
         'checkpoint-2023-06-28-5',
         'checkpoint-2023-07-11-1',
+        'checkpoint-2023-07-12-1',
     ]
     index = len(checkpoint_value) - 1
     checkpoint_file = f"{checkpoint_value[index]}.pth.tar"  
