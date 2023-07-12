@@ -121,6 +121,7 @@ logs = [
     '2023-06-28-3',  # 4 + small model-9
     '2023-06-28-4',  # 5 + small model-10
     '2023-06-28-5',  # 6 + small model-10
+    '2023-07-11-1',  # NOTE 8-fold: 0 + small model-11
 ]
 
 log_index = len(logs) - 1
@@ -395,7 +396,7 @@ def print_stats():
 
             print(f"-"*50, file=txt_file)
         
-        print(f"saving stats to {file_path} as stats-{curr_txt_file}.txt")
+        print(f"saving stats to {file_path} as stats-{curr_txt_file}.txt\n")
 
 
 def load_multiple_train_results(indices: list):
