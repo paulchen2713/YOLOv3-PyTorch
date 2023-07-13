@@ -216,7 +216,7 @@ config10 = [
 ]
 
 # 11: smaller-model-11
-config = [
+config11 = [
     (16, 3, 1),  
     ["B", 1],
     (32, 3, 2),
@@ -245,6 +245,35 @@ config = [
     (64, 1, 1),
     ["B", 1],
     (128, 3, 1),  ## 1 
+    "S",
+]
+
+# 12: smaller-model-12
+config = [
+    (32, 3, 1),    
+    (64, 3, 2),
+    # ["B", 1],      
+    (128, 3, 2),
+    # ["B", 2],      
+    (256, 3, 2),   ## 1 
+    ["B", 4],      
+    (512, 3, 2),   ## 2 
+    ["B", 4],      
+    (1024, 3, 2),  ## 3 
+    # ["B", 2],      
+    # to this point is the feature extractor
+    (512, 1, 1),   
+    (1024, 3, 1),  ## 3 
+    "S",
+    (256, 1, 1),
+    "U",
+    (256, 1, 1),
+    (512, 3, 1),   ## 2 
+    "S",
+    (128, 1, 1),
+    "U",
+    (128, 1, 1),
+    (256, 3, 1),   ## 1 
     "S",
 ]
 
@@ -446,7 +475,7 @@ if __name__ == "__main__":
     assert out[1].shape == (batch_size, num_channels, IMAGE_SIZE//stride[1], IMAGE_SIZE//stride[1], num_classes + 5)  # [20, 3, 26, 26, num_classes + 5]
     assert out[2].shape == (batch_size, num_channels, IMAGE_SIZE//stride[2], IMAGE_SIZE//stride[2], num_classes + 5)  # [20, 3, 52, 52, num_classes + 5]
     
-    print("Success!")
+    print("Success!\n")
 
 
 
