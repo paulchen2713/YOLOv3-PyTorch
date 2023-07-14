@@ -378,7 +378,7 @@ class YOLOv3(nn.Module):
 
             # skip layers are connected to ["B", 8] based on the paper, original config file 
             # if isinstance(layer, ResidualBlock) and layer.num_repeats != 1: # 
-            if isinstance(layer, ResidualBlock) and layer.num_repeats == 4:  # NOTE 8
+            if isinstance(layer, ResidualBlock) and layer.num_repeats == 2:  # NOTE 8
                 route_connections.append(x)
 
             elif isinstance(layer, nn.Upsample): # if we use the Upsample
