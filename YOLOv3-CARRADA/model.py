@@ -157,7 +157,7 @@ config8 = [
 ]
 
 # 9: smaller-model-9
-config9 = [
+config = [
     (16, 3, 1),  
     ["B", 1],
     (32, 3, 2),
@@ -186,7 +186,7 @@ config9 = [
 ]
 
 # 10: smaller-model-10
-config = [
+config10 = [
     (16, 3, 1),  
     ["B", 1],
     (32, 3, 2),
