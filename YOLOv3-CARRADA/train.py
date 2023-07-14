@@ -360,7 +360,7 @@ if __name__ == "__main__":
 
 
     # NOTE 8-fold
-    # 2023-07-14-2  epoch: 100   duration:   hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.  ##split 7 + smaller model-9
+    # 2023-07-14-2  epoch: 100   duration:  4.4088 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4497  ##split 7 + smaller model-9
     # 2023-07-14-1  epoch: 100   duration:  4.2533 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4624  ##split 6 + smaller model-9
     # 2023-07-13-3  epoch: 100   duration:  4.2821 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4642  ##split 5 + smaller model-10
     # 2023-07-13-2  epoch: 100   duration:  4.1892 hours  WEIGHT_DECAY = 1e-4  LEARNING_RATE = 15e-5  max mAP:  0.4397  ##split 4 + smaller model-10
