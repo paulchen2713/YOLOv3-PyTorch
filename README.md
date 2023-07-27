@@ -1,5 +1,5 @@
 # YOLOv3-PyTorch
-- This **was** the research topic for my master's thesis. You are welcome to play with the code, ~but please don't hijack my research. I'll die.~
+- This ~is~ **was** the research topic for my master's thesis. You are welcome to play with the code, ~but please don't hijack my research. I'll die.~
 - A guide on 'how to use this code'
   - First, download the ```CARRADA Dataset```, the ```Pascal_VOC Dataset``` from kaggle, or the ```CFAR Dataset``` and structure the folders as shown in the file tree below
   - Second, set up a virtual environment using Anaconda, e.g. 
